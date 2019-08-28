@@ -185,31 +185,6 @@ public class MyselfActivity extends AppCompatActivity {
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(videoOptionModel);
-      /*  videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "allowed_media_types", "video"); //根据媒体类型来配置
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", 20000);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 1316);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);  // 无限读
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 10240);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
-        list.add(videoOptionModel);
-        //  关闭播放器缓冲，这个必须关闭，否则会出现播放一段时间后，一直卡主，控制台打印 FFP_MSG_BUFFERING_START
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "seek-at-start", 5000);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"reconnect",5);
-        list.add(videoOptionModel);*/
         GSYVideoManager.instance().setOptionModelList(list);
         PlayerFactory.setPlayManager(Exo2PlayerManager.class);
        // PlayerFactory.setPlayManager(IjkPlayerManager.class);
@@ -224,28 +199,6 @@ public class MyselfActivity extends AppCompatActivity {
 
     }
 
-
-   /* *//**
-     * 显示键盘
-     *
-     * @param et 输入焦点
-     *//*
-    public void showInput(final EditText et) {
-        et.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
-    }
-
-    *//**
-     * 隐藏键盘
-     *//*
-    protected void hideInput() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        View v = getWindow().peekDecorView();
-        if (null != v) {
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        }
-    }*/
 
     @Override
     public void onBackPressed() {
