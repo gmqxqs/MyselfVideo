@@ -58,11 +58,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     private static final int msgKey1 = 1;
     protected  int count = 0;
     private  Context contextFirst;
-
     public MySelfGSYVideoPlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
         this.contextFirst = context;
-
     }
 
     public MySelfGSYVideoPlayer(Context context) {
@@ -74,50 +72,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         super(context, attrs);
         this.contextFirst = context;
     }
-    private  boolean isFinish =false;
-    // 暂停图片广告
-    protected  String pauseAdImageUrl;
-    public void setPauseAdImageUrl(String pauseAdImageUrl){
-        this.pauseAdImageUrl = pauseAdImageUrl;
-    }
-    public String getPauseAdImageUrl(){
-        return  pauseAdImageUrl;
-    }
-
-
-    //片头视频广告
-    protected String videoAdUrl;
-    public void setVideoAdUrl(String videoAdUrl){
-        this.videoAdUrl = videoAdUrl;
-    }
-    public String getVideoAdUrl(){
-        return videoAdUrl;
-    }
-
-    //片头图片广告
-    protected String imageAdUrl;
-    public void setImageAdUrl(String imageAdUrl){
-        this.imageAdUrl = imageAdUrl;
-    }
-    public String getImageAdUrl(){
-        return imageAdUrl;
-    }
 
 
 
-
-    protected View mJumpAd;
-
-    protected TextView mADTime;
-
-    protected boolean isAdModel = false;
-
-    protected boolean isFirstPrepared = false;
-
-    //触摸移动显示文本
-    protected TextView mDialogSeekTime;
-    //触摸移动显示全部时间
-    protected TextView mDialogTotalTime;
     protected  TextView mSystemTime;
     protected LinearLayout mTimeandbarray;
     protected  LinearLayout controllerbottom;
@@ -138,31 +95,12 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected BatteryView batteryView;
     protected  LinearLayout mDanmu;
     protected  EditText edit_danmu;
-    protected  boolean progressTemplate = false;
-    protected List<GSYVideoModel> mUriList = new ArrayList<>();
-    protected int mPlayPosition;
-    protected ImageView mAdImageView;
-    protected  WebView webView;
-    protected  TextView mAdimage_skip;
-    protected  FrameLayout mAdFrameLayout;
-    protected  ImageView mAdClose;
-    protected  ImageView mAd;
-    public Bitmap bmp;                     //bitmap图片对象
-    public int primaryWidth;               //原图片宽
-    public int primaryHeight;              //原图片高
-    public double scaleWidth, scaleHeight; //高宽比例
-/*    ImageView mCoverImage;
-    String mCoverOriginUrl;
-    int mDefaultRes;
 
 
-    //重复seekto 的过渡值
-    private int curSeekPos = -1;
-    private int curSeekCount = 0;*/
+
 
     /**
      * 继承后重写可替换为你需要的布局
-     *
      * @return
      */
     @Override
@@ -179,32 +117,18 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         return mTitleTextView;
     }
     private int batteryLevel;
-    public TimeCount timeCount;
+
     public FrameLayout surface_container;
     public FrameLayout getSurface(){
         return surface_container;
     }
-    public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
-    public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> getUrls(){
-        return urls;
-    }
 
-    public boolean isImageAd = false;
+
 
 
     protected void init(final Context context) {
         super.init(context);
-        mJumpAd = findViewById(R.id.jump_ad);
-        mADTime = (TextView) findViewById(R.id.ad_time);
         // mWidgetContainer = (ViewGroup) findViewById(R.id.widget_container);
-        if (mJumpAd != null) {
-            mJumpAd.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    playNext();
-                }
-            });
-        }
         surface_container = findViewById(R.id.surface_container);
         batteryView = findViewById(R.id.battery);
         layout_bottom = findViewById(R.id.all);
@@ -224,18 +148,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         bottom_progressbar = findViewById(R.id.bottom_progressbar);
         mDanmu = findViewById(R.id.danmu);
         edit_danmu = findViewById(R.id.edit_danmu);
-        mAdImageView = findViewById(R.id.adImage);
-        mAdFrameLayout = findViewById(R.id.adFrameLayout);
-        mAdClose = findViewById(R.id.ad_close);
-        mAdClose.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdFrameLayout.setVisibility(GONE);
-            }
-        });
-        mAd = findViewById(R.id.ad);
-        mAdimage_skip = findViewById(R.id.adimage_skip);
-
         edit_danmu.setOnKeyListener(new OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -296,18 +208,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         });
 
 
-
-
-
     }
 
-    public  ImageView getAdClose(){
-        return  mAdClose;
-    }
 
-    public  ImageView getAd(){
-        return  mAd;
-    }
 
     public ImageView getPlaystart(){
         return playstart;
@@ -321,15 +224,11 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         return mTotalTimeTextView;
     }
 
-    public  TextView getAdimage_skip(){
-        return mAdimage_skip;
-    }
+
     public ImageView getLockScreen(){
         return mLockScreen;
     }
-    public ImageView getMadImageView(){
-        return mAdImageView;
-    }
+
 
     public static Activity findActivity(Context context) {
         if (context instanceof Activity) {
@@ -351,30 +250,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
         gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar);
 
-        MySelfGSYVideoPlayer gsyVideoPlayer = (MySelfGSYVideoPlayer) gsyBaseVideoPlayer;
-        if (gsyBaseVideoPlayer != null) {
-
-            gsyVideoPlayer.setLockClickListener(mLockClickListener);
-            gsyVideoPlayer.setNeedLockFull(isNeedLockFull());
-            initFullUI(gsyVideoPlayer);
-
-            //比如你自定义了返回案件，但是因为返回按键底层已经设置了返回事件，所以你需要在这里重新增加的逻辑
-        }
-        if(gsyBaseVideoPlayer == null){
-            System.out.println("视频播放器为空");
-        } else{
-            System.out.println("gsyBaseVideoPlayer:"+gsyBaseVideoPlayer);
-        }
-        if(isImageAd){
-            System.out.println("是否为片头图片广告");
-            //((MySelfGSYVideoPlayer) getCurrentPlayer()).getSurface().setBackground(getResources().getDrawable(R.drawable.xxx1));
-            ((MySelfGSYVideoPlayer) gsyBaseVideoPlayer).getSurface().setBackground(getResources().getDrawable(R.drawable.xxx1));
-        }
-
-       /* if(isFinish){
-            System.out.println("时间到了");
-            gsyBaseVideoPlayer = gsyBaseVideoPlayer2;
-        }*/
         return gsyBaseVideoPlayer;
     }
     /**
@@ -516,8 +391,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     @Override
     public void onPrepared() {
         super.onPrepared();
-        isFirstPrepared = true;
-        changeAdUIState();
+
+
     }
     @Override
     public int getFullId() {
@@ -598,10 +473,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mPan.setVisibility(GONE);
                 bottom_progressbar.setVisibility(VISIBLE);
                 controllerbottom.setVisibility(VISIBLE);
-                if(isAdModel){
-                    mADTime.setVisibility(VISIBLE);
-                    mJumpAd.setVisibility(VISIBLE);
-                }
+
             } else {
                 System.out.println("非全屏");
                 if (mFullscreenButton != null)
@@ -619,147 +491,15 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 bottom_progressbar.setVisibility(GONE);
 
             }
-            changeAdUIState();
+
             return true;
         }
 
         return false;
     }
-    /**
-     * 如果需要片头广告的，请用setAdUp
-     *
-     * @param url           播放url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param position      需要播放的位置
-     * @return
-     */
-
-    public boolean setUp(List<GSYVideoModel> url, boolean cacheWithPlay, int position) {
-        return setUp(url, cacheWithPlay, position, null);
-    }
-
-    /**
-     * 如果需要片头广告的，请用setAdUp
-     *
-     * @param url           播放url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param position      需要播放的位置
-     * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
-     * @return
-     */
-
-    public boolean setUp(List<GSYVideoModel> url, boolean cacheWithPlay, int position, File cachePath) {
-        return setUp(url, cacheWithPlay, position, cachePath, new HashMap<String, String>());
-    }
-
-    /**
-     * 如果需要片头广告的，请用setAdUp
-     *
-     * @param url           播放url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param position      需要播放的位置
-     * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
-     * @param mapHeadData   http header
-     * @return
-     */
-
-    public boolean setUp(List<GSYVideoModel> url, boolean cacheWithPlay, int position, File cachePath, Map<String, String> mapHeadData) {
-        return setUp(url, cacheWithPlay, position, cachePath, mapHeadData, true);
-    }
 
 
-    /**
-     * 如果需要片头广告的，请用setAdUp
-     *
-     * @param url           播放url
-     * @param cacheWithPlay 是否边播边缓存
-     * @param position      需要播放的位置
-     * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
-     * @param mapHeadData   http header
-     * @param changeState   切换的时候释放surface
-     * @return
-     */
-    protected boolean setUp(List<GSYVideoModel> url, boolean cacheWithPlay, int position, File cachePath, Map<String, String> mapHeadData, boolean changeState) {
-        System.out.println("positionUrl:" + position);
-        GSYVideoModel gsyVideoModel = url.get(position);
-        if (gsyVideoModel instanceof MySelfGSYVideoPlayer.GSYADVideoModel) {
-            MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
-            System.out.println("url.size():" + url.size());
-            if (gsyadVideoModel.isSkip() && position < (url.size() - 1)) {
-                System.out.println("广告");
-                return setUp(url, cacheWithPlay, position + 1, cachePath, mapHeadData, changeState);
-            }
 
-            isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
-            System.out.println("是不是视频广告2:" + isAdModel);
-        }
-        changeAdUIState();
-        mUriList = url;
-        mPlayPosition = position;
-        mMapHeadData = mapHeadData;
-        boolean set = setUp(gsyVideoModel.getUrl(), cacheWithPlay, cachePath, gsyVideoModel.getTitle(), changeState);
-        if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
-            mTitleTextView.setText(gsyVideoModel.getTitle());
-        }
-        return set;
-    }
-
-    public LinearLayout getControllerbottom(){
-        return  controllerbottom;
-    }
-
-    /**
-     * 根据是否广告url修改ui显示状态
-     */
-    public void changeAdUIState() {
-
-        if (mJumpAd != null) {
-            mJumpAd.setVisibility((isFirstPrepared && isAdModel) ? VISIBLE : GONE);
-        }
-
-        if (mADTime != null) {
-            mADTime.setVisibility((isFirstPrepared && isAdModel) ? VISIBLE : GONE);
-        }
-
-        /*if (mWidgetContainer != null) {
-            mWidgetContainer.setVisibility((isFirstPrepared && isAdModel) ? GONE : VISIBLE);
-        }*/
-       /* if (layout_bottom != null) {
-            int color = (isFirstPrepared && isAdModel) ? Color.TRANSPARENT : getContext().getResources().getColor(R.color.bottom_container_bg);
-            layout_bottom.setBackgroundColor(color);
-        }*/
-
-
-        if(playstart != null){
-            playstart.setVisibility((isFirstPrepared && isAdModel ) || isImageAd  || mIfCurrentIsFullscreen  ? GONE : VISIBLE);
-        }
-
-        if(controllerbottom!= null){
-            controllerbottom.setVisibility((isFirstPrepared && isAdModel ) || isImageAd  || !mIfCurrentIsFullscreen ? GONE : VISIBLE);
-        }
-
-        if( mFullscreenButton!= null){
-            mFullscreenButton.setVisibility(  mIfCurrentIsFullscreen ? GONE : VISIBLE);
-        }
-
-        if(mLockScreen!= null){
-            mLockScreen.setVisibility((isFirstPrepared && isAdModel) || isImageAd || !mIfCurrentIsFullscreen  ? GONE : VISIBLE);
-        }
-
-        if (mCurrentTimeTextView != null) {
-            mCurrentTimeTextView.setVisibility(((isFirstPrepared && isAdModel ) || isImageAd ) || (mIfCurrentIsFullscreen && isImageAd ) || mIfCurrentIsFullscreen ? GONE : VISIBLE);
-
-        }
-
-        if (mTotalTimeTextView != null) {
-            mTotalTimeTextView.setVisibility(((isFirstPrepared && isAdModel)  || isImageAd  )|| (mIfCurrentIsFullscreen && isImageAd ) || mIfCurrentIsFullscreen ?  GONE : VISIBLE);
-        }
-
-        if (mProgressBar != null) {
-            mProgressBar.setVisibility((isFirstPrepared && isAdModel) || isImageAd  ? INVISIBLE : VISIBLE);
-            mProgressBar.setEnabled(!(isFirstPrepared && isAdModel));
-        }
-    }
 
     public void resetProgressAndTime() {
         if (mProgressBar == null || mTotalTimeTextView == null || mCurrentTimeTextView == null) {
@@ -783,9 +523,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     @Override
     protected void hideAllWidget() {
-        if (isFirstPrepared && isAdModel) {
-            return;
-        }
+
         setViewShowState(mBottomContainer, INVISIBLE);
         setViewShowState(controllerbottom, INVISIBLE);
         setViewShowState(mTopContainer, INVISIBLE);
@@ -1003,19 +741,23 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Debuger.printfLog("changeUiToPlayingShow");
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
+
         setViewShowState(mTimeandbarray,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
         setViewShowState(newstart, GONE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, GONE);
         setViewShowState(mThumbImageViewLayout, GONE);
         setViewShowState(mBottomProgressBar, GONE);
-        setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
-        setViewShowState(controllerbottom, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
-        setViewShowState(mAdImageView,GONE);
+        if(mIfCurrentIsFullscreen){
+            setViewShowState(controllerbottom, VISIBLE);
+        } else{
+            setViewShowState(controllerbottom, GONE);
+        }
+
        /* if (mLoadingProgressBar instanceof ENDownloadView) {
             ((ENDownloadView) mLoadingProgressBar).reset();
         }*/
-        setViewShowState(mAdFrameLayout,GONE);
+
 
         updateStartImage();
         upPlayImage();
@@ -1026,29 +768,18 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Debuger.printfLog("changeUiToPauseShow");
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
-        setViewShowState(controllerbottom, GONE);
         setViewShowState(mTimeandbarray,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
         setViewShowState(newstart, GONE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, GONE);
         setViewShowState(mThumbImageViewLayout, GONE);
         setViewShowState(mBottomProgressBar, GONE);
-        setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
-        setViewShowState(controllerbottom, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
-        setViewShowState(mAdImageView,VISIBLE);
-        setViewShowState(mAdFrameLayout,VISIBLE);
+        if(mIfCurrentIsFullscreen){
+            setViewShowState(controllerbottom, VISIBLE);
+        } else{
+            setViewShowState(controllerbottom, GONE);
+        }
 
-       /* System.out.println("bmp:" + bmp);
-        if(bmp == null){
-            setViewShowState(mAdFrameLayout,GONE);
-        } else {
-            setViewShowState(mAdFrameLayout,VISIBLE);
-        }*/
-
-
-       /* if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
-        }*/
         updateStartImage();
         updatePauseCover();
         upPlayImage();
@@ -1248,61 +979,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     }
 
-    /**
-     * 显示wifi确定框，如需要自定义继承重写即可
-     */
-    @Override
-    public void showWifiDialog() {
-      /*
-        if (networkUtils.isWifiConnected(mContext)) {
-            //Toast.makeText(mContext, getResources().getString(R.string.no_net), Toast.LENGTH_LONG).show();
-            startPlayLogic();
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivityContext());
-        builder.setMessage(getResources().getString(R.string.tips_not_wifi));
-        builder.setPositiveButton(getResources().getString(R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                startPlayLogic();
-            }
-        });*/
-
-      /*  if (NetworkUtils.isAvailable(mContext)) {
-            startPlayLogic();
-            if (NetworkUtils.isWifiConnected(mContext)) {
-                startPlayLogic();
-                return;
-            }
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivityContext());
-            builder.setMessage(getResources().getString(R.string.tips_not_wifi));
-            builder.setPositiveButton(getResources().getString(R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    startPlayLogic();
-                }
-            });
-            startPlayLogic();
-        } else {
-            Toast.makeText(mContext, getResources().getString(R.string.no_net), Toast.LENGTH_LONG).show();
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivityContext());
-        builder.setMessage(getResources().getString(R.string.tips_not_wifi));
-        builder.setPositiveButton(getResources().getString(R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                startPlayLogic();
-            }
-        });*/
-
-        super.showWifiDialog();
-
-
-    }
 
 
     /**
@@ -1311,27 +987,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     @Override
     protected void onClickUiToggle() {
-        if(isImageAd){
-
-            Intent intent = new Intent(CommonUtil.getActivityContext(contextFirst), ImageAdWebViewActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("ImageAdUrl",getImageAdUrl());
-            intent.putExtras(bundle);
-            CommonUtil.getActivityContext(contextFirst).startActivity(intent);
-            return;
-        }
-        if (isAdModel) {
-            System.out.println("广告视频跳转:"+isAdModel);
-            System.out.println("videoAdUrl:"+getVideoAdUrl());
-            Intent intent = new Intent(CommonUtil.getActivityContext(contextFirst), VideoAdWebViewActivity.class);
-            Bundle bundle = new Bundle();
-
-            bundle.putString("videoAdUrl",getVideoAdUrl());
-            intent.putExtras(bundle);
-            CommonUtil.getActivityContext(contextFirst).startActivity(intent);
-            return;
-        }
-
         if (mIfCurrentIsFullscreen && mLockCurScreen) {
             setViewShowState(mLockScreen, VISIBLE);
             return;
@@ -1503,23 +1158,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
         }
 
-/*        if (mTouchingProgressBar) {
-            if (progress != 0) {
-                mProgressBar.setProgress(progress);
-            }
-            if(progress <= 0 ){
-                mProgressBar.setProgress(0);
-            }
-
-        }*/
-
-   /*     if (mCurrentState == CURRENT_STATE_PAUSE){
-            if (progressTemplate) {
-                positionCurrent = -1;
-                cancelProgressTimer();
-                // return;
-            }
-        }*/
 
         if (getGSYVideoManager().getBufferedPercentage() > 0) {
             secProgress = getGSYVideoManager().getBufferedPercentage();
@@ -1536,11 +1174,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             if (progress != 0) mBottomProgressBar.setProgress(progress);
             setSecondaryProgress(secProgress);
         }
-        if (mADTime != null && currentTime > 0) {
-            int totalSeconds = totalTime / 1000;
-            int currentSeconds = currentTime / 1000;
-            mADTime.setText("" + (totalSeconds - currentSeconds));
-        }
+
 
     }
 
@@ -1578,121 +1212,14 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         super.cloneParams(from, to);
         final   MySelfGSYVideoPlayer sf = (MySelfGSYVideoPlayer) from;
         MySelfGSYVideoPlayer st = (MySelfGSYVideoPlayer) to;
-       /* if(sf.getBackground() != null){
-            st.getSurface().setBackground(sf.getSurface().getBackground());
-        }*/
-
-        st.imageAdUrl = sf.getImageAdUrl();
-        st.videoAdUrl = sf.getVideoAdUrl();
         st.surface_container =sf.surface_container;
-        st.pauseAdImageUrl = sf.getPauseAdImageUrl();
-        st.isAdModel = sf.isAdModel;
-        st.mUriList = sf.mUriList;
-        st.isImageAd = sf.isImageAd;
-        st.isFirstPrepared = sf.isFirstPrepared;
-        st.timeCount = sf.timeCount;
-        st.urls = sf.urls;
-        System.out.println("sf.getSurface().getBackground():" + sf.getSurface().getBackground());
-        st.getSurface().setBackground(sf.getSurface().getBackground());
-        System.out.println("st.getSurface().getBackground():" + st.getSurface().getBackground());
-        // st.mAdImageView = sf.mAdImageView;
-        //    int res = (int) sf.getMadImageView().getTag();
-        //创建BitMap对象，用于显示图片
-      /*  System.out.println("sf.mAdImageView.getBackground():"+sf.mAdImageView.getBackground());
-        st.mAdImageView.setBackground(sf.mAdImageView.getBackground());*/
-        //  int result = (int) sf.mAdImageView.getBackground();
-        if(sf.bmp != null){
-            st.bmp = sf.bmp;
-            st.getAdClose().setVisibility(View.VISIBLE);
-            st.getAd().setVisibility(View.VISIBLE);
-            //    st.bmp = sf.mAdImageView.getBackground();
-            //原始大小
-            primaryWidth = st.bmp.getWidth();
-            primaryHeight = st.bmp.getHeight();
-            //初始比例为1
-            scaleWidth = scaleHeight = 1;
 
-            //st.mAdImageView.setImageBitmap(bmp);
-            // scale(2, 2);
-            scaleWidth = scaleWidth * 1.5;  //缩放到原来的*倍
-            scaleHeight = scaleHeight * 1.5;
-
-            Matrix matrix = new Matrix();   //矩阵，用于图片比例缩放
-            matrix.postScale((float)scaleWidth, (float)scaleHeight);    //设置高宽比例（三维矩阵）
-
-            //缩放后的BitMap
-            Bitmap newBmp = Bitmap.createBitmap(st.bmp, 0, 0, primaryWidth, primaryHeight, matrix, true);
-
-            //重新设置BitMap
-            st.mAdImageView.setImageBitmap(newBmp);
-            //scale(0.8,0.8);
-            displayAd();
-            st.mAdImageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(CommonUtil.getActivityContext(contextFirst), PauseImageAdWebViewActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("pauseImageAdUrl",getPauseAdImageUrl());
-                    intent.putExtras(bundle);
-                    CommonUtil.getActivityContext(contextFirst).startActivity(intent);
-                }
-            });
-        }
-
-
-        st.changeAdUIState();
-    }
-
-    public void displayAd(){
-
-        //原始大小
-        primaryWidth = bmp.getWidth();
-        primaryHeight = bmp.getHeight();
-        //初始比例为1
-        scaleWidth = scaleHeight = 1;
-        //st.mAdImageView.setImageBitmap(bmp);
-        // scale(2, 2);
-        scaleWidth = scaleWidth * 1.0;  //缩放到原来的*倍
-        scaleHeight = scaleHeight * 1.0;
-
-        Matrix matrix = new Matrix();   //矩阵，用于图片比例缩放
-        matrix.postScale((float)scaleWidth, (float)scaleHeight);    //设置高宽比例（三维矩阵）
-
-        //缩放后的BitMap
-        Bitmap newBmp = Bitmap.createBitmap(bmp, 0, 0, primaryWidth, primaryHeight, matrix, true);
-
-        //重新设置BitMap
-        mAdImageView.setImageBitmap(newBmp);
-    }
-    /**
-     * 缩放
-     */
-    private void scale(double  scale_width, double scale_height) {
-
-        //这种方法，有点不好是：如果图片大小超出屏幕会报错。
-        if((scale_width > 1 && scaleWidth * primaryWidth >= CommonUtil.getActivityContext(contextFirst).getWindowManager().getDefaultDisplay().getWidth())
-                || (scale_width > 1 && scale_height * primaryHeight >= CommonUtil.getActivityContext(contextFirst).getWindowManager().getDefaultDisplay().getHeight())){
-            //bt_bigger.setEnabled(false);
-        }else {
-            //bt_bigger.setEnabled(true);
-        }
-
-
-
-        scaleWidth = scaleWidth * scale_width;  //缩放到原来的*倍
-        scaleHeight = scaleHeight * scale_height;
-
-        Matrix matrix = new Matrix();   //矩阵，用于图片比例缩放
-        matrix.postScale((float)scaleWidth, (float)scaleHeight);    //设置高宽比例（三维矩阵）
-
-        //缩放后的BitMap
-        Bitmap newBmp = Bitmap.createBitmap(bmp, 0, 0, primaryWidth, primaryHeight, matrix, true);
-
-        //重新设置BitMap
-        mAdImageView.setImageBitmap(newBmp);
 
 
     }
+
+
+
     protected void loopSetProgressAndTime() {
         if (mProgressBar == null || mTotalTimeTextView == null || mCurrentTimeTextView == null) {
             return;
@@ -1710,62 +1237,15 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
      */
     @Override
     protected void touchDoubleUp() {
-     /*   if (isAdModel) {
-            Intent intent = new Intent(CommonUtil.getAppCompActivity(contextFirst), PauseImageAdWebViewActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("adUrl",getAdUrl());
-            intent.putExtras(bundle);
-            CommonUtil.getAppCompActivity(contextFirst).startActivity(intent);
-            return;
-        }*/
+
         if (mIfCurrentIsFullscreen && mLockCurScreen) {
             setViewShowState(mLockScreen, VISIBLE);
             return;
         }
-
         super.clickStartIcon();
     }
 
-    /**
-     * 广告期间不需要触摸
-     */
-    @Override
-    protected void touchSurfaceMove(float deltaX, float deltaY, float y) {
-        if (mChangePosition && isAdModel) {
-            return;
-        } else {
-            super.touchSurfaceMove(deltaX, deltaY, y);
-        }
-    }
 
-    /**
-     * 广告期间不需要触摸
-     */
-    @Override
-    protected void touchSurfaceMoveFullLogic(float absDeltaX, float absDeltaY) {
-        if ((absDeltaX > mThreshold || absDeltaY > mThreshold)) {
-            int screenWidth = CommonUtil.getScreenWidth(getContext());
-            if (isAdModel && absDeltaX >= mThreshold && Math.abs(screenWidth - mDownX) > mSeekEndOffset) {
-                //防止全屏虚拟按键
-                mChangePosition = true;
-                mDownPosition = getCurrentPositionWhenPlaying();
-            } else {
-                super.touchSurfaceMoveFullLogic(absDeltaX, absDeltaY);
-            }
-        }
-    }
-
-    /**
-     * 广告期间不需要触摸
-     */
-    @Override
-    protected void touchSurfaceUp() {
-        if (mChangePosition && isAdModel) {
-            return;
-        }
-        super.touchSurfaceUp();
-
-    }
 
     protected void clickStartIcon() {
         if (TextUtils.isEmpty(mUrl)) {
@@ -1826,193 +1306,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             layout_bottom.setVisibility(GONE);
             startButtonLogic();
         }
-    }
-
-    /**
-     * 播放下一集
-     *
-     * @return true表示还有下一集
-     */
-    public boolean playNext() {
-        if (mPlayPosition < (mUriList.size() - 1)) {
-            mPlayPosition += 1;
-            GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
-            MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
-            isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
-            System.out.println("是不是视频广告:"+isAdModel);
-            mSaveChangeViewTIme = 0;
-            setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);
-            if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
-                mTitleTextView.setText(gsyVideoModel.getTitle());
-            }
-            startPlayLogic();
-            return true;
-        }
-        return false;
-    }
-
-
-    /******************对外接口*******************/
-
-    /**
-     * 带片头广告的，setAdUp
-     *
-     * @param url
-     * @param cacheWithPlay
-     * @param position
-     * @return
-     */
-    public boolean setAdUp(ArrayList<GSYADVideoModel> url, boolean cacheWithPlay, int position) {
-        return setUp((ArrayList<GSYVideoModel>) url.clone(), cacheWithPlay, position);
-    }
-
-    /**
-     * 带片头广告的，setAdUp
-     *
-     * @param url
-     * @param cacheWithPlay
-     * @param position
-     * @param cachePath
-     * @return
-     */
-    public boolean setAdUp(ArrayList<GSYADVideoModel> url, boolean cacheWithPlay, int position, File cachePath) {
-        return setUp((ArrayList<GSYVideoModel>) url.clone(), cacheWithPlay, position, cachePath);
-    }
-
-    /**
-     * 带片头广告的，setAdUp
-     *
-     * @param url
-     * @param cacheWithPlay
-     * @param position
-     * @param cachePath
-     * @param mapHeadData
-     * @return
-     */
-    public boolean setAdUp(ArrayList<GSYADVideoModel> url, boolean cacheWithPlay, int position, File cachePath, Map<String, String> mapHeadData) {
-        return setUp((ArrayList<GSYVideoModel>) url.clone(), cacheWithPlay, position, cachePath, mapHeadData);
-    }
-
-
-
-    public static class GSYADVideoModel extends GSYVideoModel {
-        /**
-         * 正常
-         */
-        public static int TYPE_NORMAL = 0;
-
-        /**
-         * 广告
-         */
-        public static int TYPE_AD = 1;
-
-        /**
-         * 类型
-         */
-        private int mType = TYPE_NORMAL;
-
-        /**
-         * 是否跳过
-         */
-        private boolean isSkip;
-
-        /**
-         * @param url   播放url
-         * @param title 标题
-         * @param type  类型 广告还是正常类型
-         */
-        public GSYADVideoModel(String url, String title, int type) {
-            this(url, title, type, false);
-        }
-
-        /**
-         * @param url    播放url
-         * @param title  标题
-         * @param type   类型 广告还是正常类型
-         * @param isSkip 是否跳过
-         */
-        public GSYADVideoModel(String url, String title, int type, boolean isSkip) {
-            super(url, title);
-            this.mType = type;
-            this.isSkip = isSkip;
-        }
-
-        public int getType() {
-            return mType;
-        }
-
-        public void setType(int type) {
-            this.mType = type;
-        }
-
-        public boolean isSkip() {
-            return isSkip;
-        }
-
-        public void setSkip(boolean skip) {
-            isSkip = skip;
-        }
-
-        @Override
-        public String toString() {
-            return "GSYADVideoModel{" +
-                    "mType=" + mType +
-                    ", isSkip=" + isSkip +
-                    ", mUrl=" + mUrl +
-                    '}';
-        }
-    }
-
-
-    public class TimeCount extends CountDownTimer {
-
-        public TimeCount(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-
-            mAdimage_skip.setVisibility(VISIBLE);
-        //    surface_container.setBackground(getResources().getDrawable(R.drawable.xxx1));
-           // setBackground(getResources().getDrawable(R.drawable.xxx1));
-          //  surface_container.setBackground(getResources().getDrawable(R.drawable.xxx1));
-            mAdimage_skip.setText(millisUntilFinished / 1000 + "秒 跳过");
-
-            changeAdUIState();
-        //    getSurface().setBackground(getResources().getDrawable(R.drawable.xxx1));
-
-        }
-
-        @Override
-        public void onFinish() {
-            isFinish = true;
-            System.out.println("结束了");
-            mAdimage_skip.setVisibility(GONE);
-            isImageAd = false;
-            if(isIfCurrentIsFullscreen()){
-                System.out.println("全屏片头图片广告结束");
-                getSurface().setBackgroundColor(Color.BLUE);
-                System.out.println("有没有urls0:" + urls.size());
-
-                ((MySelfGSYVideoPlayer) getCurrentPlayer()).setAdUp(urls,true,0);
-                ((MySelfGSYVideoPlayer) getCurrentPlayer()).isImageAd = false;
-
-                getCurrentPlayer().startPlayLogic();
-                return;
-               //startPlayLogic();
-            }
-            getSurface().setBackgroundColor(Color.BLACK);
-            /*setAdUp(urls,true,0);
-            startPlayLogic();*/
-           // getSurface().setBackgroundColor(Color.BLACK);
-            //setBackground(getResources().getDrawable(R.drawable.xxx1));
-            System.out.println("有没有urls1:" + urls.size());
-            setAdUp(urls,true,0);
-            startPlayLogic();
-        }
-
     }
 
 

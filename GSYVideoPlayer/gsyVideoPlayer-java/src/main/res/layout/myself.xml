@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000">
-
+    android:layout_height="wrap_content"
+    android:background="#000000"
+    >
     <FrameLayout
         android:id="@+id/surface_container"
         android:layout_centerHorizontal="true"
@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </FrameLayout>
-
     <RelativeLayout
         android:id="@+id/thumb"
         android:layout_width="match_parent"
@@ -23,71 +22,72 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="-1dp"
-        android:layout_marginLeft="-1dp"
-        android:layout_marginTop="-5dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginLeft="-2dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginBottom="0dp"
         android:background="#000000"
         android:scaleType="fitCenter" />
-
     <LinearLayout
-            android:id="@+id/all"
+        android:id="@+id/all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+        <!--进度条布局-->
+        <LinearLayout
+            android:id="@+id/layout_bottom"
+            android:layout_below="@id/surface_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true">
-            <!--进度条布局-->
-            <LinearLayout
-                android:id="@+id/layout_bottom"
-                android:layout_below="@id/surface_container"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="visible">
-                <ImageView
-                    android:id="@+id/playstart"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:scaleType="centerInside"
-                    android:layout_marginLeft="12dp"
-                    android:src="@drawable/vedio_stop_icon"/>
-                <TextView
-                    android:id="@+id/current"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:text="00:00"
-                    android:textColor="#ffffff" />
-                <SeekBar
-                    android:id="@+id/progress"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1.0"
-                    android:background="@null"
-                    android:max="100"
-                    android:maxHeight="2dp"
-                    android:minHeight="2dp"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp"
-                    android:progressDrawable="@drawable/video_self_progress"
-                    android:thumb="@drawable/video_seek_thumb" />
-                <TextView
-                    android:id="@+id/total"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="00:00"
-                    android:textColor="#ffffff" />
-                <ImageView
-                    android:id="@+id/fullscreen"
-                    android:layout_width="50dp"
-                    android:layout_height="30dp"
-                    android:scaleType="center"
-                    android:src="@drawable/vedio_full_screen_icon"/>
-            </LinearLayout>
+            android:layout_height="40dp"
+
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/playstart"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:scaleType="centerInside"
+                android:layout_marginLeft="12dp"
+                android:src="@drawable/vedio_stop_icon"/>
+            <TextView
+                android:id="@+id/current"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="00:00"
+                android:textColor="#ffffff" />
+            <SeekBar
+                android:id="@+id/progress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.0"
+                android:background="@null"
+                android:max="100"
+                android:maxHeight="2dp"
+                android:minHeight="2dp"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:progressDrawable="@drawable/video_self_progress"
+                android:thumb="@drawable/video_seek_thumb" />
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+
+                android:textColor="#ffffff" />
+            <ImageView
+                android:id="@+id/fullscreen"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:scaleType="center"
+                android:src="@drawable/vedio_full_screen_icon"/>
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/controllerbottom"
             android:layout_width="match_parent"
@@ -101,7 +101,7 @@
                 android:layout_marginBottom="15dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/vedio_stop_icon"
-              />
+                />
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="30dp"
@@ -147,7 +147,8 @@
                     android:textSize="12sp"
                     android:hint="弹幕走一波"
                     android:textColorHint="#3F000000"
-                    android:visibility="visible"/>
+                    android:visibility="visible"
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -266,6 +267,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:textStyle="bold"
+
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
 
@@ -274,13 +276,13 @@
                 android:layout_height="wrap_content"
                 android:gravity="right|center_vertical">
                 <ImageView
-                android:id="@+id/barrage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/veido_barrage_icon_nl"
-                android:layout_gravity="right|center_vertical"
-                android:visibility="gone"
-                android:paddingLeft="30dp"/>
+                    android:id="@+id/barrage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/veido_barrage_icon_nl"
+                    android:layout_gravity="right|center_vertical"
+                    android:visibility="gone"
+                    android:paddingLeft="30dp" />
                 <ImageView
                     android:id="@+id/share"
                     android:layout_width="wrap_content"
@@ -288,7 +290,8 @@
                     android:src="@drawable/function_share_icon"
                     android:layout_gravity="right|center_vertical"
                     android:visibility="gone"
-                    android:paddingLeft="30dp"/>
+                    android:paddingLeft="30dp"
+                    />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -303,80 +306,22 @@
 
     </LinearLayout>
     <!--刚进来的缓冲动画-->
-   <!-- <moe.codeest.enviews.ENDownloadView
-        android:id="@+id/loading"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="invisible" />
-    &lt;!&ndash;视频播放时的暂停，继续播放的方块背景&ndash;&gt;
-    <moe.codeest.enviews.ENPlayView
-        android:id="@+id/start"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="centWer_vertical"
-        android:visibility="gone"/>-->
-    <FrameLayout
-        android:id="@+id/adFrameLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity = "center_vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/adImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity = "center_vertical"
-            android:scaleType="fitCenter"
-           />
-        <FrameLayout
-            android:layout_gravity="left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/ad"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:visibility="gone"
-                android:background="@drawable/ad_tag"
-                />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_gravity="right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/ad_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:visibility="gone"
-                android:background="@drawable/ad_close_icon" />
-        </FrameLayout>
-    </FrameLayout>
-
-
-
-
-    <!--<WebView
-        android:id="@+id/webview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />-->
-
+    <!-- <moe.codeest.enviews.ENDownloadView
+         android:id="@+id/loading"
+         android:layout_width="28dp"
+         android:layout_height="28dp"
+         android:layout_centerHorizontal="true"
+         android:layout_centerVertical="true"
+         android:visibility="invisible" />
+     &lt;!&ndash;视频播放时的暂停，继续播放的方块背景&ndash;&gt;
+     <moe.codeest.enviews.ENPlayView
+         android:id="@+id/start"
+         android:layout_width="60dp"
+         android:layout_height="60dp"
+         android:layout_centerHorizontal="true"
+         android:layout_centerVertical="true"
+         android:layout_gravity="centWer_vertical"
+         android:visibility="gone"/>-->
     <LinearLayout
         android:id="@+id/replay"
         android:layout_width="wrap_content"
@@ -386,24 +331,24 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:visibility="gone">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/newstart"
-        android:src="@drawable/vedio_default_play_icon"
-        android:visibility="visible"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/newstart"
+            android:src="@drawable/vedio_default_play_icon"
+            android:visibility="visible"/>
 
-    <!--重播文字提示-->
-    <TextView
-        android:id="@+id/replay_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/newstart"
-        android:text=""
-        android:layout_marginLeft="10dp"
-        android:textColor="#ffffff"
-        android:textSize="12sp"
-        android:visibility="invisible" />
+        <!--重播文字提示-->
+        <TextView
+            android:id="@+id/replay_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/newstart"
+            android:text=""
+            android:layout_marginLeft="10dp"
+            android:textColor="#ffffff"
+            android:textSize="12sp"
+            android:visibility="invisible" />
     </LinearLayout>
     <ImageView
         android:id="@+id/small_close"
@@ -417,15 +362,15 @@
 
     <!--锁屏按钮-->
     <ImageView
-    android:id="@+id/lock_screen"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_centerVertical="true"
-    android:layout_marginLeft="50dp"
-    android:scaleType="center"
-    android:visibility="gone"
-    android:src="@drawable/vedio_lock_no_icon" />
+        android:id="@+id/lock_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="50dp"
+        android:scaleType="center"
+        android:visibility="gone"
+        android:src="@drawable/vedio_lock_no_icon" />
     <ImageView
         android:id="@+id/pan"
         android:layout_width="30dp"
@@ -437,64 +382,4 @@
         android:layout_marginTop="-5dp"
         android:visibility="gone"
         android:src="@drawable/vedio_sent_barrage_icon" />
-
-    <LinearLayout
-        android:layout_width="130dp"
-        android:layout_height="28dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/ad_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/video_jump_btn_bg"
-            android:paddingBottom="4dp"
-            android:paddingLeft="10dp"
-            android:text="10"
-            android:textColor="#FFFFFF"/>
-
-        <TextView
-            android:id="@+id/jump_ad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/video_jump_btn_bg"
-            android:paddingBottom="4dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="4dp"
-            android:text="VIP可关闭广告"
-            android:textColor="#FFFFFF" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ad_close_icon2"
-                android:visibility="gone"
-                />
-    </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/adimage_skip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/video_jump_btn_bg"
-        android:paddingBottom="4dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="4dp"
-        android:text="10秒 跳过广告"
-        android:textColor="#FFFFFF"
-        android:visibility="gone" />
 </RelativeLayout>
-
-
