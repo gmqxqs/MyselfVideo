@@ -33,7 +33,7 @@ public abstract class GSYTextureRenderView extends FrameLayout implements IGSYSu
     protected GSYRenderView mTextureView;
 
     //渲染控件父类
-    protected ViewGroup mTextureViewContainer;
+    public  ViewGroup mTextureViewContainer;
 
     //满屏填充暂停为徒
     protected Bitmap mFullPauseBitmap;

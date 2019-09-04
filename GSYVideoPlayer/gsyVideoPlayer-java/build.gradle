@@ -5,6 +5,7 @@ android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
     compileSdkVersion globalConfiguration.androidCompileSdkVersion
     buildToolsVersion globalConfiguration.androidBuildToolsVersion
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
 
@@ -43,6 +44,7 @@ dependencies {
     //api project(':gsyVideoPlayer-base')
     api "com.shuyu:gsyVideoPlayer-base:$gsyVideoVersion"
     api "com.shuyu:gsyvideoplayer-androidvideocache:$gsyVideoVersion"
+    compile 'org.apache.httpcomponents:httpcore:4.4.2'
 
 }
 

@@ -78,7 +78,7 @@ public class IjkExo2MediaPlayer extends AbstractMediaPlayer implements Player.Ev
     /**
      * 是否开启缓存
      */
-    protected boolean isCache = false;
+    protected boolean isCache = true;
     /**
      * dataSource等的帮组类
      */
@@ -150,6 +150,7 @@ public class IjkExo2MediaPlayer extends AbstractMediaPlayer implements Player.Ev
     @Override
     public void setDataSource(Context context, Uri uri) {
         mDataSource = uri.toString();
+
         mMediaSource = mExoHelper.getMediaSource(mDataSource, isPreview, isCache, isLooping, mCacheDir, mOverrideExtension);
     }
 
@@ -358,7 +359,6 @@ public class IjkExo2MediaPlayer extends AbstractMediaPlayer implements Player.Ev
                         }
                         if (mSurface != null)
                             mInternalPlayer.setVideoSurface(mSurface);
-
                         mInternalPlayer.prepare(mMediaSource);
                         mInternalPlayer.setPlayWhenReady(false);
                     }

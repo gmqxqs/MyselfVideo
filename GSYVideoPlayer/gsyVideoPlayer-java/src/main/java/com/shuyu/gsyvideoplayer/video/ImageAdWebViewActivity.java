@@ -1,10 +1,10 @@
 package com.shuyu.gsyvideoplayer.video;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.KeyEvent;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -12,9 +12,7 @@ import android.webkit.WebViewClient;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.shuyu.gsyvideoplayer.R;
-
-public class MyWebViewActivity extends AppCompatActivity {
+public class ImageAdWebViewActivity extends Activity {
     WebView webView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,7 +21,7 @@ public class MyWebViewActivity extends AppCompatActivity {
         webView = new WebView(this);
         System.out.println("webView:"+webView);
         Intent intent = getIntent();
-        String adUrl = intent.getStringExtra("adUrl");
+        String adUrl = intent.getStringExtra("ImageAdUrl");
         //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
         webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -73,6 +71,17 @@ public class MyWebViewActivity extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(true);
         webView.loadUrl(adUrl);
         setContentView(webView);
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+            webView.goBack();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
 
     }
 }

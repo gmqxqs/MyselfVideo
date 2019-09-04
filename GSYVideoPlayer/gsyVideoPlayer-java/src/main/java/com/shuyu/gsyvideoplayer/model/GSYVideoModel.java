@@ -6,7 +6,7 @@ package com.shuyu.gsyvideoplayer.model;
 
 public class GSYVideoModel {
 
-    private String mUrl;
+    protected String mUrl;
     private String mTitle;
 
     public GSYVideoModel(String url, String title) {

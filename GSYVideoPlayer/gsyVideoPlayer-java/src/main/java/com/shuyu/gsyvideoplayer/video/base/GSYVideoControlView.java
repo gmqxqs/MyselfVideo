@@ -147,7 +147,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
     protected ImageView mFullscreenButton;
 
     //返回按键
-    protected ImageView mBackButton;
+    public ImageView mBackButton;
 
     //锁定图标
     protected ImageView mLockScreen;
@@ -513,6 +513,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     cancelDismissControlViewTimer();
+
                 case MotionEvent.ACTION_MOVE:
                     cancelProgressTimer();
                     ViewParent vpdown = getParent();
@@ -520,6 +521,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                         vpdown.requestDisallowInterceptTouchEvent(true);
                         vpdown = vpdown.getParent();
                     }
+
                     break;
                 case MotionEvent.ACTION_UP:
                     startDismissControlViewTimer();
@@ -532,6 +534,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                         vpup = vpup.getParent();
                     }
                     mBrightnessData = -1f;
+
                     break;
             }
         }

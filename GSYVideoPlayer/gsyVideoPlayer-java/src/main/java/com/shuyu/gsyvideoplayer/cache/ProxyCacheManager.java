@@ -9,10 +9,21 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.file.Md5FileNameGenerator;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.FileUtils;
+import com.shuyu.gsyvideoplayer.utils.HttpConnect;
+import com.shuyu.gsyvideoplayer.utils.Md5Utils;
 import com.shuyu.gsyvideoplayer.utils.StorageUtils;
+import org.apache.http.HttpResponse;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -26,7 +37,6 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
 
     //视频代理
     protected HttpProxyCacheServer proxy;
-
 
     protected File mCacheDir;
 
@@ -56,25 +66,52 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
         }
     }
 
+
+
     @Override
     public void doCacheLogic(Context context, IMediaPlayer mediaPlayer, String originUrl, Map<String, String> header, File cachePath) {
         String url = originUrl;
+     //   checkURlBTS(url);
         userAgentHeadersInjector.mMapHeadData.clear();
         if (header != null) {
             userAgentHeadersInjector.mMapHeadData.putAll(header);
         }
+       /* if(url.startsWith("http") && !url.contains("127.0.0.1") && url.contains(".m3u8")){
+            String tempUrl = Md5Utils.md5(url);
+            System.out.println("tempUrl:" + tempUrl);
+            String configRoot = "/storage/emulated/0/Android/data/vip.maogou.app/files/";
+            String folder = configRoot + tempUrl;
+            System.out.println("folder:" +folder);
+            File file = new File(folder);
+            ArrayList<String> list = new ArrayList<>();
+            if(file.exists()){
+                 try{
+                     url = folder + "/index.m3u8";
+                    mediaPlayer.setDataSource(context, Uri.parse(url), header);
+                    return;
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                return;
+            } else{
+                System.out.println("不存在");
+            }
+        }*/
+
+
         if (url.startsWith("http") && !url.contains("127.0.0.1") && !url.contains(".m3u8")) {
             HttpProxyCacheServer proxy = getProxy(context.getApplicationContext(), cachePath);
             if (proxy != null) {
                 //此处转换了url，然后再赋值给mUrl。
                 url = proxy.getProxyUrl(url);
                 mCacheFile = (!url.startsWith("http"));
+
                 //注册上缓冲监听
                 if (!mCacheFile) {
                     proxy.registerCacheListener(this, originUrl);
                 }
             }
-        } else if ((!url.startsWith("http") && !url.startsWith("rtmp")
+        }   else if ((!url.startsWith("http") && !url.startsWith("rtmp")
                 && !url.startsWith("rtsp") && !url.contains(".m3u8"))) {
             mCacheFile = true;
         }
@@ -85,6 +122,11 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
         }
 
     }
+
+
+
+
+
 
     @Override
     public void clearCache(Context context, File cachePath, String url) {

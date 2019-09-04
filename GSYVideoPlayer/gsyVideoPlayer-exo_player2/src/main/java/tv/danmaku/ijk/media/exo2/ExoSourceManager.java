@@ -37,6 +37,7 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.NavigableSet;
 
@@ -108,6 +109,7 @@ public class ExoSourceManager {
                                 getHttpDataSourceFactory(mAppContext, preview))).createMediaSource(contentUri);
                 break;
             case C.TYPE_HLS:
+
                 mediaSource = new HlsMediaSource.Factory(getDataSourceFactoryCache(mAppContext, cacheEnable, preview, cacheDir)).createMediaSource(contentUri);
                 break;
             case TYPE_RTMP:
@@ -167,12 +169,15 @@ public class ExoSourceManager {
      */
     public static synchronized Cache getCacheSingleInstance(Context context, File cacheDir) {
         String dirs = context.getCacheDir().getAbsolutePath();
+        System.out.println("dirs:" + dirs);
         if (cacheDir != null) {
             dirs = cacheDir.getAbsolutePath();
         }
         if (mCache == null) {
             String path = dirs + File.separator + "exo";
+            System.out.println("path:" + path);
             boolean isLocked = SimpleCache.isCacheFolderLocked(new File(path));
+            System.out.println("isLocked:" + isLocked);
             if (!isLocked) {
                 mCache = new SimpleCache(new File(path), new LeastRecentlyUsedCacheEvictor(DEFAULT_MAX_SIZE));
             }
@@ -300,6 +305,11 @@ public class ExoSourceManager {
             String key = CacheUtil.generateKey(Uri.parse(url));
             if (!TextUtils.isEmpty(key)) {
                 NavigableSet<CacheSpan> cachedSpans = cache.getCachedSpans(key);
+                Iterator interator2=cachedSpans.iterator();
+                while(interator2.hasNext()){
+                    CacheSpan cacheSpan=(CacheSpan)interator2.next();
+                    System.out.println("cacheSpan name =="+cacheSpan);
+                }
                 if (cachedSpans.size() == 0) {
                     isCache = false;
                 } else {
@@ -307,6 +317,7 @@ public class ExoSourceManager {
                     long currentLength = 0;
                     for (CacheSpan cachedSpan : cachedSpans) {
                         currentLength += cache.getCachedLength(key, cachedSpan.position, cachedSpan.length);
+                        System.out.println("currentLength:"+currentLength);
                     }
                     isCache = currentLength >= contentLength;
                 }

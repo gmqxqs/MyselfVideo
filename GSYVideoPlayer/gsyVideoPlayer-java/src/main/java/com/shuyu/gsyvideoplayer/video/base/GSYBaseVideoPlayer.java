@@ -39,7 +39,7 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showSupportActionBar;
 public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
 
     //保存系统状态ui
-    protected int mSystemUiVisibility;
+    public int mSystemUiVisibility;
 
     //当前item框的屏幕位置
     protected int[] mListItemRect;
@@ -60,7 +60,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     protected boolean mRotateViewAuto = true;
 
     //旋转使能后是否跟随系统设置
-    protected boolean mRotateWithSystem = true;
+    public boolean mRotateWithSystem = true;
 
     //当前全屏是否锁定全屏
     protected boolean mLockLand = false;
@@ -75,7 +75,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     protected View mSmallClose;
 
     //旋转工具类
-    protected OrientationUtils mOrientationUtils;
+    public  OrientationUtils mOrientationUtils;
 
     //全屏返回监听，如果设置了，默认返回无效
     protected View.OnClickListener mBackFromFullScreenListener;
@@ -170,14 +170,14 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     }
 
 
-    private ViewGroup getViewGroup() {
+   public ViewGroup getViewGroup() {
         return (ViewGroup) (CommonUtil.scanForActivity(getContext())).findViewById(Window.ID_ANDROID_CONTENT);
     }
 
     /**
      * 移除没用的
      */
-    private void removeVideo(ViewGroup vp, int id) {
+    public void removeVideo(ViewGroup vp, int id) {
         View old = vp.findViewById(id);
         if (old != null) {
             if (old.getParent() != null) {
@@ -292,14 +292,14 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     /**
      * 全屏
      */
-    protected void resolveFullVideoShow(Context context, final GSYBaseVideoPlayer gsyVideoPlayer, final FrameLayout frameLayout) {
+    public void resolveFullVideoShow(Context context, final GSYBaseVideoPlayer gsyVideoPlayer, final FrameLayout frameLayout) {
         LayoutParams lp = (LayoutParams) gsyVideoPlayer.getLayoutParams();
         lp.setMargins(0, 0, 0, 0);
         lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
         lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
         lp.gravity = Gravity.CENTER;
         gsyVideoPlayer.setLayoutParams(lp);
-        gsyVideoPlayer.setIfCurrentIsFullscreen(true);
+
         mOrientationUtils = new OrientationUtils((Activity) context, gsyVideoPlayer);
         mOrientationUtils.setEnable(isRotateViewAuto());
         mOrientationUtils.setRotateWithSystem(mRotateWithSystem);
@@ -375,7 +375,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
      * 退出window层播放全屏效果
      */
     @SuppressWarnings("ResourceType")
-    protected void clearFullscreenLayout() {
+    public void clearFullscreenLayout() {
         if(!mFullAnimEnd) {
             return;
         }
@@ -401,24 +401,20 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
             GSYVideoPlayer gsyVideoPlayer = (GSYVideoPlayer) oldF;
             gsyVideoPlayer.mIfCurrentIsFullscreen = false;
         }
-
         postDelayed(new Runnable() {
             @Override
             public void run() {
                 backToNormal();
             }
         }, delay);
-
     }
 
     /**
      * 回到正常效果
      */
     @SuppressWarnings("ResourceType")
-    protected void backToNormal() {
-
+    public void backToNormal() {
         final ViewGroup vp = getViewGroup();
-
         final View oldF = vp.findViewById(getFullId());
         final GSYVideoPlayer gsyVideoPlayer;
         if (oldF != null) {
@@ -495,7 +491,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     /**
      * 是否根据autoFullSize调整lockLand
      */
-    protected boolean isLockLandByAutoFullSize() {
+    public boolean isLockLandByAutoFullSize() {
         boolean isLockLand = mLockLand;
         if (isAutoFullWithSize()) {
             isLockLand = true;
@@ -581,7 +577,6 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     @SuppressWarnings("ResourceType, unchecked")
     public GSYBaseVideoPlayer startWindowFullscreen(final Context context, final boolean actionBar, final boolean statusBar) {
 
-
         mSystemUiVisibility = ((Activity) context).getWindow().getDecorView().getSystemUiVisibility();
 
         hideSupportActionBar(context, actionBar, statusBar);
@@ -637,7 +632,6 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
             gsyVideoPlayer.setId(getFullId());
             gsyVideoPlayer.setIfCurrentIsFullscreen(true);
             gsyVideoPlayer.setVideoAllCallBack(mVideoAllCallBack);
-
             cloneParams(this, gsyVideoPlayer);
 
             if (gsyVideoPlayer.getFullscreenButton() != null) {
@@ -645,11 +639,11 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
                 gsyVideoPlayer.getFullscreenButton().setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mBackFromFullScreenListener == null) {
-                            clearFullscreenLayout();
-                        } else {
-                            mBackFromFullScreenListener.onClick(v);
-                        }
+                    if (mBackFromFullScreenListener == null) {
+                        clearFullscreenLayout();
+                    } else {
+                        mBackFromFullScreenListener.onClick(v);
+                    }
                     }
                 });
             }
@@ -660,8 +654,10 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
                     @Override
                     public void onClick(View v) {
                         if (mBackFromFullScreenListener == null) {
+                            System.out.println("mBackFromFullScreenListener为空");
                             clearFullscreenLayout();
                         } else {
+                            System.out.println("mBackFromFullScreenListener不为空");
                             mBackFromFullScreenListener.onClick(v);
                         }
                     }
@@ -889,9 +885,11 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
      */
     public GSYBaseVideoPlayer getCurrentPlayer() {
         if (getFullWindowPlayer() != null) {
+            System.out.println("获得全屏播放器");
             return getFullWindowPlayer();
         }
         if (getSmallWindowPlayer() != null) {
+            System.out.println("获得小屏播放器");
             return getSmallWindowPlayer();
         }
         return this;
