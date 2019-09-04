@@ -182,6 +182,8 @@ public class MyselfActivity extends AppCompatActivity {
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(videoOptionModel);
+        GSYVideoManager.instance().setOptionModelList(list);
+      //  PlayerFactory.setPlayManager(Exo2PlayerManager.class);
         videoPlayer.startPlayLogic();
 
     }
