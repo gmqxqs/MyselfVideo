@@ -1,6 +1,7 @@
 package com.example.gsyvideoplayer.myself;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import androidx.core.widget.NestedScrollView;
@@ -21,6 +22,7 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.cache.ProxyCacheManager;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
+import com.shuyu.gsyvideoplayer.model.GSYVideoModel;
 import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
@@ -59,6 +61,7 @@ public class MyselfActivity extends AppCompatActivity {
     public String getUrl(){
         return url;
     }
+    public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -81,8 +84,24 @@ public class MyselfActivity extends AppCompatActivity {
        // File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
       // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
       //  url = "https://apd-f8910e1356000a77700d03e763a2f1de.v.smtcdns.com/moviets.tc.qq.com/AzbLMHFlwekSJjr_iNj8ZrO-6pjH54wMP0_YYtp6b95Q/uwMROfz2r5xgoaQXGdGnC2df64gVTKzl5C_X6A3JOVT0QIb-/oaIHHmVKVBBoOBA7WtDx9YsscU0QPUuyvoR-GBor2VlsxphBvUem7dEaqWk-knFb0MA6aZzGCNG4VSIoPH5VK_5NjmaTKSb_YWB8_wFQBgj_PSQILC5bEl9-wM3BEzfNJfiarEDgfg2nZGKGFQPR7JHshfjFiMyZnz8Jm6BOsJw/w0031s4gikk.321004.ts.m3u8?ver=4";
-        url = "http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
-        GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
+        String tempUrl = "http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
+        String url = tempUrl.substring(tempUrl.indexOf("http"),tempUrl.lastIndexOf("http"));
+        String newUrl = videoPlayer.playUrl(url);
+
+        urls = videoPlayer.getUrls();
+        if(url.equals(newUrl)){
+            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(url,
+                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
+        } else{
+            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(newUrl,
+                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
+        }
+        urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel("http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8",
+                "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
+        urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel("http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8",
+                "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
+
+    /*    GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption
                 .setIsTouchWiget(true)
                 .setRotateViewAuto(false)
@@ -153,8 +172,18 @@ public class MyselfActivity extends AppCompatActivity {
                         Debuger.printfLog(" progress " + progress + " secProgress " + secProgress + " currentPosition " + currentPosition + " duration " + duration);
                     }
                 })
-                .build(videoPlayer);
+                .build(videoPlayer);*/
 
+
+
+
+
+
+
+
+
+        videoPlayer.setAutoFullWithSize(true);
+        videoPlayer.setShowFullAnimation(false);
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,8 +206,8 @@ public class MyselfActivity extends AppCompatActivity {
         list.add(videoOptionModel);
         GSYVideoManager.instance().setOptionModelList(list);
         PlayerFactory.setPlayManager(Exo2PlayerManager.class);
+        videoPlayer.setAdUp(urls, true, 0);
         videoPlayer.startPlayLogic();
-
     }
 
 

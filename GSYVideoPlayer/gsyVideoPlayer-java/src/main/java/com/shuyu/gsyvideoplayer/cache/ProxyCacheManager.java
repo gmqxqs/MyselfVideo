@@ -77,47 +77,7 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
             userAgentHeadersInjector.mMapHeadData.putAll(header);
         }
 
-        if(url.startsWith("http") && !url.contains("127.0.0.1") && url.contains(".m3u8")){
-            String endUrl = url.substring(url.lastIndexOf("/")+1,url.length());
-            System.out.println("endUrl:" + endUrl);
-            String tempUrl = Md5Utils.md5(url);
-            System.out.println("tempUrl:" + tempUrl);
-            String configRoot = context.getExternalFilesDir(null).getPath();
-            System.out.println("configRoot:" + configRoot);
-            String testUrl = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files";
-            String folder = testUrl + "/" + tempUrl;
-         //   String folder = configRoot + "/"+tempUrl;
-            System.out.println("folder:" +folder);
-            File file = new File(folder);
-            if(file.exists()){
-                 try{
-                     url = folder + "/"+ endUrl;
-                    // url = folder;
-                     System.out.println("downurl:"+url);
-                     File downFile = new File(url);
-                     if(downFile.exists()){
-                         System.out.println("下载文件地址:" + url);
-                         System.out.println("新:"+ Uri.parse(url));
-                         try{
-                             mediaPlayer.setDataSource(context, Uri.parse(url),header);
-                         }catch (IOException e){
-                             System.out.println("失效");
-                         }
 
-                         return;
-                     } else{
-                         System.out.println("下载文件不存在");
-                     }
-
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-          //      return;
-            } else{
-                System.out.println("不存在");
-            }
-        }
 
 
         if (url.startsWith("http") && !url.contains("127.0.0.1") && !url.contains(".m3u8")) {

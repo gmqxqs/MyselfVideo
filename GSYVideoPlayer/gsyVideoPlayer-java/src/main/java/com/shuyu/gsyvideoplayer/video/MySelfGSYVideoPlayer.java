@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -35,13 +36,16 @@ import com.shuyu.gsyvideoplayer.MyselfView.BatteryView;
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
 import com.shuyu.gsyvideoplayer.model.GSYVideoModel;
+import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 
+import com.shuyu.gsyvideoplayer.utils.Md5Utils;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,6 +55,7 @@ import java.util.Map;
 
 import moe.codeest.enviews.ENDownloadView;
 import moe.codeest.enviews.ENPlayView;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showNavKey;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showSupportActionBar;
@@ -96,6 +101,12 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected BatteryView batteryView;
     protected  LinearLayout mDanmu;
     protected  EditText edit_danmu;
+    protected List<GSYVideoModel> mUriList = new ArrayList<>();
+    protected boolean isDown = false;
+    public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
+    public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> getUrls(){
+        return urls;
+    }
 
 
 
@@ -198,12 +209,12 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 clickStartIcon();
             }
         });
-
         newstart.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                // showWifiDialog();
-                startPlayLogic();
+                //startPlayLogic();
+                playNext(0);
                 // startButtonLogic();
             }
         });
@@ -349,6 +360,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         cancelProgressTimer();
         // resetProgressAndTime();
     }
+
     @Override
     public  void  onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
             System.out.println("进度条改变");
@@ -358,6 +370,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 int time = seekBar.getProgress() * getDuration() / 100;
 
                 mBottomProgressBar.setProgress(seekBar.getProgress());
+                System.out.println("seekBarProgress():"+seekBar.getProgress());
                 mProgressBar.setProgress(seekBar.getProgress());
                // setTextAndProgress(seekBar.getProgress());
                 mCurrentTimeTextView.setText(CommonUtil.stringForTime(time));
@@ -817,6 +830,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(controllerbottom, GONE);
         setViewShowState(mTimeandbarray,GONE);
         setViewShowState(newstart, VISIBLE);
+
         setViewShowState(replay, VISIBLE);
         setViewShowState(replay_text, VISIBLE);
         setViewShowState(mLoadingProgressBar, GONE);
@@ -833,12 +847,27 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     @Override
     protected void changeUiToError() {
         Debuger.printfLog("changeUiToError");
-        System.out.println("changeUiToError");
+        String time = mCurrentTimeTextView.getText().toString();
+        System.out.println("time:"+time);
+        SimpleDateFormat sdf =   new SimpleDateFormat(  "mm:ss " );
+        Date date = new Date();
+        try{
+          date = sdf.parse( time);
+        } catch (Exception e){
+
+        }
+
         setViewShowState(mTopContainer, GONE);
         setViewShowState(mBottomContainer, GONE);
         setViewShowState(controllerbottom, GONE);
         setViewShowState(mTimeandbarray,GONE);
         setViewShowState(newstart, VISIBLE);
+        int position = getCurrentPositionWhenPlaying();
+        System.out.println("错误的位置:"+position);
+        if(isDown){
+            setViewShowState(newstart,GONE);
+            playNext(position);
+        }
         setViewShowState(replay, VISIBLE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, GONE);
@@ -1215,9 +1244,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         final   MySelfGSYVideoPlayer sf = (MySelfGSYVideoPlayer) from;
         MySelfGSYVideoPlayer st = (MySelfGSYVideoPlayer) to;
         st.surface_container =sf.surface_container;
-
-
-
+        st.mUriList = sf.mUriList;
+        st.urls = sf.urls;
+        st.isDown = sf.isDown;
     }
 
 
@@ -1310,6 +1339,276 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
     }
 
+
+    public String playUrl(String originUrl) {
+        String url = originUrl;
+        if (url.startsWith("http") && !url.contains("127.0.0.1") && url.contains(".m3u8")) {
+            String endUrl = url.substring(url.lastIndexOf("/") + 1, url.length());
+            System.out.println("endUrl:" + endUrl);
+            String tempUrl = Md5Utils.md5(url);
+            System.out.println("tempUrl:" + tempUrl);
+            String configRoot = contextFirst.getExternalFilesDir(null).getPath();
+            System.out.println("configRoot:" + configRoot);
+            String testUrl = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files";
+            String folder = testUrl + "/" + tempUrl;
+            //   String folder = configRoot + "/"+tempUrl;
+            System.out.println("folder:" + folder);
+            File file = new File(folder);
+            if (file.exists()) {
+                try {
+                    url = folder + "/" + endUrl;
+                    // url = folder;
+                    System.out.println("downurl:" + url);
+                    File downFile = new File(url);
+                    if (downFile.exists()) {
+                        System.out.println("下载文件地址:" + url);
+                        System.out.println("新:" + Uri.parse(url));
+                        return url;
+                    } else {
+                        System.out.println("下载文件不存在");
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                System.out.println("不存在");
+            }
+        }
+        return  originUrl;
+
+    }
+
+
+    public static class GSYADVideoModel extends GSYVideoModel {
+        /**
+         * 正常
+         */
+        public static int TYPE_NORMAL = 0;
+
+        /**
+         * 广告
+         */
+        public static int TYPE_AD = 1;
+
+        /**
+         * 本地
+         */
+        public static int TYPE_DOWN = 2;
+
+        /**
+         * 类型
+         */
+        private int mType = TYPE_NORMAL;
+
+        /**
+         * 是否跳过
+         */
+        private boolean isSkip;
+
+        /**
+         * @param url   播放url
+         * @param title 标题
+         * @param type  类型 广告还是正常类型
+         */
+        public GSYADVideoModel(String url, String title, int type) {
+            this(url, title, type, false);
+        }
+
+        /**
+         * @param url    播放url
+         * @param title  标题
+         * @param type   类型 广告还是正常类型
+         * @param isSkip 是否跳过
+         */
+        public GSYADVideoModel(String url, String title, int type, boolean isSkip) {
+            super(url, title);
+            this.mType = type;
+            this.isSkip = isSkip;
+        }
+
+        public int getType() {
+            return mType;
+        }
+
+        public void setType(int type) {
+            this.mType = type;
+        }
+
+        public boolean isSkip() {
+            return isSkip;
+        }
+
+        public void setSkip(boolean skip) {
+            isSkip = skip;
+        }
+
+        @Override
+        public String toString() {
+            return "GSYADVideoModel{" +
+                    "mType=" + mType +
+                    ", isSkip=" + isSkip +
+                    ", mUrl=" + mUrl +
+                    '}';
+        }
+    }
+
+
+
+    /**
+     * 如果需要片头广告的，请用setAdUp
+     *
+     * @param url           播放url
+     * @param cacheWithPlay 是否边播边缓存
+     * @param position      需要播放的位置
+     * @return
+     */
+
+    public boolean setUp(List<GSYVideoModel> url, boolean cacheWithPlay, int position) {
+        return setUp(url, cacheWithPlay, position, null);
+    }
+
+    /**
+     * 如果需要片头广告的，请用setAdUp
+     *
+     * @param url           播放url
+     * @param cacheWithPlay 是否边播边缓存
+     * @param position      需要播放的位置
+     * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
+     * @return
+     */
+
+    public boolean setUp(List<GSYVideoModel> url, boolean cacheWithPlay, int position, File cachePath) {
+        return setUp(url, cacheWithPlay, position, cachePath, new HashMap<String, String>());
+    }
+
+    /**
+     * 如果需要片头广告的，请用setAdUp
+     *
+     * @param url           播放url
+     * @param cacheWithPlay 是否边播边缓存
+     * @param position      需要播放的位置
+     * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
+     * @param mapHeadData   http header
+     * @return
+     */
+
+    public boolean setUp(List<GSYVideoModel> url, boolean cacheWithPlay, int position, File cachePath, Map<String, String> mapHeadData) {
+        return setUp(url, cacheWithPlay, position, cachePath, mapHeadData, true);
+    }
+
+
+    /**
+     * 如果需要片头广告的，请用setAdUp
+     *
+     * @param url           播放url
+     * @param cacheWithPlay 是否边播边缓存
+     * @param position      需要播放的位置
+     * @param cachePath     缓存路径，如果是M3U8或者HLS，请设置为false
+     * @param mapHeadData   http header
+     * @param changeState   切换的时候释放surface
+     * @return
+     */
+    protected boolean setUp(List<GSYVideoModel> url, boolean cacheWithPlay, int position, File cachePath, Map<String, String> mapHeadData, boolean changeState) {
+        System.out.println("positionUrl:" + position);
+        GSYVideoModel gsyVideoModel = url.get(position);
+        if (gsyVideoModel instanceof MySelfGSYVideoPlayer.GSYADVideoModel) {
+            MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
+            System.out.println("url.size():" + url.size());
+            if (gsyadVideoModel.isSkip() && position < (url.size() - 1)) {
+                System.out.println("广告");
+                return setUp(url, cacheWithPlay, position + 1, cachePath, mapHeadData, changeState);
+            }
+
+
+           // isAdModel = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
+            isDown = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
+        }
+
+        mUriList = url;
+        mPlayPosition = position;
+        mMapHeadData = mapHeadData;
+        boolean set = setUp(gsyVideoModel.getUrl(), cacheWithPlay, cachePath, gsyVideoModel.getTitle(), changeState);
+        if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
+            mTitleTextView.setText(gsyVideoModel.getTitle());
+        }
+        return set;
+    }
+
+    /******************对外接口*******************/
+
+    /**
+     * 带片头广告的，setAdUp
+     *
+     * @param url
+     * @param cacheWithPlay
+     * @param position
+     * @return
+     */
+    public boolean setAdUp(ArrayList<GSYADVideoModel> url, boolean cacheWithPlay, int position) {
+        return setUp((ArrayList<GSYVideoModel>) url.clone(), cacheWithPlay, position);
+    }
+
+    /**
+     * 带片头广告的，setAdUp
+     *
+     * @param url
+     * @param cacheWithPlay
+     * @param position
+     * @param cachePath
+     * @return
+     */
+    public boolean setAdUp(ArrayList<GSYADVideoModel> url, boolean cacheWithPlay, int position, File cachePath) {
+        return setUp((ArrayList<GSYVideoModel>) url.clone(), cacheWithPlay, position, cachePath);
+    }
+
+    /**
+     * 带片头广告的，setAdUp
+     *
+     * @param url
+     * @param cacheWithPlay
+     * @param position
+     * @param cachePath
+     * @param mapHeadData
+     * @return
+     */
+    public boolean setAdUp(ArrayList<GSYADVideoModel> url, boolean cacheWithPlay, int position, File cachePath, Map<String, String> mapHeadData) {
+        return setUp((ArrayList<GSYVideoModel>) url.clone(), cacheWithPlay, position, cachePath, mapHeadData);
+    }
+    /**
+     * 播放下一集
+     *
+     * @return true表示还有下一集
+     */
+    public boolean playNext(int position) {
+        if (mPlayPosition < (mUriList.size() - 1)) {
+            mPlayPosition += 1;
+            GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
+            MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
+         /*   isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
+            System.out.println("是不是视频广告:"+isAdModel);*/
+            mSaveChangeViewTIme = 0;
+            setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);
+            if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
+                mTitleTextView.setText(gsyVideoModel.getTitle());
+            }
+    /*        System.out.println("startTime:" + time);
+            VideoOptionModel videoOptionModel =
+                    new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "seek-at-start", time);
+            List<VideoOptionModel> list = new ArrayList<>();
+            list.add(videoOptionModel);
+            GSYVideoManager.instance().setOptionModelList(list);*/
+            System.out.println("当前播的位置:"+position);
+            setSeekOnStart(position);
+            startPlayLogic();
+            return true;
+        } else{
+            startPlayLogic();
+        }
+        return false;
+    }
 
 
 
