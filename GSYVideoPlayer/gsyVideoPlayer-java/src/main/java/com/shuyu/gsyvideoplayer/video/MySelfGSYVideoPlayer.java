@@ -151,6 +151,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     public int primaryWidth;               //原图片宽
     public int primaryHeight;              //原图片高
     public double scaleWidth, scaleHeight; //高宽比例
+    public LinearLayout adLinearLayout;
 /*    ImageView mCoverImage;
     String mCoverOriginUrl;
     int mDefaultRes;
@@ -235,6 +236,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         });
         mAd = findViewById(R.id.ad);
         mAdimage_skip = findViewById(R.id.adimage_skip);
+        adLinearLayout = findViewById(R.id.adLinearLayout);
 
         edit_danmu.setOnKeyListener(new OnKeyListener() {
             @Override
@@ -715,6 +717,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
         if (mJumpAd != null) {
             mJumpAd.setVisibility((isFirstPrepared && isAdModel) ? VISIBLE : GONE);
+        }
+
+        if(adLinearLayout != null){
+            adLinearLayout.setVisibility((isFirstPrepared && isAdModel) ? VISIBLE : GONE);
         }
 
         if (mADTime != null) {
