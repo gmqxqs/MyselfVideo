@@ -84,7 +84,7 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
             System.out.println("tempUrl:" + tempUrl);
             String configRoot = context.getExternalFilesDir(null).getPath();
             System.out.println("configRoot:" + configRoot);
-            String testUrl = "/storage/emulated/0/Android/data/me.maogou.app/files";
+            String testUrl = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files";
             String folder = testUrl + "/" + tempUrl;
          //   String folder = configRoot + "/"+tempUrl;
             System.out.println("folder:" +folder);
@@ -98,7 +98,12 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
                      if(downFile.exists()){
                          System.out.println("下载文件地址:" + url);
                          System.out.println("新:"+ Uri.parse(url));
-                         mediaPlayer.setDataSource(context, Uri.parse(url),header);
+                         try{
+                             mediaPlayer.setDataSource(context, Uri.parse(url),header);
+                         }catch (IOException e){
+                             System.out.println("失效");
+                         }
+
                          return;
                      } else{
                          System.out.println("下载文件不存在");
@@ -108,7 +113,7 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                return;
+          //      return;
             } else{
                 System.out.println("不存在");
             }

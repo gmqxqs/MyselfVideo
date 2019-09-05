@@ -140,6 +140,8 @@ public class IjkExo2MediaPlayer extends AbstractMediaPlayer implements Player.Ev
             mHeaders.putAll(headers);
         }
         setDataSource(context, uri);
+
+
     }
 
     @Override
@@ -150,8 +152,9 @@ public class IjkExo2MediaPlayer extends AbstractMediaPlayer implements Player.Ev
     @Override
     public void setDataSource(Context context, Uri uri) {
         mDataSource = uri.toString();
-
         mMediaSource = mExoHelper.getMediaSource(mDataSource, isPreview, isCache, isLooping, mCacheDir, mOverrideExtension);
+
+
     }
 
     @Override

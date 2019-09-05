@@ -33,6 +33,7 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.MyselfView.BatteryView;
 
 import com.shuyu.gsyvideoplayer.R;
+import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
 import com.shuyu.gsyvideoplayer.model.GSYVideoModel;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
@@ -518,6 +519,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
 
     }
+
 
 
 
@@ -1307,6 +1309,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             startButtonLogic();
         }
     }
+
+
 
 
 }

@@ -80,8 +80,8 @@ public class MyselfActivity extends AppCompatActivity {
         header.put("allowCrossProtocolRedirects", "true");*/
        // File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
       // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
-     // url = "https://apd-f8910e1356000a77700d03e763a2f1de.v.smtcdns.com/moviets.tc.qq.com/AzbLMHFlwekSJjr_iNj8ZrO-6pjH54wMP0_YYtp6b95Q/uwMROfz2r5xgoaQXGdGnC2df64gVTKzl5C_X6A3JOVT0QIb-/oaIHHmVKVBBoOBA7WtDx9YsscU0QPUuyvoR-GBor2VlsxphBvUem7dEaqWk-knFb0MA6aZzGCNG4VSIoPH5VK_5NjmaTKSb_YWB8_wFQBgj_PSQILC5bEl9-wM3BEzfNJfiarEDgfg2nZGKGFQPR7JHshfjFiMyZnz8Jm6BOsJw/w0031s4gikk.321004.ts.m3u8?ver=4";
-        url = "https://iqiyi.com-l-iqiyi.com/20190823/22550_41c5b03c/index.m3u8";
+      //  url = "https://apd-f8910e1356000a77700d03e763a2f1de.v.smtcdns.com/moviets.tc.qq.com/AzbLMHFlwekSJjr_iNj8ZrO-6pjH54wMP0_YYtp6b95Q/uwMROfz2r5xgoaQXGdGnC2df64gVTKzl5C_X6A3JOVT0QIb-/oaIHHmVKVBBoOBA7WtDx9YsscU0QPUuyvoR-GBor2VlsxphBvUem7dEaqWk-knFb0MA6aZzGCNG4VSIoPH5VK_5NjmaTKSb_YWB8_wFQBgj_PSQILC5bEl9-wM3BEzfNJfiarEDgfg2nZGKGFQPR7JHshfjFiMyZnz8Jm6BOsJw/w0031s4gikk.321004.ts.m3u8?ver=4";
+        url = "http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
         GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption
                 .setIsTouchWiget(true)
