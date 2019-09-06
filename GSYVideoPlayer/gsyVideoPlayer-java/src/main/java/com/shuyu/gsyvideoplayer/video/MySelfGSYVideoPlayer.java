@@ -214,7 +214,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             public void onClick(View v) {
                // showWifiDialog();
                 //startPlayLogic();
-                playNext(0);
+                playNextUrl(0);
                 // startButtonLogic();
             }
         });
@@ -866,8 +866,15 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         System.out.println("错误的位置:"+position);
         if(isDown){
             setViewShowState(newstart,GONE);
-            playNext(position);
+            playNextUrl(position);
+            isDown = false;
+        } else{
+            System.out.println("!isDown:"+ isDown);
+            setViewShowState(newstart,GONE);
+            playNextUrl(position);
+            isDown = true;
         }
+
         setViewShowState(replay, VISIBLE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, GONE);
@@ -1582,9 +1589,37 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
      *
      * @return true表示还有下一集
      */
-    public boolean playNext(int position) {
-        if (mPlayPosition < (mUriList.size() - 1)) {
-            mPlayPosition += 1;
+    public boolean playNextUrl(int position) {
+        if (isDown){
+            if (mPlayPosition < (mUriList.size() - 1)) {
+                mPlayPosition += 1;
+                System.out.println("mPlayPositionNormal:" + mPlayPosition );
+                GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
+                MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
+         /*   isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
+            System.out.println("是不是视频广告:"+isAdModel);*/
+                mSaveChangeViewTIme = 0;
+                setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);
+                if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
+                    mTitleTextView.setText(gsyVideoModel.getTitle());
+                }
+    /*        System.out.println("startTime:" + time);
+            VideoOptionModel videoOptionModel =
+                    new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "seek-at-start", time);
+            List<VideoOptionModel> list = new ArrayList<>();
+            list.add(videoOptionModel);
+            GSYVideoManager.instance().setOptionModelList(list);*/
+                System.out.println("当前播的位置:"+position);
+                setSeekOnStart(position);
+                startPlayLogic();
+                return true;
+            } else{
+                startPlayLogic();
+            }
+        } else{
+            mPlayPosition -= 1;
+            System.out.println("mPlayPositionDown:" + mPlayPosition);
+            System.out.println("错误的位置:" + position);
             GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
             MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
          /*   isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
@@ -1604,9 +1639,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             setSeekOnStart(position);
             startPlayLogic();
             return true;
-        } else{
-            startPlayLogic();
         }
+
         return false;
     }
 
