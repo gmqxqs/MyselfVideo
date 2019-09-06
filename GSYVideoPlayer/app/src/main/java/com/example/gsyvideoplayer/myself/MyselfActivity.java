@@ -1,11 +1,12 @@
 package com.example.gsyvideoplayer.myself;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.example.gsyvideoplayer.R;
 import com.example.gsyvideoplayer.video.LandLayoutVideo;
@@ -22,16 +25,17 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.cache.ProxyCacheManager;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
-import com.shuyu.gsyvideoplayer.model.GSYVideoModel;
 import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.shuyu.gsyvideoplayer.video.MySelfGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
+
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+
 
 public class MyselfActivity extends AppCompatActivity {
 
@@ -61,13 +66,14 @@ public class MyselfActivity extends AppCompatActivity {
     public String getUrl(){
         return url;
     }
-    public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_myself);
+
         videoPlayer =  (MySelfGSYVideoPlayer) findViewById(R.id.video_player);
+
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -81,27 +87,9 @@ public class MyselfActivity extends AppCompatActivity {
        /* Map<String, String> header = new HashMap<>();
         header.put("ee", "33");
         header.put("allowCrossProtocolRedirects", "true");*/
-       // File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
-      // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
-      //  url = "https://apd-f8910e1356000a77700d03e763a2f1de.v.smtcdns.com/moviets.tc.qq.com/AzbLMHFlwekSJjr_iNj8ZrO-6pjH54wMP0_YYtp6b95Q/uwMROfz2r5xgoaQXGdGnC2df64gVTKzl5C_X6A3JOVT0QIb-/oaIHHmVKVBBoOBA7WtDx9YsscU0QPUuyvoR-GBor2VlsxphBvUem7dEaqWk-knFb0MA6aZzGCNG4VSIoPH5VK_5NjmaTKSb_YWB8_wFQBgj_PSQILC5bEl9-wM3BEzfNJfiarEDgfg2nZGKGFQPR7JHshfjFiMyZnz8Jm6BOsJw/w0031s4gikk.321004.ts.m3u8?ver=4";
-        String tempUrl = "http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
-        String url = tempUrl.substring(tempUrl.indexOf("http"),tempUrl.lastIndexOf("http"));
-        String newUrl = videoPlayer.playUrl(url);
-
-        urls = videoPlayer.getUrls();
-        if(url.equals(newUrl)){
-            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(url,
-                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
-        } else{
-            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(newUrl,
-                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
-        }
-        urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel("http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8",
-                "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
-        urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel("http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8",
-                "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
-
-    /*    GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
+        //   File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
+        url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
+        GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption
                 .setIsTouchWiget(true)
                 .setRotateViewAuto(false)
@@ -172,18 +160,8 @@ public class MyselfActivity extends AppCompatActivity {
                         Debuger.printfLog(" progress " + progress + " secProgress " + secProgress + " currentPosition " + currentPosition + " duration " + duration);
                     }
                 })
-                .build(videoPlayer);*/
+                .build(videoPlayer);
 
-
-
-
-
-
-
-
-
-        videoPlayer.setAutoFullWithSize();
-        videoPlayer.setShowFullAnimation(false);
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,8 +183,7 @@ public class MyselfActivity extends AppCompatActivity {
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(videoOptionModel);
         GSYVideoManager.instance().setOptionModelList(list);
-        PlayerFactory.setPlayManager(Exo2PlayerManager.class);
-        videoPlayer.setAdUp(urls, true, 0);
+        //  PlayerFactory.setPlayManager(Exo2PlayerManager.class);
         videoPlayer.startPlayLogic();
 
     }
