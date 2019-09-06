@@ -88,7 +88,8 @@ public class MyselfActivity extends AppCompatActivity {
         header.put("ee", "33");
         header.put("allowCrossProtocolRedirects", "true");*/
         //   File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
-        url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
+        //url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
+        url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
         GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption
                 .setIsTouchWiget(true)
@@ -263,4 +264,6 @@ public class MyselfActivity extends AppCompatActivity {
         //    orientationUtils.setRotateWithSystem(false);
         videoPlayer.startWindowFullscreen(MyselfActivity.this, true, true);
     }
+
+
 }

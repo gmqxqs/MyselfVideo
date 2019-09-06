@@ -213,7 +213,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             @Override
             public void onClick(View v) {
                 if(mCurrentState == CURRENT_STATE_PAUSE){
+                    getGSYVideoManager().start();
                     setStateAndUi(CURRENT_STATE_PLAYING);
+
                 }
             }
         });
