@@ -74,12 +74,12 @@ public class MyselfActivity extends AppCompatActivity {
         timeCount = videoPlayer.new TimeCount(10000,1000);
         urls = videoPlayer.getUrls();
         //广告1
-        urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
-                "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD));
+     /*   urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
+                "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD));*/
         //正式内容
        /* urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
                 "测试视频", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));*/
-        urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel("https://vip.okokbo.com/20171214/u0ebkVlQ/index.m3u8",
+        urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel("https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8",
                 "测试视频", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
         //    videoPlayer.setAdUp(urls, true, 0);
         videoPlayer.setAutoFullWithSize(true);
