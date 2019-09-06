@@ -87,7 +87,6 @@ public class MyselfActivity extends AppCompatActivity {
         String tempUrl = "http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
         String url = tempUrl.substring(tempUrl.indexOf("http"),tempUrl.lastIndexOf("http"));
         String newUrl = videoPlayer.playUrl(url);
-
         urls = videoPlayer.getUrls();
         if(url.equals(newUrl)){
             urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(url,

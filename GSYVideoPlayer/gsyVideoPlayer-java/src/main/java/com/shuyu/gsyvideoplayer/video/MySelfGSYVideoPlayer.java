@@ -1356,9 +1356,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             System.out.println("tempUrl:" + tempUrl);
             String configRoot = contextFirst.getExternalFilesDir(null).getPath();
             System.out.println("configRoot:" + configRoot);
-            String testUrl = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files";
-            String folder = testUrl + "/" + tempUrl;
-            //   String folder = configRoot + "/"+tempUrl;
+           // String testUrl = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files";
+          //  String folder = testUrl + "/" + tempUrl;
+            String folder = configRoot + "/"+tempUrl;
             System.out.println("folder:" + folder);
             File file = new File(folder);
             if (file.exists()) {
@@ -1613,9 +1613,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 setSeekOnStart(position);
                 startPlayLogic();
                 return true;
-            } else{
-                startPlayLogic();
             }
+           /* else{
+                startPlayLogic();
+            }*/
         } else{
             mPlayPosition -= 1;
             System.out.println("mPlayPositionDown:" + mPlayPosition);
