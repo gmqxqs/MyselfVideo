@@ -724,12 +724,12 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mThumbImageViewLayout, GONE);
         setViewShowState(mBottomProgressBar, GONE);
         setViewShowState(mLockScreen, GONE);
-     /*   if (mLoadingProgressBar instanceof ENDownloadView) {
+        if (mLoadingProgressBar instanceof ENDownloadView) {
             ENDownloadView enDownloadView = (ENDownloadView) mLoadingProgressBar;
             if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
                 ((ENDownloadView) mLoadingProgressBar).start();
             }
-        }*/
+        }
         updateStartImage();
         upPlayImage();
     }
@@ -742,12 +742,14 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
 
+        setViewShowState(mStartButton,GONE);
         setViewShowState(mTimeandbarray,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
         setViewShowState(newstart, GONE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, GONE);
         setViewShowState(mThumbImageViewLayout, GONE);
         setViewShowState(mBottomProgressBar, GONE);
+
         if(mIfCurrentIsFullscreen){
             setViewShowState(controllerbottom, VISIBLE);
         } else{
@@ -768,6 +770,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Debuger.printfLog("changeUiToPauseShow");
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
+        setViewShowState(mStartButton,VISIBLE);
         setViewShowState(mTimeandbarray,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
         setViewShowState(newstart, GONE);
         setViewShowState(replay_text, GONE);
@@ -790,8 +793,14 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Debuger.printfLog("changeUiToPlayingBufferingShow");
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
-        setViewShowState(controllerbottom, GONE);
-        setViewShowState(mTimeandbarray,GONE);
+        if(mIfCurrentIsFullscreen){
+            setViewShowState(controllerbottom, VISIBLE);
+            setViewShowState(mTimeandbarray, VISIBLE);
+        } else{
+            setViewShowState(controllerbottom, GONE);
+            setViewShowState(mTimeandbarray, GONE);
+        }
+
         setViewShowState(newstart, GONE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, VISIBLE);

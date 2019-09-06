@@ -136,6 +136,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
     //loading view
     protected View mLoadingProgressBar;
 
+
     //进度条
     protected SeekBar mProgressBar;
 
@@ -217,6 +218,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         mLockScreen = (ImageView) findViewById(R.id.lock_screen);
 
         mLoadingProgressBar = findViewById(R.id.loading);
+
 
 
         if (isInEditMode())

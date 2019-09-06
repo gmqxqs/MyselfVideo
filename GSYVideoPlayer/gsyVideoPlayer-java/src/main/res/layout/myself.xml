@@ -306,22 +306,22 @@
 
     </LinearLayout>
     <!--刚进来的缓冲动画-->
-    <!-- <moe.codeest.enviews.ENDownloadView
-         android:id="@+id/loading"
-         android:layout_width="28dp"
-         android:layout_height="28dp"
-         android:layout_centerHorizontal="true"
-         android:layout_centerVertical="true"
-         android:visibility="invisible" />
-     &lt;!&ndash;视频播放时的暂停，继续播放的方块背景&ndash;&gt;
-     <moe.codeest.enviews.ENPlayView
-         android:id="@+id/start"
-         android:layout_width="60dp"
-         android:layout_height="60dp"
-         android:layout_centerHorizontal="true"
-         android:layout_centerVertical="true"
-         android:layout_gravity="centWer_vertical"
-         android:visibility="gone"/>-->
+     <moe.codeest.enviews.ENDownloadView
+    android:id="@+id/loading"
+    android:layout_width="28dp"
+    android:layout_height="28dp"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:visibility="invisible" />
+    <!--视频播放时的暂停，继续播放的方块背景-->
+    <moe.codeest.enviews.ENPlayView
+        android:id="@+id/start"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/replay"
         android:layout_width="wrap_content"

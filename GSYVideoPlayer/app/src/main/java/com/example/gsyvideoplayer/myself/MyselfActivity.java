@@ -88,7 +88,7 @@ public class MyselfActivity extends AppCompatActivity {
         header.put("ee", "33");
         header.put("allowCrossProtocolRedirects", "true");*/
         //   File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
-        url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
+        url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
         GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption
                 .setIsTouchWiget(true)
@@ -172,18 +172,20 @@ public class MyselfActivity extends AppCompatActivity {
                 videoPlayer.startWindowFullscreen(MyselfActivity.this, true, true);
             }
         });
+
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
+
         //解决拖动视频会弹回来,因为ijk的FFMPEG对关键帧问题。
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(videoOptionModel);
         GSYVideoManager.instance().setOptionModelList(list);
-        //  PlayerFactory.setPlayManager(Exo2PlayerManager.class);
+        PlayerFactory.setPlayManager(Exo2PlayerManager.class);
         videoPlayer.startPlayLogic();
 
     }
