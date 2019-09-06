@@ -87,6 +87,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected  ImageView mPan;
     protected  View mBatteryView;
     protected  ImageView newstart;
+    protected  ImageView startPlay;
     protected  LinearLayout replay;
     protected  TextView replay_text;
     protected ProgressBar bottom_progressbar;
@@ -134,6 +135,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         layout_bottom = findViewById(R.id.all);
         mPan = findViewById(R.id.pan);
         newstart = findViewById(R.id.newstart);
+        startPlay = findViewById(R.id.startPlay);
         mSystemTime = findViewById(R.id.systemtime);
         mTimeandbarray = findViewById(R.id.timeandbarray);
         controllerbottom = findViewById(R.id.controllerbottom);
@@ -204,6 +206,15 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                // showWifiDialog();
                 startPlayLogic();
                 // startButtonLogic();
+            }
+        });
+
+        startPlay.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCurrentState == CURRENT_STATE_PAUSE){
+                    setStateAndUi(CURRENT_STATE_PLAYING);
+                }
             }
         });
 
@@ -742,9 +753,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
 
-        setViewShowState(mStartButton,GONE);
+        //setViewShowState(mStartButton,GONE);
         setViewShowState(mTimeandbarray,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
         setViewShowState(newstart, GONE);
+        setViewShowState(startPlay, GONE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, GONE);
         setViewShowState(mThumbImageViewLayout, GONE);
@@ -770,9 +782,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Debuger.printfLog("changeUiToPauseShow");
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
-        setViewShowState(mStartButton,VISIBLE);
+      //  setViewShowState(mStartButton,VISIBLE);
         setViewShowState(mTimeandbarray,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
         setViewShowState(newstart, GONE);
+        setViewShowState(startPlay, VISIBLE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, GONE);
         setViewShowState(mThumbImageViewLayout, GONE);

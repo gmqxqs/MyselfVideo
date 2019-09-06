@@ -314,13 +314,22 @@
     android:layout_centerVertical="true"
     android:visibility="invisible" />
     <!--视频播放时的暂停，继续播放的方块背景-->
-    <moe.codeest.enviews.ENPlayView
+   <!-- <moe.codeest.enviews.ENPlayView
         android:id="@+id/start"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
+        android:visibility="gone"/>-->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/startPlay"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/vedio_default_play_icon"
         android:visibility="gone"/>
     <LinearLayout
         android:id="@+id/replay"
@@ -337,6 +346,7 @@
             android:id="@+id/newstart"
             android:src="@drawable/vedio_default_play_icon"
             android:visibility="visible"/>
+
 
         <!--重播文字提示-->
         <TextView
