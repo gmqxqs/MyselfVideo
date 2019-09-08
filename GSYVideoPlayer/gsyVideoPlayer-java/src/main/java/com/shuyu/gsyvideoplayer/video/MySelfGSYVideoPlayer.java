@@ -327,6 +327,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         };*/
 
     }
+    int errorPosition = 0;
+    int errortime = 0;
     /***
      * 拖动进度条
      */
@@ -346,12 +348,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             try {
                 //int progress = seekBar.getProgress();
                 int time = seekBar.getProgress() * getDuration() / 100;
+                errortime = seekBar.getProgress() * getDuration() / 100;
                 System.out.println("time3:" + time);
                 //  int time = progress  * getDuration() / 100;
                 getGSYVideoManager().seekTo(time);
                 mBottomProgressBar.setProgress(seekBar.getProgress());
                 mProgressBar.setProgress(seekBar.getProgress());
-
+                errorPosition = seekBar.getProgress();
             } catch (Exception e) {
                 Debuger.printfWarning(e.toString());
             }
@@ -864,14 +867,16 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(newstart, VISIBLE);
         int position = getCurrentPositionWhenPlaying();
         System.out.println("错误的位置:"+position);
+        System.out.println("errorPosition:"+ errortime);
         if(isDown){
-            setViewShowState(newstart,GONE);
-            playNextUrl(position);
+            System.out.println("isDown:"+ isDown);
+            //setViewShowState(newstart,GONE);
+            playNextUrl(errortime);
             isDown = false;
         } else{
             System.out.println("!isDown:"+ isDown);
             setViewShowState(newstart,GONE);
-            playNextUrl(position);
+            playNextUrl(errortime);
             isDown = true;
         }
 
@@ -1346,19 +1351,43 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
     }
 
+    public ArrayList<String> subString(String url){
+        ArrayList<String> list = new ArrayList<>();
+        String staticUrl = "";
+        String httpUrl = "";
+        if(url.startsWith("static")){
+            staticUrl = url.substring(url.indexOf("/")+1,url.indexOf("http"));
+            String configRoot = contextFirst.getExternalFilesDir(null).getPath();
+            staticUrl = configRoot + staticUrl;
+            System.out.println("staticUrl:" +staticUrl);
+
+        }
+        if(!staticUrl.equals("")){
+            list.add(staticUrl);
+            httpUrl = url.substring(url.indexOf("http"),url.length());
+            if(!httpUrl.equals("")){
+                list.add(httpUrl);
+            }
+        } else{
+            list.add(url);
+        }
+
+        return list;
+    }
 
     public String playUrl(String originUrl) {
         String url = originUrl;
         if (url.startsWith("http") && !url.contains("127.0.0.1") && url.contains(".m3u8")) {
             String endUrl = url.substring(url.lastIndexOf("/") + 1, url.length());
+            endUrl = endUrl.substring(0,endUrl.lastIndexOf("?"));
             System.out.println("endUrl:" + endUrl);
             String tempUrl = Md5Utils.md5(url);
             System.out.println("tempUrl:" + tempUrl);
             String configRoot = contextFirst.getExternalFilesDir(null).getPath();
             System.out.println("configRoot:" + configRoot);
-           // String testUrl = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files";
-          //  String folder = testUrl + "/" + tempUrl;
-            String folder = configRoot + "/"+tempUrl;
+            String testUrl = "/storage/emulated/0/Android/data/vip.maogou.app/files/2/7/dbd63fba03e0e661eb93d556bc920f/27dbd63fba03e0e661eb93d556bc920f";
+            String folder = testUrl;
+           // String folder = configRoot + "/"+tempUrl;
             System.out.println("folder:" + folder);
             File file = new File(folder);
             if (file.exists()) {
@@ -1374,8 +1403,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     } else {
                         System.out.println("下载文件不存在");
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1538,6 +1565,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mPlayPosition = position;
         mMapHeadData = mapHeadData;
         boolean set = setUp(gsyVideoModel.getUrl(), cacheWithPlay, cachePath, gsyVideoModel.getTitle(), changeState);
+        System.out.println("gsyVideoModel.getUrl():" + gsyVideoModel.getUrl());
         if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
             mTitleTextView.setText(gsyVideoModel.getTitle());
         }
@@ -1617,30 +1645,35 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
            /* else{
                 startPlayLogic();
             }*/
-        } else{
+        } else {
             mPlayPosition -= 1;
             System.out.println("mPlayPositionDown:" + mPlayPosition);
-            System.out.println("错误的位置:" + position);
+            System.out.println("错误的网络位置:" + position);
             GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
             MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
-         /*   isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
-            System.out.println("是不是视频广告:"+isAdModel);*/
+            isDown = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
+            System.out.println("是不是下载视频:" + isDown);
             mSaveChangeViewTIme = 0;
             setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);
             if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
                 mTitleTextView.setText(gsyVideoModel.getTitle());
             }
+            System.out.println("当前播的本地视频位置:" + position);
+            setSeekOnStart(position);
+            startPlayLogic();
+            return true;
+        }
     /*        System.out.println("startTime:" + time);
             VideoOptionModel videoOptionModel =
                     new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "seek-at-start", time);
             List<VideoOptionModel> list = new ArrayList<>();
             list.add(videoOptionModel);
-            GSYVideoManager.instance().setOptionModelList(list);*/
+            GSYVideoManager.instance().setOptionModelList(list);*//*
             System.out.println("当前播的位置:"+position);
             setSeekOnStart(position);
             startPlayLogic();
             return true;
-        }
+        }*/
 
         return false;
     }

@@ -190,6 +190,7 @@ public class SystemPlayerManager implements IPlayerManager {
     @Override
     public long getCurrentPosition() {
         if (mediaPlayer != null) {
+            System.out.println("mediaPalyer:" + mediaPlayer);
             return mediaPlayer.getCurrentPosition();
         }
         return 0;
