@@ -22,6 +22,7 @@ import com.example.gsyvideoplayer.R;
 import com.example.gsyvideoplayer.video.LandLayoutVideo;
 import com.google.android.exoplayer2.SeekParameters;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.cache.CacheFactory;
 import com.shuyu.gsyvideoplayer.cache.ProxyCacheManager;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
@@ -45,6 +46,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager;
+import tv.danmaku.ijk.media.exo2.ExoPlayerCacheManager;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 
@@ -89,9 +91,9 @@ public class MyselfActivity extends AppCompatActivity {
         header.put("ee", "33");
         header.put("allowCrossProtocolRedirects", "true");*/
         //   File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
-    //    url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
-        url = "http://static_api.maogou.vip/9e9e1b7ea4e250af8fe1f1865650d42b/a036cac2531b35692e8975f252229fcf.m3u8";
-       // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
+        url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
+      //  url = "http://static_api.maogou.vip/9e9e1b7ea4e250af8fe1f1865650d42b/a036cac2531b35692e8975f252229fcf.m3u8";
+      //  url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
         GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
 
         gsyVideoOption
@@ -188,13 +190,30 @@ public class MyselfActivity extends AppCompatActivity {
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(videoOptionModel);
-      /*  videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 50);
-        list.add(videoOptionModel);*/
+        list.add(new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 0));
+        list.add(new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0));
+        list.add(new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0));
+       // list.add(new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1));
+        list.add(new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48));
+
+        list.add(new VideoOptionModel(1, "analyzemaxduration", 100));
+        list.add(new VideoOptionModel(1, "probesize", 10240));
+        list.add(new VideoOptionModel(1, "flush_packets", 1));
+        list.add(new VideoOptionModel(4, "packet-buffering", 0));
+        //list.add(new VideoOptionModel(4, "framedrop", 1));
+        list.add( new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 50));
+
         GSYVideoManager.instance().setOptionModelList(list);
-       PlayerFactory.setPlayManager(Exo2PlayerManager.class);
+        PlayerFactory.setPlayManager(Exo2PlayerManager.class);
+        CacheFactory.setCacheManager(ExoPlayerCacheManager.class);
         GSYVideoManager.onResume(false);
-        //  IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
-        IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_ERROR);
+        IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
+
+        // GSYVideoType.enableMediaCodec();
+        //GSYVideoType.enableMediaCodecTexture();
+
+        //   IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_ERROR);
+
         videoPlayer.startPlayLogic();
     }
 

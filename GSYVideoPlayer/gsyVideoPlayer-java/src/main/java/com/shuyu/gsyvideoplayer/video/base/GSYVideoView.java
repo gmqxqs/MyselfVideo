@@ -593,7 +593,6 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     @Override
     public void onAutoCompletion() {
         setStateAndUi(CURRENT_STATE_AUTO_COMPLETE);
-
         mSaveChangeViewTIme = 0;
         mCurrentPosition = 0;
 
