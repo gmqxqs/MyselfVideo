@@ -764,6 +764,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mThumbImageViewLayout, GONE);
         setViewShowState(mBottomProgressBar, GONE);
 
+        System.out.println("getNetSpeed():" + getNetSpeed());
+
         if(mIfCurrentIsFullscreen){
             setViewShowState(controllerbottom, VISIBLE);
         } else{

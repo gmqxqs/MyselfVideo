@@ -28,6 +28,7 @@ import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
 import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.video.MySelfGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
@@ -88,9 +89,10 @@ public class MyselfActivity extends AppCompatActivity {
         header.put("ee", "33");
         header.put("allowCrossProtocolRedirects", "true");*/
         //   File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
-        //url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
-        url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
+        url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
+       // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
         GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
+
         gsyVideoOption
                 .setIsTouchWiget(true)
                 .setRotateViewAuto(false)
@@ -98,7 +100,7 @@ public class MyselfActivity extends AppCompatActivity {
                 .setAutoFullWithSize(false)
                 .setShowFullAnimation(false)
                 .setNeedLockFull(false)
-                .setCacheWithPlay(true)
+                .setCacheWithPlay(false)
                 //    .setCachePath(file)
                 .setUrl(url)
                 //   .setMapHeadData(header)
@@ -185,8 +187,13 @@ public class MyselfActivity extends AppCompatActivity {
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(videoOptionModel);
+      /*  videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 50);
+        list.add(videoOptionModel);*/
         GSYVideoManager.instance().setOptionModelList(list);
         PlayerFactory.setPlayManager(Exo2PlayerManager.class);
+        GSYVideoManager.onResume(false);
+        //  IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
+        IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_ERROR);
         videoPlayer.startPlayLogic();
 
     }
