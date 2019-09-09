@@ -109,7 +109,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         return urls;
     }
 
-
+    boolean isComplete = false;
 
 
     /**
@@ -870,6 +870,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             ((ENDownloadView) mLoadingProgressBar).reset();
         }*/
         // updateStartImage();
+        if(isDown){
+           isComplete = true;
+        }
         upPlayImage();
     }
 
@@ -1646,7 +1649,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     public boolean playNextUrl(int position) {
         if (isDown){
             if (mPlayPosition < (mUriList.size() - 1)) {
-                mPlayPosition += 1;
+                if(!isComplete){
+                    mPlayPosition += 1;
+                }
+
                 System.out.println("mPlayPositionNormal:" + mPlayPosition );
                 GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
                 MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
