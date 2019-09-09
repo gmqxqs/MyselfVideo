@@ -1,12 +1,11 @@
 package com.example.gsyvideoplayer.myself;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,8 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
-
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.example.gsyvideoplayer.R;
 import com.example.gsyvideoplayer.video.LandLayoutVideo;
@@ -25,18 +22,17 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.cache.ProxyCacheManager;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
+import com.shuyu.gsyvideoplayer.model.GSYVideoModel;
 import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.video.MySelfGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
-
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +42,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
-
 
 public class MyselfActivity extends AppCompatActivity {
 
@@ -67,14 +62,13 @@ public class MyselfActivity extends AppCompatActivity {
     public String getUrl(){
         return url;
     }
+    public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_myself);
-
         videoPlayer =  (MySelfGSYVideoPlayer) findViewById(R.id.video_player);
-
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -88,82 +82,31 @@ public class MyselfActivity extends AppCompatActivity {
        /* Map<String, String> header = new HashMap<>();
         header.put("ee", "33");
         header.put("allowCrossProtocolRedirects", "true");*/
-        //   File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
-        url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
-       // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
-        GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
-        gsyVideoOption
-                .setIsTouchWiget(true)
-                .setRotateViewAuto(false)
-                .setLockLand(false)
-                .setAutoFullWithSize(false)
-                .setShowFullAnimation(false)
-                .setNeedLockFull(false)
-                .setCacheWithPlay(false)
-                //    .setCachePath(file)
-                .setUrl(url)
-                //   .setMapHeadData(header)
-                .setVideoTitle("测试视频")
-                .setVideoAllCallBack(new GSYSampleCallBack() {
-                    @Override
-                    public void onPrepared(String url, Object... objects) {
-                        Debuger.printfError("***** onPrepared **** " + objects[0]);
-                        Debuger.printfError("***** onPrepared **** " + objects[1]);
-                        super.onPrepared(url, objects);
-                        //开始播放了才能旋转和全屏
-                        orientationUtils.setEnable(true);
-                        isPlay = true;
-                        //设置 seek 的临近帧。
-                        if(videoPlayer.getGSYVideoManager().getPlayer() instanceof Exo2PlayerManager) {
-                            ((Exo2PlayerManager) videoPlayer.getGSYVideoManager().getPlayer()).setSeekParameter(SeekParameters.NEXT_SYNC);
-                            Debuger.printfError("***** setSeekParameter **** ");
-                        }
-                    }
 
-                    @Override
-                    public void onEnterFullscreen(String url, Object... objects) {
-                        super.onEnterFullscreen(url, objects);
-                        Debuger.printfError("***** onEnterFullscreen **** " + objects[0]);//title
-                        Debuger.printfError("***** onEnterFullscreen **** " + objects[1]);//当前全屏player
-                    }
+       // File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
+      // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
+      //  url = "https://apd-f8910e1356000a77700d03e763a2f1de.v.smtcdns.com/moviets.tc.qq.com/AzbLMHFlwekSJjr_iNj8ZrO-6pjH54wMP0_YYtp6b95Q/uwMROfz2r5xgoaQXGdGnC2df64gVTKzl5C_X6A3JOVT0QIb-/oaIHHmVKVBBoOBA7WtDx9YsscU0QPUuyvoR-GBor2VlsxphBvUem7dEaqWk-knFb0MA6aZzGCNG4VSIoPH5VK_5NjmaTKSb_YWB8_wFQBgj_PSQILC5bEl9-wM3BEzfNJfiarEDgfg2nZGKGFQPR7JHshfjFiMyZnz8Jm6BOsJw/w0031s4gikk.321004.ts.m3u8?ver=4";
+        String tempUrl = "static://2/7/2d09d6d01e841029aaf8a0d80a6bdf29/index.m3u8http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
+        ArrayList<String> listUrl = new ArrayList<String>();
+        listUrl = videoPlayer.subString(tempUrl);
+        System.out.println("list:" + listUrl);
+   //     String url = "https://apd-1f573461e2849c2dff8de8011848088b.v.smtcdns.com/moviets.tc.qq.com/A-pfo_cZrdx-q2vFBqnpS4xcOM5Jb9Q8r8GgdIs8r8P0/uwMROfz2r5zAoaQXGdGnC2df644E7D3uP8M8pmtgwsRK9nEL/h3Ir07Asx9wg0_yDFrgKal0z4RSuVdCBIljI9eWOBAODkcEcQByGBAJMGF42Hkd48Gmf8rSFFPW5hh53XONL7LmdZpg9INujHPIJA-Y8gtK6W5P2XvMvBxKABOCWelv-mebHpqBSSTBUz6uDLGuHFhLeXt8dESEIn7_tnDs0CpU/z00310ev4nq.321002.ts.m3u8?ver=4";
+        String newUrl = videoPlayer.playUrl(url);
+        System.out.println("newUrlL:" + newUrl);
+        urls = videoPlayer.getUrls();
+        System.out.println("listUrl.size():" + listUrl.size());
+        if(listUrl.size() >= 2){
+            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
+                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
+            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(1),
+                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
+        } else{
+            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
+                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
+        }
 
-                    @Override
-                    public void onAutoComplete(String url, Object... objects) {
-                        super.onAutoComplete(url, objects);
-                    }
-
-                    @Override
-                    public void onClickStartError(String url, Object... objects) {
-                        super.onClickStartError(url, objects);
-                    }
-
-                    @Override
-                    public void onQuitFullscreen(String url, Object... objects) {
-                        super.onQuitFullscreen(url, objects);
-                        Debuger.printfError("***** onQuitFullscreen **** " + objects[0]);//title
-                        Debuger.printfError("***** onQuitFullscreen **** " + objects[1]);//当前非全屏player
-                        if (orientationUtils != null) {
-                            orientationUtils.backToProtVideo();
-                        }
-                    }
-                })
-                .setLockClickListener(new LockClickListener() {
-                    @Override
-                    public void onClick(View view, boolean lock) {
-                        if (orientationUtils != null) {
-                            //配合下方的onConfigurationChanged
-                            orientationUtils.setEnable(!lock);
-                        }
-                    }
-                })
-                .setGSYVideoProgressListener(new GSYVideoProgressListener() {
-                    @Override
-                    public void onProgress(int progress, int secProgress, int currentPosition, int duration) {
-                        Debuger.printfLog(" progress " + progress + " secProgress " + secProgress + " currentPosition " + currentPosition + " duration " + duration);
-                    }
-                })
-                .build(videoPlayer);
-
+        videoPlayer.setAutoFullWithSize(true);
+        videoPlayer.setShowFullAnimation(false);
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,15 +129,15 @@ public class MyselfActivity extends AppCompatActivity {
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(videoOptionModel);
-      /*  videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 50);
-        list.add(videoOptionModel);*/
+
         GSYVideoManager.instance().setOptionModelList(list);
         PlayerFactory.setPlayManager(Exo2PlayerManager.class);
-        GSYVideoManager.onResume(false);
-        //  IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
-        IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_ERROR);
-        videoPlayer.startPlayLogic();
+        System.out.println("urls:" + urls);
+        videoPlayer.setAdUp(urls,true,0);
+       //   videoPlayer.setUp("http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8",true,null,"");
 
+
+        videoPlayer.startPlayLogic();
     }
 
 

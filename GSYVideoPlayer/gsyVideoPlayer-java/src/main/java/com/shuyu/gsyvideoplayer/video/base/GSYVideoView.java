@@ -753,6 +753,19 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
                 return position;
             }
         }
+        if (mCurrentState == CURRENT_STATE_ERROR) {
+            try {
+                System.out.println("current1:" + position);
+                position = (int) getGSYVideoManager().getCurrentPosition();
+                System.out.println("current2:" + position);
+                if(position <= 0){
+                    position = 0;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return position;
+            }
+        }
         if (position == 0 && mCurrentPosition > 0) {
             return (int) mCurrentPosition;
         }

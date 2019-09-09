@@ -76,27 +76,8 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
         if (header != null) {
             userAgentHeadersInjector.mMapHeadData.putAll(header);
         }
-       /* if(url.startsWith("http") && !url.contains("127.0.0.1") && url.contains(".m3u8")){
-            String tempUrl = Md5Utils.md5(url);
-            System.out.println("tempUrl:" + tempUrl);
-            String configRoot = "/storage/emulated/0/Android/data/vip.maogou.app/files/";
-            String folder = configRoot + tempUrl;
-            System.out.println("folder:" +folder);
-            File file = new File(folder);
-            ArrayList<String> list = new ArrayList<>();
-            if(file.exists()){
-                 try{
-                     url = folder + "/index.m3u8";
-                    mediaPlayer.setDataSource(context, Uri.parse(url), header);
-                    return;
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                return;
-            } else{
-                System.out.println("不存在");
-            }
-        }*/
+
+
 
 
         if (url.startsWith("http") && !url.contains("127.0.0.1") && !url.contains(".m3u8")) {
@@ -105,7 +86,6 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
                 //此处转换了url，然后再赋值给mUrl。
                 url = proxy.getProxyUrl(url);
                 mCacheFile = (!url.startsWith("http"));
-
                 //注册上缓冲监听
                 if (!mCacheFile) {
                     proxy.registerCacheListener(this, originUrl);
@@ -115,6 +95,7 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
                 && !url.startsWith("rtsp") && !url.contains(".m3u8"))) {
             mCacheFile = true;
         }
+
         try {
             mediaPlayer.setDataSource(context, Uri.parse(url), header);
         } catch (IOException e) {

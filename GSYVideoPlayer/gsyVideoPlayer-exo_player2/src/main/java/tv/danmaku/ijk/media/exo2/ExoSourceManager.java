@@ -120,6 +120,7 @@ public class ExoSourceManager {
                 break;
             case C.TYPE_OTHER:
             default:
+
                 mediaSource = new ExtractorMediaSource.Factory(getDataSourceFactoryCache(mAppContext, cacheEnable, preview, cacheDir))
                         .setExtractorsFactory(new DefaultExtractorsFactory())
                         .createMediaSource(contentUri);
