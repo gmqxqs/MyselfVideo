@@ -92,7 +92,6 @@ public class MyselfActivity extends AppCompatActivity {
         url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
        // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
         GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
-
         gsyVideoOption
                 .setIsTouchWiget(true)
                 .setRotateViewAuto(false)
