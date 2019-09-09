@@ -41,6 +41,7 @@ import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 
 import com.shuyu.gsyvideoplayer.utils.Md5Utils;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
@@ -103,6 +104,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected  EditText edit_danmu;
     protected List<GSYVideoModel> mUriList = new ArrayList<>();
     protected boolean isDown = false;
+    protected boolean isNormal = false;
+    protected boolean isComplete = false;
     public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
     public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> getUrls(){
         return urls;
@@ -214,6 +217,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             public void onClick(View v) {
                // showWifiDialog();
                 //startPlayLogic();
+
                 playNextUrl(0);
                 // startButtonLogic();
             }
@@ -844,6 +848,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             ((ENDownloadView) mLoadingProgressBar).reset();
         }*/
         // updateStartImage();
+        isComplete = true;
         upPlayImage();
     }
 
@@ -852,13 +857,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Debuger.printfLog("changeUiToError");
         String time = mCurrentTimeTextView.getText().toString();
         System.out.println("time:"+time);
-        SimpleDateFormat sdf =   new SimpleDateFormat(  "mm:ss " );
-        Date date = new Date();
-        try{
-          date = sdf.parse( time);
-        } catch (Exception e){
-
-        }
 
         setViewShowState(mTopContainer, GONE);
         setViewShowState(mBottomContainer, GONE);
@@ -871,8 +869,14 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         if(isDown){
             System.out.println("isDown:"+ isDown);
             //setViewShowState(newstart,GONE);
-            playNextUrl(errortime);
-            isDown = false;
+            if(NetworkUtils.isConnected(contextFirst)){
+                playNextUrl(errortime);
+                isDown = false;
+            } else{
+                releaseVideos();
+                return;
+            }
+
         } else{
             System.out.println("!isDown:"+ isDown);
             setViewShowState(newstart,GONE);
@@ -1360,17 +1364,18 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             String configRoot = contextFirst.getExternalFilesDir(null).getPath();
             staticUrl = configRoot + staticUrl;
             System.out.println("staticUrl:" +staticUrl);
-
-        }
-        if(!staticUrl.equals("")){
-            list.add(staticUrl);
-            httpUrl = url.substring(url.indexOf("http"),url.length());
-            if(!httpUrl.equals("")){
-                list.add(httpUrl);
+            if(!staticUrl.equals("")){
+                list.add(staticUrl);
+                httpUrl = url.substring(url.indexOf("http"),url.length());
+                if(!httpUrl.equals("")){
+                    list.add(httpUrl);
+                }
             }
-        } else{
+        }
+        if(url.startsWith("http")){
             list.add(url);
         }
+
 
         return list;
     }
@@ -1620,38 +1625,39 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     public boolean playNextUrl(int position) {
         if (isDown){
             if (mPlayPosition < (mUriList.size() - 1)) {
-                mPlayPosition += 1;
+                if(!isComplete){
+                    mPlayPosition += 1;
+                }
+
                 System.out.println("mPlayPositionNormal:" + mPlayPosition );
                 GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
                 MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
-         /*   isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
-            System.out.println("是不是视频广告:"+isAdModel);*/
+
                 mSaveChangeViewTIme = 0;
                 setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);
                 if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
                     mTitleTextView.setText(gsyVideoModel.getTitle());
                 }
-    /*        System.out.println("startTime:" + time);
-            VideoOptionModel videoOptionModel =
-                    new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "seek-at-start", time);
-            List<VideoOptionModel> list = new ArrayList<>();
-            list.add(videoOptionModel);
-            GSYVideoManager.instance().setOptionModelList(list);*/
+
                 System.out.println("当前播的位置:"+position);
                 setSeekOnStart(position);
                 startPlayLogic();
                 return true;
             }
-           /* else{
-                startPlayLogic();
-            }*/
-        } else {
-            mPlayPosition -= 1;
+
+        } else if(!isDown) {
+            if(mUriList.size() == 1 ){
+                mPlayPosition = 0;
+            } else{
+                mPlayPosition -= 1;
+            }
+
             System.out.println("mPlayPositionDown:" + mPlayPosition);
             System.out.println("错误的网络位置:" + position);
             GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
             MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
             isDown = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
+            isNormal = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_NORMAL);
             System.out.println("是不是下载视频:" + isDown);
             mSaveChangeViewTIme = 0;
             setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);
