@@ -89,7 +89,8 @@ public class MyselfActivity extends AppCompatActivity {
         header.put("ee", "33");
         header.put("allowCrossProtocolRedirects", "true");*/
         //   File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
-        url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
+    //    url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
+        url = "http://static_api.maogou.vip/9e9e1b7ea4e250af8fe1f1865650d42b/a036cac2531b35692e8975f252229fcf.m3u8";
        // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
         GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
 
@@ -190,12 +191,11 @@ public class MyselfActivity extends AppCompatActivity {
       /*  videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 50);
         list.add(videoOptionModel);*/
         GSYVideoManager.instance().setOptionModelList(list);
-        PlayerFactory.setPlayManager(Exo2PlayerManager.class);
+       PlayerFactory.setPlayManager(Exo2PlayerManager.class);
         GSYVideoManager.onResume(false);
         //  IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
         IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_ERROR);
         videoPlayer.startPlayLogic();
-
     }
 
 
