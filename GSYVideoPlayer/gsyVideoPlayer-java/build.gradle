@@ -55,7 +55,7 @@ uploadArchives {
     configuration = configurations.archives
     repositories {
         mavenDeployer {
-            repository(url: "file://E://WorkSpace/myaar/repository/")
+            repository(url: "file://F://WorkSpace/myaar/repository/")
             pom.project {
                 version '1.0.0'
                 artifactId  "gsyvideoplayerarr"

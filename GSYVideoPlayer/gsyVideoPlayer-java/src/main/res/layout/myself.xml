@@ -340,25 +340,26 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
         android:visibility="gone">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/newstart"
-            android:src="@drawable/vedio_default_play_icon"
-            android:visibility="visible"/>
 
+    <ImageView
+        android:id="@+id/newstart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/vedio_default_play_icon"
+        android:visibility="visible"/>
 
-        <!--重播文字提示-->
-        <TextView
-            android:id="@+id/replay_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/newstart"
-            android:text=""
-            android:layout_marginLeft="10dp"
-            android:textColor="#ffffff"
-            android:textSize="12sp"
-            android:visibility="invisible" />
+    <!--重播文字提示-->
+    <TextView
+        android:id="@+id/replay_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newstart"
+        android:text=""
+        android:layout_marginLeft="10dp"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:visibility="invisible"/>
+
     </LinearLayout>
     <ImageView
         android:id="@+id/small_close"
@@ -368,8 +369,7 @@
         android:paddingTop="10dp"
         android:scaleType="centerInside"
         android:src="@drawable/video_small_close"
-        android:visibility="gone" />
-
+        android:visibility="gone"/>
     <!--锁屏按钮-->
     <ImageView
         android:id="@+id/lock_screen"
@@ -392,4 +392,96 @@
         android:layout_marginTop="-5dp"
         android:visibility="gone"
         android:src="@drawable/vedio_sent_barrage_icon" />
+    <LinearLayout
+        android:id="@+id/adLinearLayout"
+        android:layout_width="130dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="30dp"
+        android:layout_alignParentRight="true"
+        android:scaleType="centerInside"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal"
+        android:background="@drawable/video_jump_btn_bg"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/ad_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dp"
+            android:text="10"
+            android:textSize="12dp"
+            android:textColor="#FFFFFF"/>
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="|"
+            android:textSize="11dp"
+            android:paddingLeft="7dp"
+            android:textColor="#B2FFFFFF"/>
+
+        <!--    <TextView
+                android:id="@+id/jump_ad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/video_jump_btn_bg"
+                android:paddingBottom="4dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="4dp"
+                android:text="VIP可关闭广告"
+                android:textColor="#FFFFFF" />-->
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/jump_ad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="7dp"
+            android:text="VIP可关闭广告"
+            android:textSize="11dp"
+            android:textColor="#B2FFFFFF"
+            android:visibility="visible"/>
+
+        <!--    <ImageView
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/ad_close_icon2"
+                android:visibility="visible" />-->
+        <TextView
+            android:id="@+id/adimage_skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/video_jump_btn_bg"
+            android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="4dp"
+            android:text="10秒 跳过广告"
+            android:textColor="#FFFFFF"
+            android:visibility="gone" />
+    </LinearLayout>
+
 </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
