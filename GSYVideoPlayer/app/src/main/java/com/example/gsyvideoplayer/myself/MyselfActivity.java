@@ -87,8 +87,8 @@ public class MyselfActivity extends AppCompatActivity {
        // File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
       // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
       //  String tempUrl = "static://2/7/2d09d6d01e841029aaf8a0d80a6bdf29/index.m3u8http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
-      //  String tempUrl = "static://storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-        String tempUrl = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+        String tempUrl = "static://storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+      //  String tempUrl = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
         ArrayList<String> listUrl = new ArrayList<String>();
         listUrl = videoPlayer.subString(tempUrl);
         System.out.println("list:" + listUrl);
@@ -155,8 +155,6 @@ public class MyselfActivity extends AppCompatActivity {
         System.out.println("urls:" + urls);
         videoPlayer.setAdUp(urls,true,0);
        //   videoPlayer.setUp("http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8",true,null,"");
-
-
         videoPlayer.startPlayLogic();
     }
 

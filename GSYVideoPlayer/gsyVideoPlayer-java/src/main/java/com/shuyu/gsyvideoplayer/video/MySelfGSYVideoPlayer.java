@@ -183,6 +183,15 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         super.init(context);
         // mWidgetContainer = (ViewGroup) findViewById(R.id.widget_container);
         mJumpAd = findViewById(R.id.jump_ad);
+        if (mJumpAd != null) {
+            mJumpAd.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("点击跳转");
+                    playNextUrl(0);
+                }
+            });
+        }
         mADTime = (TextView) findViewById(R.id.ad_time);
         surface_container = findViewById(R.id.surface_container);
         batteryView = findViewById(R.id.battery);
@@ -202,7 +211,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         replay = findViewById(R.id.replay);
         replay_text = findViewById(R.id.replay_text);
         bottom_progressbar = findViewById(R.id.bottom_progressbar);
-      /*  mAdImageView = findViewById(R.id.adImage);
+        mAdImageView = findViewById(R.id.adImage);
         mAdFrameLayout = findViewById(R.id.adFrameLayout);
         mAdClose = findViewById(R.id.ad_close);
         mAdClose.setOnClickListener(new OnClickListener() {
@@ -211,7 +220,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mAdFrameLayout.setVisibility(GONE);
             }
         });
-        mAd = findViewById(R.id.ad);*/
+        mAd = findViewById(R.id.ad);
         mAdimage_skip = findViewById(R.id.adimage_skip);
         adLinearLayout = findViewById(R.id.adLinearLayout);
         mDanmu = findViewById(R.id.danmu);
@@ -483,6 +492,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     @Override
     public void onPrepared() {
         super.onPrepared();
+        isFirstPrepared = true;
+        changeAdUIState();
 
 
     }
@@ -587,7 +598,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 bottom_progressbar.setVisibility(GONE);
 
             }
-
+            changeAdUIState();
             return true;
         }
 
@@ -1416,6 +1427,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         st.videoAdUrl = sf.getVideoAdUrl();
         st.isFirstPrepared = sf.isFirstPrepared;
         st.pauseAdImageUrl = sf.getPauseAdImageUrl();
+        st.adLinearLayout = sf.adLinearLayout;
         if(sf.bmp != null){
             st.bmp = sf.bmp;
             st.getAdClose().setVisibility(View.VISIBLE);
@@ -1870,10 +1882,11 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             }
 
 
-            isAdModel = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
+            isAdModel = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_AD);
             isDown = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
+            isNormal = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_NORMAL);
         }
-
+        changeAdUIState();
         mUriList = url;
         mPlayPosition = position;
         mMapHeadData = mapHeadData;
@@ -1936,7 +1949,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 if(!isComplete){
                     mPlayPosition += 1;
                 }
-
                 System.out.println("mPlayPositionDown:" + mPlayPosition);
                 System.out.println("错误的网络位置:" + position);
                 GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
@@ -1956,7 +1968,26 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 return true;
             }
 
-        } else if(!isDown) {
+        }else if(isAdModel){
+            System.out.println("广告跳转");
+            if (mPlayPosition < (mUriList.size() - 1)) {
+                mPlayPosition += 1;
+                System.out.println("mPlayPositionDown:" + mPlayPosition);
+                GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
+                MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
+                isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
+                isDown = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
+                isNormal = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_NORMAL);
+                System.out.println("是不是视频广告:"+isAdModel);
+                mSaveChangeViewTIme = 0;
+                setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);
+                if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
+                    mTitleTextView.setText(gsyVideoModel.getTitle());
+                }
+                startPlayLogic();
+                return true;
+            }
+        }else if(isNormal) {
             if(mUriList.size() == 1 ){
                 mPlayPosition = 0;
             } else{
