@@ -85,14 +85,14 @@ public class MyselfActivity extends AppCompatActivity {
 
        // File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
       // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
-      //  url = "https://apd-f8910e1356000a77700d03e763a2f1de.v.smtcdns.com/moviets.tc.qq.com/AzbLMHFlwekSJjr_iNj8ZrO-6pjH54wMP0_YYtp6b95Q/uwMROfz2r5xgoaQXGdGnC2df64gVTKzl5C_X6A3JOVT0QIb-/oaIHHmVKVBBoOBA7WtDx9YsscU0QPUuyvoR-GBor2VlsxphBvUem7dEaqWk-knFb0MA6aZzGCNG4VSIoPH5VK_5NjmaTKSb_YWB8_wFQBgj_PSQILC5bEl9-wM3BEzfNJfiarEDgfg2nZGKGFQPR7JHshfjFiMyZnz8Jm6BOsJw/w0031s4gikk.321004.ts.m3u8?ver=4";
-        String tempUrl = "static://2/7/2d09d6d01e841029aaf8a0d80a6bdf29/index.m3u8http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
+      //  String tempUrl = "static://2/7/2d09d6d01e841029aaf8a0d80a6bdf29/index.m3u8http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
+      //  String tempUrl = "static://storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+        String tempUrl = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
         ArrayList<String> listUrl = new ArrayList<String>();
         listUrl = videoPlayer.subString(tempUrl);
         System.out.println("list:" + listUrl);
    //     String url = "https://apd-1f573461e2849c2dff8de8011848088b.v.smtcdns.com/moviets.tc.qq.com/A-pfo_cZrdx-q2vFBqnpS4xcOM5Jb9Q8r8GgdIs8r8P0/uwMROfz2r5zAoaQXGdGnC2df644E7D3uP8M8pmtgwsRK9nEL/h3Ir07Asx9wg0_yDFrgKal0z4RSuVdCBIljI9eWOBAODkcEcQByGBAJMGF42Hkd48Gmf8rSFFPW5hh53XONL7LmdZpg9INujHPIJA-Y8gtK6W5P2XvMvBxKABOCWelv-mebHpqBSSTBUz6uDLGuHFhLeXt8dESEIn7_tnDs0CpU/z00310ev4nq.321002.ts.m3u8?ver=4";
-        String newUrl = videoPlayer.playUrl(url);
-        System.out.println("newUrlL:" + newUrl);
+
         urls = videoPlayer.getUrls();
         System.out.println("listUrl.size():" + listUrl.size());
         if(listUrl.size() >= 2){
