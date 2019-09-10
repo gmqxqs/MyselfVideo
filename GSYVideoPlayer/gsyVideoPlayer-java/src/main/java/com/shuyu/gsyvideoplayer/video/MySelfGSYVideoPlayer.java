@@ -1361,8 +1361,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         String httpUrl = "";
         if(url.startsWith("static")){
             staticUrl = url.substring(url.indexOf("/")+1,url.indexOf("http"));
-            String configRoot = contextFirst.getExternalFilesDir(null).getPath();
-            staticUrl = configRoot + staticUrl;
+        /*    String configRoot = contextFirst.getExternalFilesDir(null).getPath();
+            staticUrl = configRoot + staticUrl;*/
             System.out.println("staticUrl:" +staticUrl);
             if(!staticUrl.equals("")){
                 list.add(staticUrl);
@@ -1380,7 +1380,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         return list;
     }
 
-    public String playUrl(String originUrl) {
+   /* public String playUrl(String originUrl) {
         String url = originUrl;
         if (url.startsWith("http") && !url.contains("127.0.0.1") && url.contains(".m3u8")) {
             String endUrl = url.substring(url.lastIndexOf("/") + 1, url.length());
@@ -1418,7 +1418,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
         return  originUrl;
 
-    }
+    }*/
 
 
     public static class GSYADVideoModel extends GSYVideoModel {
