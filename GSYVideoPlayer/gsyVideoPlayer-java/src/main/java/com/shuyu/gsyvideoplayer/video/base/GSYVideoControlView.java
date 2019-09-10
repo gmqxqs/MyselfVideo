@@ -747,6 +747,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
 
 
     protected void touchSurfaceUp() {
+
         if (mChangePosition) {
             int duration = getDuration();
             int progress = mSeekTimePosition * 100 / (duration == 0 ? 1 : duration);

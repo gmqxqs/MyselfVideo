@@ -107,6 +107,43 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected boolean isDown = false;
     protected boolean isNormal = false;
     protected boolean isComplete = false;
+    protected boolean isAdModel = false;
+    protected View mJumpAd;
+    protected TextView mADTime;
+    protected boolean isFirstPrepared = false;
+    public boolean isImageAd = false;
+
+    protected ImageView mAdImageView;
+    protected  WebView webView;
+    protected  TextView mAdimage_skip;
+    protected  FrameLayout mAdFrameLayout;
+    protected  ImageView mAdClose;
+    protected  ImageView mAd;
+    public Bitmap bmp;                     //bitmap图片对象
+    public int primaryWidth;               //原图片宽
+    public int primaryHeight;              //原图片高
+    public double scaleWidth, scaleHeight; //高宽比例
+    public LinearLayout adLinearLayout;
+
+    //片头视频广告
+    protected String videoAdUrl;
+    public void setVideoAdUrl(String videoAdUrl){
+        this.videoAdUrl = videoAdUrl;
+    }
+    public String getVideoAdUrl(){
+        return videoAdUrl;
+    }
+    protected  String pauseAdImageUrl;
+    public void setPauseAdImageUrl(String pauseAdImageUrl){
+        this.pauseAdImageUrl = pauseAdImageUrl;
+    }
+    public String getPauseAdImageUrl(){
+        return  pauseAdImageUrl;
+    }
+    public ImageView getMadImageView(){
+        return mAdImageView;
+    }
+
     public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
     public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> getUrls(){
         return urls;
@@ -145,6 +182,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected void init(final Context context) {
         super.init(context);
         // mWidgetContainer = (ViewGroup) findViewById(R.id.widget_container);
+        mJumpAd = findViewById(R.id.jump_ad);
+        mADTime = (TextView) findViewById(R.id.ad_time);
         surface_container = findViewById(R.id.surface_container);
         batteryView = findViewById(R.id.battery);
         layout_bottom = findViewById(R.id.all);
@@ -163,6 +202,18 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         replay = findViewById(R.id.replay);
         replay_text = findViewById(R.id.replay_text);
         bottom_progressbar = findViewById(R.id.bottom_progressbar);
+      /*  mAdImageView = findViewById(R.id.adImage);
+        mAdFrameLayout = findViewById(R.id.adFrameLayout);
+        mAdClose = findViewById(R.id.ad_close);
+        mAdClose.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdFrameLayout.setVisibility(GONE);
+            }
+        });
+        mAd = findViewById(R.id.ad);*/
+        mAdimage_skip = findViewById(R.id.adimage_skip);
+        adLinearLayout = findViewById(R.id.adLinearLayout);
         mDanmu = findViewById(R.id.danmu);
         edit_danmu = findViewById(R.id.edit_danmu);
         edit_danmu.setOnKeyListener(new OnKeyListener() {
@@ -239,6 +290,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     }
 
+    public  ImageView getAdClose(){
+        return  mAdClose;
+    }
+
+    public  ImageView getAd(){
+        return  mAd;
+    }
 
 
     public ImageView getPlaystart(){
@@ -507,6 +565,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mPan.setVisibility(GONE);
                 bottom_progressbar.setVisibility(VISIBLE);
                 controllerbottom.setVisibility(VISIBLE);
+                if(isAdModel){
+                    mADTime.setVisibility(VISIBLE);
+                    mJumpAd.setVisibility(VISIBLE);
+                }
 
             } else {
                 System.out.println("非全屏");
@@ -558,7 +620,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     @Override
     protected void hideAllWidget() {
-
+        if (isFirstPrepared && isAdModel) {
+            return;
+        }
         setViewShowState(mBottomContainer, INVISIBLE);
         setViewShowState(controllerbottom, INVISIBLE);
         setViewShowState(mTopContainer, INVISIBLE);
@@ -704,6 +768,37 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
         return false;
     }
+    /**
+     * 广告期间不需要触摸
+     */
+    @Override
+    protected void touchSurfaceUp() {
+        if (mChangePosition && isAdModel) {
+            return;
+        }
+        super.touchSurfaceUp();
+
+    }
+    protected void touchSurfaceMove(float deltaX, float deltaY, float y) {
+        if (mChangePosition && isAdModel) {
+            return;
+        } else {
+            super.touchSurfaceMove(deltaX, deltaY, y);
+        }
+    }
+
+    protected void touchSurfaceMoveFullLogic(float absDeltaX, float absDeltaY) {
+        if ((absDeltaX > mThreshold || absDeltaY > mThreshold)) {
+            int screenWidth = CommonUtil.getScreenWidth(getContext());
+            if (isAdModel && absDeltaX >= mThreshold && Math.abs(screenWidth - mDownX) > mSeekEndOffset) {
+                //防止全屏虚拟按键
+                mChangePosition = true;
+                mDownPosition = getCurrentPositionWhenPlaying();
+            } else {
+                super.touchSurfaceMoveFullLogic(absDeltaX, absDeltaY);
+            }
+        }
+    }
 
 
     protected void showAllWidget() {
@@ -797,6 +892,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
        /* if (mLoadingProgressBar instanceof ENDownloadView) {
             ((ENDownloadView) mLoadingProgressBar).reset();
         }*/
+        setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
+        setViewShowState(controllerbottom, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
+        setViewShowState(mAdImageView,GONE);
 
 
         updateStartImage();
@@ -816,11 +914,15 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mLoadingProgressBar, GONE);
         setViewShowState(mThumbImageViewLayout, GONE);
         setViewShowState(mBottomProgressBar, GONE);
-        if(mIfCurrentIsFullscreen){
+       /* if(mIfCurrentIsFullscreen){
             setViewShowState(controllerbottom, VISIBLE);
         } else{
             setViewShowState(controllerbottom, GONE);
-        }
+        }*/
+        setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
+        setViewShowState(controllerbottom, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
+        setViewShowState(mAdImageView,VISIBLE);
+        setViewShowState(mAdFrameLayout,VISIBLE);
 
         updateStartImage();
         updatePauseCover();
@@ -1064,6 +1166,18 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     @Override
     protected void onClickUiToggle() {
+        if (isAdModel) {
+            System.out.println("广告视频跳转:"+isAdModel);
+            System.out.println("videoAdUrl:"+getVideoAdUrl());
+            Intent intent = new Intent(CommonUtil.getActivityContext(contextFirst), VideoAdWebViewActivity.class);
+            Bundle bundle = new Bundle();
+
+            bundle.putString("videoAdUrl",getVideoAdUrl());
+            intent.putExtras(bundle);
+            CommonUtil.getActivityContext(contextFirst).startActivity(intent);
+            return;
+        }
+
         if (mIfCurrentIsFullscreen && mLockCurScreen) {
             setViewShowState(mLockScreen, VISIBLE);
             return;
@@ -1251,6 +1365,11 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             if (progress != 0) mBottomProgressBar.setProgress(progress);
             setSecondaryProgress(secProgress);
         }
+        if (mADTime != null && currentTime > 0) {
+            int totalSeconds = totalTime / 1000;
+            int currentSeconds = currentTime / 1000;
+            mADTime.setText("" + (totalSeconds - currentSeconds));
+        }
 
 
     }
@@ -1293,8 +1412,160 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         st.mUriList = sf.mUriList;
         st.urls = sf.urls;
         st.isDown = sf.isDown;
+        st.isAdModel = sf.isAdModel;
+        st.videoAdUrl = sf.getVideoAdUrl();
+        st.isFirstPrepared = sf.isFirstPrepared;
+        st.pauseAdImageUrl = sf.getPauseAdImageUrl();
+        if(sf.bmp != null){
+            st.bmp = sf.bmp;
+            st.getAdClose().setVisibility(View.VISIBLE);
+            st.getAd().setVisibility(View.VISIBLE);
+            //    st.bmp = sf.mAdImageView.getBackground();
+            //原始大小
+            primaryWidth = st.bmp.getWidth();
+            primaryHeight = st.bmp.getHeight();
+            //初始比例为1
+            scaleWidth = scaleHeight = 1;
+
+            //st.mAdImageView.setImageBitmap(bmp);
+            // scale(2, 2);
+            scaleWidth = scaleWidth * 1.5;  //缩放到原来的*倍
+            scaleHeight = scaleHeight * 1.5;
+
+            Matrix matrix = new Matrix();   //矩阵，用于图片比例缩放
+            matrix.postScale((float)scaleWidth, (float)scaleHeight);    //设置高宽比例（三维矩阵）
+
+            //缩放后的BitMap
+            Bitmap newBmp = Bitmap.createBitmap(st.bmp, 0, 0, primaryWidth, primaryHeight, matrix, true);
+
+            //重新设置BitMap
+            st.mAdImageView.setImageBitmap(newBmp);
+            //scale(0.8,0.8);
+            displayAd();
+            st.mAdImageView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(CommonUtil.getActivityContext(contextFirst), PauseImageAdWebViewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("pauseImageAdUrl",getPauseAdImageUrl());
+                    intent.putExtras(bundle);
+                    CommonUtil.getActivityContext(contextFirst).startActivity(intent);
+                }
+            });
+        }
+
+
+        st.changeAdUIState();
     }
 
+
+    public void displayAd(){
+
+        //原始大小
+        primaryWidth = bmp.getWidth();
+        primaryHeight = bmp.getHeight();
+        //初始比例为1
+        scaleWidth = scaleHeight = 1;
+        //st.mAdImageView.setImageBitmap(bmp);
+        // scale(2, 2);
+        scaleWidth = scaleWidth * 1.0;  //缩放到原来的*倍
+        scaleHeight = scaleHeight * 1.0;
+
+        Matrix matrix = new Matrix();   //矩阵，用于图片比例缩放
+        matrix.postScale((float)scaleWidth, (float)scaleHeight);    //设置高宽比例（三维矩阵）
+
+        //缩放后的BitMap
+        Bitmap newBmp = Bitmap.createBitmap(bmp, 0, 0, primaryWidth, primaryHeight, matrix, true);
+
+        //重新设置BitMap
+        mAdImageView.setImageBitmap(newBmp);
+    }
+    /**
+     * 缩放
+     */
+    private void scale(double  scale_width, double scale_height) {
+
+        //这种方法，有点不好是：如果图片大小超出屏幕会报错。
+        if((scale_width > 1 && scaleWidth * primaryWidth >= CommonUtil.getActivityContext(contextFirst).getWindowManager().getDefaultDisplay().getWidth())
+                || (scale_width > 1 && scale_height * primaryHeight >= CommonUtil.getActivityContext(contextFirst).getWindowManager().getDefaultDisplay().getHeight())){
+            //bt_bigger.setEnabled(false);
+        }else {
+            //bt_bigger.setEnabled(true);
+        }
+
+
+
+        scaleWidth = scaleWidth * scale_width;  //缩放到原来的*倍
+        scaleHeight = scaleHeight * scale_height;
+
+        Matrix matrix = new Matrix();   //矩阵，用于图片比例缩放
+        matrix.postScale((float)scaleWidth, (float)scaleHeight);    //设置高宽比例（三维矩阵）
+
+        //缩放后的BitMap
+        Bitmap newBmp = Bitmap.createBitmap(bmp, 0, 0, primaryWidth, primaryHeight, matrix, true);
+
+        //重新设置BitMap
+        mAdImageView.setImageBitmap(newBmp);
+
+
+    }
+
+    /**
+     * 根据是否广告url修改ui显示状态
+     */
+    public void changeAdUIState() {
+
+        if (mJumpAd != null) {
+            mJumpAd.setVisibility((isFirstPrepared && isAdModel) ? VISIBLE : GONE);
+        }
+
+        if(adLinearLayout != null){
+            adLinearLayout.setVisibility((isFirstPrepared && isAdModel) ? VISIBLE : GONE);
+        }
+
+        if (mADTime != null) {
+            mADTime.setVisibility((isFirstPrepared && isAdModel) ? VISIBLE : GONE);
+        }
+
+        /*if (mWidgetContainer != null) {
+            mWidgetContainer.setVisibility((isFirstPrepared && isAdModel) ? GONE : VISIBLE);
+        }*/
+       /* if (layout_bottom != null) {
+            int color = (isFirstPrepared && isAdModel) ? Color.TRANSPARENT : getContext().getResources().getColor(R.color.bottom_container_bg);
+            layout_bottom.setBackgroundColor(color);
+        }*/
+
+
+        if(playstart != null){
+            playstart.setVisibility((isFirstPrepared && isAdModel ) || isImageAd  || mIfCurrentIsFullscreen  ? GONE : VISIBLE);
+        }
+
+        if(controllerbottom!= null){
+            controllerbottom.setVisibility((isFirstPrepared && isAdModel ) || isImageAd  || !mIfCurrentIsFullscreen ? GONE : VISIBLE);
+        }
+
+        if( mFullscreenButton!= null){
+            mFullscreenButton.setVisibility(  mIfCurrentIsFullscreen ? GONE : VISIBLE);
+        }
+
+        if(mLockScreen!= null){
+            mLockScreen.setVisibility((isFirstPrepared && isAdModel) || isImageAd || !mIfCurrentIsFullscreen  ? GONE : VISIBLE);
+        }
+
+        if (mCurrentTimeTextView != null) {
+            mCurrentTimeTextView.setVisibility(((isFirstPrepared && isAdModel ) || isImageAd ) || (mIfCurrentIsFullscreen && isImageAd ) || mIfCurrentIsFullscreen ? GONE : VISIBLE);
+
+        }
+
+        if (mTotalTimeTextView != null) {
+            mTotalTimeTextView.setVisibility(((isFirstPrepared && isAdModel)  || isImageAd  )|| (mIfCurrentIsFullscreen && isImageAd ) || mIfCurrentIsFullscreen ?  GONE : VISIBLE);
+        }
+
+        if (mProgressBar != null) {
+            mProgressBar.setVisibility((isFirstPrepared && isAdModel) || isImageAd  ? INVISIBLE : VISIBLE);
+            mProgressBar.setEnabled(!(isFirstPrepared && isAdModel));
+        }
+    }
 
 
     protected void loopSetProgressAndTime() {
@@ -1314,7 +1585,14 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
      */
     @Override
     protected void touchDoubleUp() {
-
+       /* if (isAdModel) {
+            Intent intent = new Intent(CommonUtil.getAppCompActivity(contextFirst), PauseImageAdWebViewActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("adUrl",getAdUrl());
+            intent.putExtras(bundle);
+            CommonUtil.getAppCompActivity(contextFirst).startActivity(intent);
+            return;
+        }*/
         if (mIfCurrentIsFullscreen && mLockCurScreen) {
             setViewShowState(mLockScreen, VISIBLE);
             return;
@@ -1592,7 +1870,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             }
 
 
-           // isAdModel = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
+            isAdModel = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
             isDown = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
         }
 
@@ -1659,17 +1937,20 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     mPlayPosition += 1;
                 }
 
-                System.out.println("mPlayPositionNormal:" + mPlayPosition );
+                System.out.println("mPlayPositionDown:" + mPlayPosition);
+                System.out.println("错误的网络位置:" + position);
                 GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
                 MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
-
+                isDown = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
+                isNormal = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_NORMAL);
+                isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
+                System.out.println("是不是下载视频:" + isDown);
                 mSaveChangeViewTIme = 0;
                 setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);
                 if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
                     mTitleTextView.setText(gsyVideoModel.getTitle());
                 }
-
-                System.out.println("当前播的位置:"+position);
+                System.out.println("当前播的本地视频位置:" + position);
                 setSeekOnStart(position);
                 startPlayLogic();
                 return true;
@@ -1688,6 +1969,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
             isDown = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
             isNormal = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_NORMAL);
+            isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
             System.out.println("是不是下载视频:" + isDown);
             mSaveChangeViewTIme = 0;
             setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);

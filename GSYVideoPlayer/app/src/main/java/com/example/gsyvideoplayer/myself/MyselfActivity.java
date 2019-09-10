@@ -28,6 +28,7 @@ import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.video.MySelfGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.PauseImageAdWebViewActivity;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
@@ -95,6 +96,8 @@ public class MyselfActivity extends AppCompatActivity {
 
         urls = videoPlayer.getUrls();
         System.out.println("listUrl.size():" + listUrl.size());
+        urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
+                "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD));
         if(listUrl.size() >= 2){
             urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
                     "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
@@ -122,6 +125,23 @@ public class MyselfActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        //   videoPlayer.setImageAdUrl("http://www.baidu.com/");
+        videoPlayer.setVideoAdUrl("http://xm.ganji.com/");
+        //设置暂停图片广告的跳转地址
+        videoPlayer.setPauseAdImageUrl("https://www.suning.com/");
+        //点击暂停广告图片跳转
+        videoPlayer.getMadImageView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyselfActivity.this, PauseImageAdWebViewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                Bundle bundle = new Bundle();
+                bundle.putString("pauseImageAdUrl",videoPlayer.getPauseAdImageUrl());
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
