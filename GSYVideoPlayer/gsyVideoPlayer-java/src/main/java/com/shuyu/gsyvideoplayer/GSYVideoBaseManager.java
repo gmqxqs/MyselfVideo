@@ -278,6 +278,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
 
     @Override
     public void onSeekComplete(IMediaPlayer mp) {
+       /* System.out.println("完成seek");
         mainThreadHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -286,7 +287,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
                     listener().onSeekComplete();
                 }
             }
-        });
+        });*/
     }
 
     @Override
@@ -501,6 +502,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
     public long getCurrentPosition() {
         System.out.println("playerManager:" + playerManager);
         if (playerManager != null) {
+            System.out.println("playerManager.getCurrentPosition():"+playerManager.getCurrentPosition());
             return playerManager.getCurrentPosition();
         }
         return 0;

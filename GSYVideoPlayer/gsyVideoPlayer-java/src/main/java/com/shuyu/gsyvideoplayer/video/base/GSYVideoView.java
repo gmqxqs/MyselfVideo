@@ -489,6 +489,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
      */
     @Override
     public void onVideoPause() {
+        System.out.println("暂停");
         if (mCurrentState == CURRENT_STATE_PREPAREING) {
             mPauseBeforePrepared = true;
         }
@@ -520,6 +521,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
      */
     @Override
     public void onVideoResume(boolean seek) {
+        System.out.println("恢复");
         mPauseBeforePrepared = false;
         if (mCurrentState == CURRENT_STATE_PAUSE) {
             try {
@@ -545,6 +547,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
      */
     protected void netWorkErrorLogic() {
         final long currentPosition = getCurrentPositionWhenPlaying();
+        System.out.println("网络出问题:" + currentPosition);
         Debuger.printfError("******* Net State Changed. renew player to connect *******" + currentPosition);
         getGSYVideoManager().releaseMediaPlayer();
         postDelayed(new Runnable() {
@@ -553,7 +556,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
                 setSeekOnStart(currentPosition);
                 startPlayLogic();
             }
-        }, 500);
+        }, 100);
     }
 
 
@@ -737,6 +740,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
         if (mCurrentState == CURRENT_STATE_PLAYING) {
             try {
                 position = (int) getGSYVideoManager().getCurrentPosition();
+                System.out.println("current0:" + position);
             } catch (Exception e) {
                 e.printStackTrace();
                 return position;
@@ -745,6 +749,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
         if (mCurrentState == CURRENT_STATE_PAUSE) {
             try {
                 position = (int) getGSYVideoManager().getCurrentPosition();
+                System.out.println("current1:" + position);
                 if(position <= 0){
                     position = 0;
                 }

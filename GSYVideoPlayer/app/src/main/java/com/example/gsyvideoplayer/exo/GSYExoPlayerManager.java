@@ -199,6 +199,7 @@ public class GSYExoPlayerManager implements IPlayerManager {
     @Override
     public long getCurrentPosition() {
         if (mediaPlayer != null) {
+            System.out.println("mediaPlayer.getCurrentPosition():"+mediaPlayer.getCurrentPosition());
             return mediaPlayer.getCurrentPosition();
         }
         return 0;

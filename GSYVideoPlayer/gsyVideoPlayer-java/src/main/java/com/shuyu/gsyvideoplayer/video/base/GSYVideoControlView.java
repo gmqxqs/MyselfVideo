@@ -26,6 +26,7 @@ import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 
 import java.io.File;
 import java.util.Map;
@@ -340,7 +341,8 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 releaseNetWorkState();
                 break;
             case CURRENT_STATE_PREPAREING:
-                resetProgressAndTime();
+              //  resetProgressAndTime();
+                cancelDismissControlViewTimer();
                 break;
             case CURRENT_STATE_PLAYING:
                 if (isCurrentMediaListener()) {
@@ -355,9 +357,10 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 }
                 break;
             case CURRENT_STATE_ERROR:
-                if (isCurrentMediaListener()) {
+
+                /*if (isCurrentMediaListener()) {
                     getGSYVideoManager().releaseMediaPlayer();
-                }
+                }*/
                 break;
             case CURRENT_STATE_AUTO_COMPLETE:
                 Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ dismiss CURRENT_STATE_AUTO_COMPLETE");
@@ -637,6 +640,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
             @Override
             public void run() {
                 if (mCurrentState != CURRENT_STATE_NORMAL && mCurrentState != CURRENT_STATE_PREPAREING) {
+
                     if (percent != 0) {
                         setTextAndProgress(percent);
                         mBufferPoint = percent;
@@ -694,8 +698,10 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
             if (mSeekTimePosition > totalTimeDuration)
                 mSeekTimePosition = totalTimeDuration;
             String seekTime = CommonUtil.stringForTime(mSeekTimePosition);
+
             String totalTime = CommonUtil.stringForTime(totalTimeDuration);
             showProgressDialog(deltaX, seekTime, mSeekTimePosition, totalTime, totalTimeDuration);
+
         } else if (mChangeVolume) {
             deltaY = -deltaY;
             int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -811,7 +817,8 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 break;
             case CURRENT_STATE_PREPAREING:
                 changeUiToPreparingShow();
-                startDismissControlViewTimer();
+               // startDismissControlViewTimer();
+                cancelDismissControlViewTimer();
                 break;
             case CURRENT_STATE_PLAYING:
                 changeUiToPlayingShow();

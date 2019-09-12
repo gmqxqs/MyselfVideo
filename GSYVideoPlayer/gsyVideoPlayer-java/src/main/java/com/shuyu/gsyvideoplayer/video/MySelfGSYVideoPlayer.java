@@ -277,7 +277,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         newstart.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               // showWifiDialog();
+                // showWifiDialog();
                 //startPlayLogic();
 
                 playNextUrl(0);
@@ -450,7 +450,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     @Override
     public  void  onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-            System.out.println("进度条改变");
+        System.out.println("进度条改变");
         if (getGSYVideoManager() != null && mHadPlay) {
             try {
                 //int progress = seekBar.getProgress();
@@ -459,7 +459,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mBottomProgressBar.setProgress(seekBar.getProgress());
                 System.out.println("seekBarProgress():"+seekBar.getProgress());
                 mProgressBar.setProgress(seekBar.getProgress());
-               // setTextAndProgress(seekBar.getProgress());
+                // setTextAndProgress(seekBar.getProgress());
                 mCurrentTimeTextView.setText(CommonUtil.stringForTime(time));
                 mCurrentbottom.setText(CommonUtil.stringForTime(time));
 
@@ -738,7 +738,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     touchSurfaceMove(deltaX, deltaY, y);
                     break;
                 case MotionEvent.ACTION_UP:
-                   // startDismissControlViewTimer();
+                    // startDismissControlViewTimer();
                     touchSurfaceUp();
                     //   Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ surface_container ACTION_UP");
                     startProgressTimer();
@@ -906,7 +906,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
         setViewShowState(controllerbottom, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
         setViewShowState(mAdImageView,GONE);
-
+        setViewShowState(mAdFrameLayout,GONE);
 
         updateStartImage();
         upPlayImage();
@@ -917,7 +917,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Debuger.printfLog("changeUiToPauseShow");
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
-      //  setViewShowState(mStartButton,VISIBLE);
+        //  setViewShowState(mStartButton,VISIBLE);
         setViewShowState(mTimeandbarray,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
         setViewShowState(newstart, GONE);
         setViewShowState(startPlay, VISIBLE);
@@ -934,6 +934,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(controllerbottom, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
         setViewShowState(mAdImageView,VISIBLE);
         setViewShowState(mAdFrameLayout,VISIBLE);
+        if(mAdFrameLayout.getVisibility() == VISIBLE){
+            setViewShowState(startPlay, GONE);
+        }
 
         updateStartImage();
         updatePauseCover();
@@ -965,6 +968,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 ((ENDownloadView) mLoadingProgressBar).start();
             }
         }
+        if(isIfCurrentIsFullscreen()){
+            setViewShowState(controllerbottom, VISIBLE);
+        }
         upPlayImage();
     }
 
@@ -989,7 +995,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         // updateStartImage();
 
         if(isDown){
-           isComplete = true;
+            isComplete = true;
         }
 
         upPlayImage();
@@ -1009,23 +1015,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         int position = getCurrentPositionWhenPlaying();
         System.out.println("错误的位置:"+position);
         System.out.println("errorPosition:"+ errortime);
-        if(isDown){
-            System.out.println("isDown:"+ isDown);
-            //setViewShowState(newstart,GONE);
-            if(NetworkUtils.isConnected(contextFirst)){
-                playNextUrl(errortime);
-                isDown = false;
-            } else{
-                releaseVideos();
-                return;
-            }
-
-        } else{
-            System.out.println("!isDown:"+ isDown);
-            setViewShowState(newstart,GONE);
-            playNextUrl(errortime);
-            isDown = true;
-        }
 
         setViewShowState(replay, VISIBLE);
         setViewShowState(replay_text, GONE);
@@ -1037,6 +1026,30 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             ((ENDownloadView) mLoadingProgressBar).reset();
         }
         updateStartImage();*/
+        if(isDown){
+            System.out.println("isErrorDown:"+ isDown);
+            //setViewShowState(newstart,GONE);
+            if(NetworkUtils.isConnected(contextFirst)){
+                System.out.println("Net");
+                System.out.println("errortime1:" + errortime);
+                getCurrentPlayer().setSeekOnStart(errortime);
+                playNextUrl(errortime);
+                //isDown = false;
+                return;
+            } else{
+                System.out.println("ErrorNet");
+                releaseVideos();
+                return;
+            }
+
+        } else{
+            System.out.println("!isErrorNormal:"+ isNormal);
+            setViewShowState(newstart,GONE);
+            System.out.println("errortime2:" + errortime);
+            getCurrentPlayer().setSeekOnStart(errortime);
+            playNextUrl(errortime);
+            //  isDown = true;
+        }
         upPlayImage();
     }
 
@@ -1292,7 +1305,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             if (getGSYVideoManager() != null &&
                     getGSYVideoManager().isPlaying()) {
                 setStateAndUi(CURRENT_STATE_PAUSE);
-           //     mCurrentPosition = getGSYVideoManager().getCurrentPosition();
+                //     mCurrentPosition = getGSYVideoManager().getCurrentPosition();
                 if (getGSYVideoManager() != null)
                     getGSYVideoManager().pause();
             }
@@ -1313,7 +1326,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             try {
                 if (mCurrentPosition >= 0 && getGSYVideoManager() != null) {
                     if (seek) {
-                       // getGSYVideoManager().seekTo(mCurrentPosition);
+                        // getGSYVideoManager().seekTo(mCurrentPosition);
                     }
                     getGSYVideoManager().start();
                     setStateAndUi(CURRENT_STATE_PLAYING);
@@ -1366,7 +1379,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
 
         if (secProgress > 94) secProgress = 100;
-             setSecondaryProgress(secProgress);
+        setSecondaryProgress(secProgress);
         mTotalTimeTextView.setText(CommonUtil.stringForTime(totalTime));
         mTotalbottom.setText("/"+ CommonUtil.stringForTime(totalTime));
         // if (currentTime > 0)
@@ -1972,7 +1985,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             System.out.println("广告跳转");
             if (mPlayPosition < (mUriList.size() - 1)) {
                 mPlayPosition += 1;
-                System.out.println("mPlayPositionDown:" + mPlayPosition);
+                System.out.println("mPlayPositionDownAd:" + mPlayPosition);
                 GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
                 MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
                 isAdModel = (gsyadVideoModel.getType() == MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_AD);
@@ -1994,7 +2007,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mPlayPosition -= 1;
             }
 
-            System.out.println("mPlayPositionDown:" + mPlayPosition);
+            System.out.println("mPlayPositionDownNet:" + mPlayPosition);
             System.out.println("错误的网络位置:" + position);
             GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
             MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
