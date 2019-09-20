@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,13 +69,38 @@ public class MyselfActivity extends AppCompatActivity {
     public String getUrl(){
         return url;
     }
+    public EditText edit;
+    public Button play1;
+    public Button play2;
     public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myself);
+
         videoPlayer =  (MySelfGSYVideoPlayer) findViewById(R.id.video_player);
+        play1 = findViewById(R.id.play);
+        play1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                videoPlayer.setUp("https://youku.com-iqiyi.net/20190303/21817_a6cd96be/index.m3u8",false,null,"");
+                videoPlayer.startPlayLogic();
+
+            }
+        });
+
+        play2 = findViewById(R.id.play2);
+        play2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                videoPlayer.setUp("https://iqiyi.com-l-iqiyi.com/20190303/21817_a6cd96be/index.m3u8",false,null,"");
+                videoPlayer.startPlayLogic();
+            }
+        });
+
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -92,8 +118,9 @@ public class MyselfActivity extends AppCompatActivity {
        // File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
       // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
       //  String tempUrl = "static://2/7/2d09d6d01e841029aaf8a0d80a6bdf29/index.m3u8http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
-       String tempUrl = "static://storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-      //  String tempUrl = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+     //  String tempUrl = "static://storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+     //   String tempUrl = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+      String tempUrl ="https://iqiyi.com-l-iqiyi.com/20190303/21817_a6cd96be/index.m3u8";
       //  String tempUrl = "https://scontent-lga3-1.xx.fbcdn.net/v/t39.24130-6/10000000_194485571543767_1072296362069752098_n.mp4?_nc_cat=100&efg=eyJ2ZW5jb2RlX3RhZyI6Im9lcF9oZCJ9&_nc_oc=AQk0dFtDO98inb99mAaFjvRtWwPBRDPrIJIHT06Qw00mt_x9yRluXEFpgxuvE9XWZUA&_nc_ht=scontent-lga3-1.xx&oh=d051c96085dd5d01d64b1dcce0748d51&oe=5E080AFD";
         ArrayList<String> listUrl = new ArrayList<String>();
         listUrl = videoPlayer.subString(tempUrl);
@@ -113,9 +140,10 @@ public class MyselfActivity extends AppCompatActivity {
             urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
                     "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
         }
-
+        videoPlayer.setRotateViewAuto(false);
         videoPlayer.setAutoFullWithSize(true);
         videoPlayer.setShowFullAnimation(false);
+        videoPlayer.setLooping(false);
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +153,8 @@ public class MyselfActivity extends AppCompatActivity {
                 videoPlayer.startWindowFullscreen(MyselfActivity.this, true, true);
             }
         });
-
+        videoPlayer.setIsTouchWiget(true);
+        videoPlayer.setLooping(false);
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,9 +163,9 @@ public class MyselfActivity extends AppCompatActivity {
         });
 
         //   videoPlayer.setImageAdUrl("http://www.baidu.com/");
-        videoPlayer.setVideoAdUrl("http://xm.ganji.com/");
+  //      videoPlayer.setVideoAdUrl("http://xm.ganji.com/");
         //设置暂停图片广告的跳转地址
-        videoPlayer.setPauseAdImageUrl("https://www.suning.com/");
+   //     videoPlayer.setPauseAdImageUrl("https://www.suning.com/");
         //点击暂停广告图片跳转
         videoPlayer.getMadImageView().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +178,6 @@ public class MyselfActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         //解决拖动视频会弹回来,因为ijk的FFMPEG对关键帧问题。
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
@@ -164,18 +192,22 @@ public class MyselfActivity extends AppCompatActivity {
                 new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
         list.add(videoOptionModel);
         videoOptionModel =
-                new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 30);
+                new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 50);
         list.add(videoOptionModel);
-
+        videoOptionModel =
+                new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"reconnect",5);
+        list.add(videoOptionModel);
         GSYVideoManager.instance().setOptionModelList(list);
         GSYVideoManager.instance().setTimeOut(4000, true);
         PlayerFactory.setPlayManager(Exo2PlayerManager.class);
+      //  PlayerFactory.setPlayManager(IjkPlayerManager.class);
         System.out.println("urls:" + urls);
         videoPlayer.setAdUp(urls,true,0);
        //   videoPlayer.setUp("http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8",true,null,"");
-     //   videoPlayer.startPlayLogic();
+      //  videoPlayer.startPlayLogic();
         startPlay();
     }
+
 
 
     @Override
@@ -185,6 +217,7 @@ public class MyselfActivity extends AppCompatActivity {
             orientationUtils.backToProtVideo();
         }*/
         if (GSYVideoManager.backFromWindowFull(this)) {
+            System.out.println("回退");
             return;
         }
         super.onBackPressed();
@@ -200,7 +233,7 @@ public class MyselfActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        getCurPlay().onVideoResume(false);
+        getCurPlay().onVideoResume(true);
         super.onResume();
         isPause = false;
     }
@@ -209,6 +242,7 @@ public class MyselfActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (isPlay) {
+            System.out.println("釋放");
             getCurPlay().release();
         }
         //GSYPreViewManager.instance().releaseMediaPlayer();

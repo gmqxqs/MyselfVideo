@@ -12,4 +12,23 @@
           android:layout_width="match_parent"
           android:layout_height="211dp"/>
 
+      <LinearLayout
+          android:layout_alignParentBottom="true"
+
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="优酷"/>
+            <Button
+                android:id="@+id/play2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="爱奇艺"/>
+      </LinearLayout>
+
 </RelativeLayout>

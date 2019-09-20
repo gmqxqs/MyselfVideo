@@ -162,6 +162,7 @@ public class Exo2PlayerManager implements IPlayerManager {
 
     @Override
     public void start() {
+
         if (mediaPlayer != null) {
             mediaPlayer.start();
         }
@@ -208,6 +209,7 @@ public class Exo2PlayerManager implements IPlayerManager {
     @Override
     public void seekTo(long time) {
         if (mediaPlayer != null) {
+            System.out.println("拖动进度条time:"+time);
             mediaPlayer.seekTo(time);
         }
     }

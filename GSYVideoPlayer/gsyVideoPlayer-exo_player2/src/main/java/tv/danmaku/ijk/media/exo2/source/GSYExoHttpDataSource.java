@@ -171,6 +171,7 @@ public class GSYExoHttpDataSource extends BaseDataSource implements HttpDataSour
         String responseMessage;
         try {
             responseCode = this.connection.getResponseCode();
+
             responseMessage = this.connection.getResponseMessage();
         } catch (IOException var8) {
             this.closeConnectionQuietly();

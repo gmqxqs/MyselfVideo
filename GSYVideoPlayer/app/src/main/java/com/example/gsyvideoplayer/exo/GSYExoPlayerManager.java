@@ -192,6 +192,7 @@ public class GSYExoPlayerManager implements IPlayerManager {
     @Override
     public void seekTo(long time) {
         if (mediaPlayer != null) {
+            System.out.println("拖动进度条time:"+time);
             mediaPlayer.seekTo(time);
         }
     }

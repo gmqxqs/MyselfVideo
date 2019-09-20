@@ -109,7 +109,6 @@ public class ExoSourceManager {
                                 getHttpDataSourceFactory(mAppContext, preview))).createMediaSource(contentUri);
                 break;
             case C.TYPE_HLS:
-
                 mediaSource = new HlsMediaSource.Factory(getDataSourceFactoryCache(mAppContext, cacheEnable, preview, cacheDir)).createMediaSource(contentUri);
                 break;
             case TYPE_RTMP:

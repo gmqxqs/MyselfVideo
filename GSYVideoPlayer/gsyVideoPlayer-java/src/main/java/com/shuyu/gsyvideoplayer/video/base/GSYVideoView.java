@@ -317,6 +317,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     }
 
     protected void startPrepare() {
+        System.out.println("准备....");
         if (getGSYVideoManager().listener() != null) {
             getGSYVideoManager().listener().onCompletion();
         }
@@ -576,20 +577,19 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     public void onPrepared() {
 
         if (mCurrentState != CURRENT_STATE_PREPAREING) return;
-
+        System.out.println("结束准备0");
         mHadPrepared = true;
-
         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
+            System.out.println("结束准备1");
             Debuger.printfLog("onPrepared");
             mVideoAllCallBack.onPrepared(mOriginUrl, mTitle, this);
         }
-
         if (!mStartAfterPrepared) {
+            System.out.println("结束准备2");
             setStateAndUi(CURRENT_STATE_PAUSE);
             onVideoPause();//todo 加上这个
             return;
         }
-
         startAfterPrepared();
     }
 
@@ -658,6 +658,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
             mNetChanged = false;
             netWorkErrorLogic();
             if (mVideoAllCallBack != null) {
+
                 mVideoAllCallBack.onPlayError(mOriginUrl, mTitle, this);
             }
             return;
@@ -667,6 +668,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
             setStateAndUi(CURRENT_STATE_ERROR);
             deleteCacheFileWhenError();
             if (mVideoAllCallBack != null) {
+                System.out.println("播放错误");
                 mVideoAllCallBack.onPlayError(mOriginUrl, mTitle, this);
             }
         }
@@ -736,16 +738,19 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
      * 获取当前播放进度
      */
     public int getCurrentPositionWhenPlaying() {
+
         int position = 0;
+
         if (mCurrentState == CURRENT_STATE_PLAYING) {
             try {
                 position = (int) getGSYVideoManager().getCurrentPosition();
-                System.out.println("current0:" + position);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return position;
             }
         }
+
         if (mCurrentState == CURRENT_STATE_PAUSE) {
             try {
                 position = (int) getGSYVideoManager().getCurrentPosition();
@@ -758,6 +763,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
                 return position;
             }
         }
+
         if (mCurrentState == CURRENT_STATE_ERROR) {
             try {
                 System.out.println("current1:" + position);
@@ -771,6 +777,35 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
                 return position;
             }
         }
+
+        if (mCurrentState == CURRENT_STATE_PREPAREING) {
+            try {
+                System.out.println("current5:" + position);
+                position = (int) getGSYVideoManager().getCurrentPosition();
+                System.out.println("current6:" + position);
+                if(position <= 0){
+                    position = 0;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return position;
+            }
+        }
+
+        if (mCurrentState == CURRENT_STATE_PLAYING_BUFFERING_START) {
+            try {
+                System.out.println("current7:" + position);
+                position = (int) getGSYVideoManager().getCurrentPosition();
+                System.out.println("current8:" + position);
+                if(position <= 0){
+                    position = 0;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return position;
+            }
+        }
+
         if (position == 0 && mCurrentPosition > 0) {
             return (int) mCurrentPosition;
         }
@@ -965,7 +1000,6 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     public void setPlayTag(String playTag) {
         this.mPlayTag = playTag;
     }
-
 
     public int getPlayPosition() {
         return mPlayPosition;

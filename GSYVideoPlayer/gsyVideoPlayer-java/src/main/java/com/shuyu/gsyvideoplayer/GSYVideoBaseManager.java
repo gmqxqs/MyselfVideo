@@ -500,9 +500,8 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
 
     @Override
     public long getCurrentPosition() {
-        System.out.println("playerManager:" + playerManager);
+
         if (playerManager != null) {
-            System.out.println("playerManager.getCurrentPosition():"+playerManager.getCurrentPosition());
             return playerManager.getCurrentPosition();
         }
         return 0;

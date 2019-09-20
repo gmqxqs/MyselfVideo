@@ -44,6 +44,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer {
 
     @Override
     protected void releaseVideos() {
+        System.out.println("释放");
         GSYVideoManager.releaseAllVideos();
     }
 

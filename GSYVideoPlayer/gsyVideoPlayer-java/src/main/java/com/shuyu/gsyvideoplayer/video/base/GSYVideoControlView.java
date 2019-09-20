@@ -358,9 +358,9 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 break;
             case CURRENT_STATE_ERROR:
 
-                /*if (isCurrentMediaListener()) {
+                if (isCurrentMediaListener()) {
                     getGSYVideoManager().releaseMediaPlayer();
-                }*/
+                }
                 break;
             case CURRENT_STATE_AUTO_COMPLETE:
                 Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ dismiss CURRENT_STATE_AUTO_COMPLETE");
@@ -615,7 +615,6 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         if (getGSYVideoManager() != null && mHadPlay) {
             try {
                 int time = seekBar.getProgress() * getDuration() / 100;
-
                 getGSYVideoManager().seekTo(time);
             } catch (Exception e) {
                 Debuger.printfWarning(e.toString());
