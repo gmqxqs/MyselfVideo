@@ -607,7 +607,6 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
             mediaPlayer.setOnInfoListener(this);
             mediaPlayer.setOnVideoSizeChangedListener(this);
             mediaPlayer.prepareAsync();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

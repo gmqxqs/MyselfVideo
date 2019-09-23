@@ -37,7 +37,6 @@ import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,11 +71,8 @@ public class MyselfActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_myself);
-
         videoPlayer =  (MySelfGSYVideoPlayer) findViewById(R.id.video_player);
-
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -91,108 +87,31 @@ public class MyselfActivity extends AppCompatActivity {
         header.put("ee", "33");
         header.put("allowCrossProtocolRedirects", "true");*/
         //   File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
-        url = "https://letv.com-v-letv.com/20180802/7097_e793eb8c/index.m3u8";
+        url = "https://youku.com-iqiyi.net/20190303/21817_a6cd96be/index.m3u8";
       //  url = "http://static_api.maogou.vip/9e9e1b7ea4e250af8fe1f1865650d42b/a036cac2531b35692e8975f252229fcf.m3u8";
       //  url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
-       /* GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
-
-        gsyVideoOption
-                .setIsTouchWiget(true)
-                .setRotateViewAuto(false)
-                .setLockLand(false)
-                .setAutoFullWithSize(false)
-                .setShowFullAnimation(false)
-                .setNeedLockFull(false)
-                .setCacheWithPlay(false)
-                //    .setCachePath(file)
-                .setUrl(url)
-                //   .setMapHeadData(header)
-                .setVideoTitle("测试视频")
-                .setVideoAllCallBack(new GSYSampleCallBack() {
-                    @Override
-                    public void onPrepared(String url, Object... objects) {
-                        Debuger.printfError("***** onPrepared **** " + objects[0]);
-                        Debuger.printfError("***** onPrepared **** " + objects[1]);
-                        super.onPrepared(url, objects);
-                        //开始播放了才能旋转和全屏
-                        orientationUtils.setEnable(true);
-                        isPlay = true;
-                        //设置 seek 的临近帧。
-                        if(videoPlayer.getGSYVideoManager().getPlayer() instanceof Exo2PlayerManager) {
-                            ((Exo2PlayerManager) videoPlayer.getGSYVideoManager().getPlayer()).setSeekParameter(SeekParameters.NEXT_SYNC);
-                            Debuger.printfError("***** setSeekParameter **** ");
-                        }
-                    }
-
-                    @Override
-                    public void onEnterFullscreen(String url, Object... objects) {
-                        super.onEnterFullscreen(url, objects);
-                        Debuger.printfError("***** onEnterFullscreen **** " + objects[0]);//title
-                        Debuger.printfError("***** onEnterFullscreen **** " + objects[1]);//当前全屏player
-                    }
-
-                    @Override
-                    public void onAutoComplete(String url, Object... objects) {
-                        super.onAutoComplete(url, objects);
-                    }
-
-                    @Override
-                    public void onClickStartError(String url, Object... objects) {
-                        super.onClickStartError(url, objects);
-                    }
-
-                    @Override
-                    public void onQuitFullscreen(String url, Object... objects) {
-                        super.onQuitFullscreen(url, objects);
-                        Debuger.printfError("***** onQuitFullscreen **** " + objects[0]);//title
-                        Debuger.printfError("***** onQuitFullscreen **** " + objects[1]);//当前非全屏player
-                        if (orientationUtils != null) {
-                            orientationUtils.backToProtVideo();
-                        }
-                    }
-                })
-                .setLockClickListener(new LockClickListener() {
-                    @Override
-                    public void onClick(View view, boolean lock) {
-                        if (orientationUtils != null) {
-                            //配合下方的onConfigurationChanged
-                            orientationUtils.setEnable(!lock);
-                        }
-                    }
-                })
-                .setGSYVideoProgressListener(new GSYVideoProgressListener() {
-                    @Override
-                    public void onProgress(int progress, int secProgress, int currentPosition, int duration) {
-                        Debuger.printfLog(" progress " + progress + " secProgress " + secProgress + " currentPosition " + currentPosition + " duration " + duration);
-                    }
-                })
-                .build(videoPlayer);*/
-
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //直接横屏
                 orientationUtils.resolveByClick();
-
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
                 videoPlayer.startWindowFullscreen(MyselfActivity.this, true, true);
             }
         });
-
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-
         //解决拖动视频会弹回来,因为ijk的FFMPEG对关键帧问题。
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(videoOptionModel);
+
   /*      videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"media",1);
         list.add(videoOptionModel);
-
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"mediacodec",1);
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"videotoolbox",0);
@@ -241,11 +160,8 @@ public class MyselfActivity extends AppCompatActivity {
        list.add(videoOptionModel);
        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",1);
        list.add(videoOptionModel);
-
-
-        GSYVideoManager.instance().setOptionModelList(list);
-        PlayerFactory.setPlayManager(Exo2PlayerManager.class);
-
+       GSYVideoManager.instance().setOptionModelList(list);
+       PlayerFactory.setPlayManager(Exo2PlayerManager.class);
      //   CacheFactory.setCacheManager(ExoPlayerCacheManager.class);
         GSYVideoManager.onResume(false);
     //    GSYVideoType.setRenderType(GSYVideoType.SUFRACE);
@@ -257,7 +173,7 @@ public class MyselfActivity extends AppCompatActivity {
         //GSYVideoType.enableMediaCodecTexture();
 
         //   IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_ERROR);
-        videoPlayer.setUp(url,false,"");
+        videoPlayer.setUp(url,true,"");
         videoPlayer.startPlayLogic();
     }
 
@@ -325,15 +241,6 @@ public class MyselfActivity extends AppCompatActivity {
         return videoPlayer;
     }
 
-    public void  titleClick(View v){
-        onBackPressed();
-    }
-
-    public void toFull(View v){
-        orientationUtils.resolveByClick();
-        //    orientationUtils.setRotateWithSystem(false);
-        videoPlayer.startWindowFullscreen(MyselfActivity.this, true, true);
-    }
 
 
 }
