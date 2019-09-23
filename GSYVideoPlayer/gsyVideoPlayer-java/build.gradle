@@ -35,7 +35,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation androidDependencies.appcompat_v7
-
     def viewDependencies = rootProject.ext.viewDependencies
     api viewDependencies.ijkplayer_java
     api viewDependencies.ijkplayer_exo
