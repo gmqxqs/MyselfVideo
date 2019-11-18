@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.os.Message;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -50,6 +53,10 @@ import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -116,7 +123,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected boolean isFirstPrepared = false;
     public boolean isImageAd = false;
 
-    protected ImageView mAdImageView;
+    protected ImageView mPauseImageView;
     protected  WebView webView;
     protected  TextView mAdimage_skip;
     protected  FrameLayout mAdFrameLayout;
@@ -137,24 +144,65 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         return videoAdUrl;
     }
     protected  String pauseAdImageUrl;
-    public void setPauseAdImageUrl(String pauseAdImageUrl){
+    public void setPauseAdUrl(String pauseAdImageUrl){
         this.pauseAdImageUrl = pauseAdImageUrl;
     }
     public String getPauseAdImageUrl(){
         return  pauseAdImageUrl;
     }
-    public ImageView getMadImageView(){
-        return mAdImageView;
+    public ImageView getPauseImageView(){
+        return mPauseImageView;
     }
+
+    //设置网络图片
+    public void setPauseImageURL(final String path) {
+        //开启一个线程用于联网
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    //把传过来的路径转成URL
+                    URL url = new URL(path);
+                    //获取连接
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    //使用GET方法访问网络
+                    connection.setRequestMethod("GET");
+                    //超时时间为10秒
+                    connection.setConnectTimeout(10000);
+                    //获取返回码
+                    int code = connection.getResponseCode();
+                    if (code == 200) {
+                        InputStream inputStream = connection.getInputStream();
+                        //使用工厂把网络的输入流生产Bitmap
+                        bmp = BitmapFactory.decodeStream(inputStream);
+                        //利用Message把图片发给Handler
+                       /* Message msg = Message.obtain();
+                        msg.obj = bitmap;
+                        msg.what = GET_DATA_SUCCESS;
+                        handler.sendMessage(msg);*/
+                       inputStream.close();
+                        mPauseImageView.setImageBitmap(bmp);
+                    }else {
+                        //服务启发生错误
+                       // handler.sendEmptyMessage(SERVER_ERROR);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    //网络连接错误
+                   // handler.sendEmptyMessage(NETWORK_ERROR);
+                }
+            }
+        }.start();
+    }
+
+
 
     public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
     public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> getUrls(){
         return urls;
     }
-
     public EditText edit;
     public Button play;
-
 
     /**
      * 继承后重写可替换为你需要的布局
@@ -193,7 +241,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 }
             });
         }
-
         mADTime = (TextView) findViewById(R.id.ad_time);
         surface_container = findViewById(R.id.surface_container);
         batteryView = findViewById(R.id.battery);
@@ -213,7 +260,17 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         replay = findViewById(R.id.replay);
         replay_text = findViewById(R.id.replay_text);
         bottom_progressbar = findViewById(R.id.bottom_progressbar);
-        mAdImageView = findViewById(R.id.adImage);
+        mPauseImageView = findViewById(R.id.adImage);
+        mPauseImageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CommonUtil.getActivityContext(contextFirst), PauseImageAdWebViewActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("pauseImageAdUrl",getPauseAdImageUrl());
+                intent.putExtras(bundle);
+                CommonUtil.getActivityContext(contextFirst).startActivity(intent);
+            }
+        });
         mAdFrameLayout = findViewById(R.id.adFrameLayout);
         mAdClose = findViewById(R.id.ad_close);
         mAdClose.setOnClickListener(new OnClickListener() {
@@ -227,8 +284,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         adLinearLayout = findViewById(R.id.adLinearLayout);
         mDanmu = findViewById(R.id.danmu);
         edit_danmu = findViewById(R.id.edit_danmu);
-
-
         edit_danmu.setOnKeyListener(new OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -338,56 +393,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         return mLockScreen;
     }
 
-
-    public static Activity findActivity(Context context) {
-        if (context instanceof Activity) {
-            return (Activity) context;
-        }
-        if (context instanceof ContextWrapper) {
-            ContextWrapper wrapper = (ContextWrapper) context;
-            return findActivity(wrapper.getBaseContext());
-        } else {
-            return null;
-        }
-    }
-
-
-
-    GSYBaseVideoPlayer gsyBaseVideoPlayer;
-    @Override
-    public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
-
-        gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar);
-
-        return gsyBaseVideoPlayer;
-    }
-    /**
-     * 全屏的UI逻辑
-     */
-    private void initFullUI(MySelfGSYVideoPlayer mySelfGSYVideoPlayer) {
-
-        if (mBottomProgressDrawable != null) {
-            mySelfGSYVideoPlayer.setBottomProgressBarDrawable(mBottomProgressDrawable);
-        }
-
-        if (mBottomShowProgressDrawable != null && mBottomShowProgressThumbDrawable != null) {
-            mySelfGSYVideoPlayer.setBottomShowProgressBarDrawable(mBottomShowProgressDrawable,
-                    mBottomShowProgressThumbDrawable);
-        }
-
-        if (mVolumeProgressDrawable != null) {
-            mySelfGSYVideoPlayer.setDialogVolumeProgressBar(mVolumeProgressDrawable);
-        }
-
-        if (mDialogProgressBarDrawable != null) {
-            mySelfGSYVideoPlayer.setDialogProgressBar(mDialogProgressBarDrawable);
-        }
-
-        if (mDialogProgressHighLightColor >= 0 && mDialogProgressNormalColor >= 0) {
-            mySelfGSYVideoPlayer.setDialogProgressColor(mDialogProgressHighLightColor, mDialogProgressNormalColor);
-        }
-    }
-
     public void seekTo(long position) {
         try {
             if (getGSYVideoManager() != null && position > 0) {
@@ -401,6 +406,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             e.printStackTrace();
         }
     }
+
+
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
@@ -736,11 +743,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         if (id == R.id.surface_container) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    Log.e("视频","按下");
                     cancelDismissControlViewTimer();
                     touchSurfaceDown(x, y);
                     cancelProgressTimer();
                     break;
                 case MotionEvent.ACTION_MOVE:
+                    Log.e("视频","移动");
                     float deltaX = x - mDownX;
                     float deltaY = y - mDownY;
                     float absDeltaX = Math.abs(deltaX);
@@ -754,6 +763,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     touchSurfaceMove(deltaX, deltaY, y);
                     break;
                 case MotionEvent.ACTION_UP:
+                    Log.e("视频","抬起");
                     // startDismissControlViewTimer();
                     touchSurfaceUp();
                     //   Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ surface_container ACTION_UP");
@@ -782,7 +792,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     startProgressTimer();
                     startDismissControlViewTimer();
                     //  Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ progress ACTION_UP");
-                    break; /*  ViewParent vpup = getParent();
+                    break;
+                    /*  ViewParent vpup = getParent();
                     while (vpup != null) {
                         vpup.requestDisallowInterceptTouchEvent(false);
                         vpup = vpup.getParent();
@@ -921,7 +932,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }*/
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
         setViewShowState(controllerbottom, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
-        setViewShowState(mAdImageView,GONE);
+        setViewShowState(mPauseImageView,GONE);
         setViewShowState(mAdFrameLayout,GONE);
 
         updateStartImage();
@@ -947,7 +958,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }*/
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
         setViewShowState(controllerbottom, (mIfCurrentIsFullscreen && !isAdModel) ? VISIBLE : GONE);
-        setViewShowState(mAdImageView,VISIBLE);
+        setViewShowState(mPauseImageView,VISIBLE);
+        setViewShowState(mAd,VISIBLE);
+        setViewShowState(mAdClose,VISIBLE);
         setViewShowState(mAdFrameLayout,VISIBLE);
         if(mAdFrameLayout.getVisibility() == VISIBLE){
             setViewShowState(startPlay, GONE);
@@ -1292,7 +1305,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     }
 
     public void  setProgressAndVideo(int position){
-
         int duration = getDuration();
         int progress = (int) (position * 100 / (duration == 0 ? 1 : duration));
         if(position <= 0){
@@ -1492,10 +1504,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             Bitmap newBmp = Bitmap.createBitmap(st.bmp, 0, 0, primaryWidth, primaryHeight, matrix, true);
 
             //重新设置BitMap
-            st.mAdImageView.setImageBitmap(newBmp);
+            st.mPauseImageView.setImageBitmap(newBmp);
             //scale(0.8,0.8);
             displayAd();
-            st.mAdImageView.setOnClickListener(new OnClickListener() {
+            st.mPauseImageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(CommonUtil.getActivityContext(contextFirst), PauseImageAdWebViewActivity.class);
@@ -1531,7 +1543,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Bitmap newBmp = Bitmap.createBitmap(bmp, 0, 0, primaryWidth, primaryHeight, matrix, true);
 
         //重新设置BitMap
-        mAdImageView.setImageBitmap(newBmp);
+        mPauseImageView.setImageBitmap(newBmp);
     }
     /**
      * 缩放
@@ -1558,7 +1570,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Bitmap newBmp = Bitmap.createBitmap(bmp, 0, 0, primaryWidth, primaryHeight, matrix, true);
 
         //重新设置BitMap
-        mAdImageView.setImageBitmap(newBmp);
+        mPauseImageView.setImageBitmap(newBmp);
 
 
     }
@@ -1921,8 +1933,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 System.out.println("广告");
                 return setUp(url, false, position + 1, cachePath, mapHeadData, changeState);
             }
-
-
             isAdModel = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_AD);
             isDown = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
             isNormal = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_NORMAL);

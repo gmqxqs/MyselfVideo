@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -696,8 +697,9 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
             mSeekTimePosition = (int) (mDownPosition + (deltaX * totalTimeDuration / curWidth) / mSeekRatio);
             if (mSeekTimePosition > totalTimeDuration)
                 mSeekTimePosition = totalTimeDuration;
+            Log.e("curSeekTime", mSeekTimePosition+"");
             String seekTime = CommonUtil.stringForTime(mSeekTimePosition);
-
+            Log.e("curTotalTime", mSeekTimePosition+"");
             String totalTime = CommonUtil.stringForTime(totalTimeDuration);
             showProgressDialog(deltaX, seekTime, mSeekTimePosition, totalTime, totalTimeDuration);
 

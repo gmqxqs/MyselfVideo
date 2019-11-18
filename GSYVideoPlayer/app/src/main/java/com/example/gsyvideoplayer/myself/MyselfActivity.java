@@ -80,15 +80,12 @@ public class MyselfActivity extends AppCompatActivity {
         setContentView(R.layout.activity_myself);
 
         videoPlayer =  (MySelfGSYVideoPlayer) findViewById(R.id.video_player);
-        play1 = findViewById(R.id.play);
+      /*  play1 = findViewById(R.id.play);
         play1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                videoPlayer.setUp("https://youku.com-iqiyi.net/20190303/21817_a6cd96be/index.m3u8",false,null,"");
+                videoPlayer.setUp("http://pz1i87m6r.sabkt.gdipper.com/201910151711/39a402d22d6e3fc66da2237b7bbbc7ce/prod/fm/5ccd38d334d819b4bb383233/cbb_Wr386gHb.m3u8",false,null,"");
                 videoPlayer.startPlayLogic();
-
             }
         });
 
@@ -99,8 +96,7 @@ public class MyselfActivity extends AppCompatActivity {
                 videoPlayer.setUp("https://iqiyi.com-l-iqiyi.com/20190303/21817_a6cd96be/index.m3u8",false,null,"");
                 videoPlayer.startPlayLogic();
             }
-        });
-
+        });*/
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -116,14 +112,17 @@ public class MyselfActivity extends AppCompatActivity {
         header.put("allowCrossProtocolRedirects", "true");*/
 
        // File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
-      // url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
+        url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
+      //  url = "tvbus://12kkuqqh14mceaHmc6Y8CaqJS2bMkuQHSzxGMAwchiK3vQnxxYt";
+      //  url = "http://gslb.52glb.com/gslb/sce?stream_id=g_cctv1&uid=test";
       //  String tempUrl = "static://2/7/2d09d6d01e841029aaf8a0d80a6bdf29/index.m3u8http://v1.bjssmd.net/20190715/yXfbhmdr/index.m3u8";
      //  String tempUrl = "static://storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-     //   String tempUrl = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-      String tempUrl ="https://iqiyi.com-l-iqiyi.com/20190303/21817_a6cd96be/index.m3u8";
+      //  String tempUrl = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+    //  String tempUrl ="https://iqiyi.com-l-iqiyi.com/20190303/21817_a6cd96be/index.m3u8";
+     //   String tempUrl ="https://img-album.youguoquan.com/201909281757/0dc426503496ff2a33b5dd584e18a559/prod/fm/5d8495a78c661d4c0e3ce6ad/cbb_Ak9LcTt4.m3u8";
       //  String tempUrl = "https://scontent-lga3-1.xx.fbcdn.net/v/t39.24130-6/10000000_194485571543767_1072296362069752098_n.mp4?_nc_cat=100&efg=eyJ2ZW5jb2RlX3RhZyI6Im9lcF9oZCJ9&_nc_oc=AQk0dFtDO98inb99mAaFjvRtWwPBRDPrIJIHT06Qw00mt_x9yRluXEFpgxuvE9XWZUA&_nc_ht=scontent-lga3-1.xx&oh=d051c96085dd5d01d64b1dcce0748d51&oe=5E080AFD";
         ArrayList<String> listUrl = new ArrayList<String>();
-        listUrl = videoPlayer.subString(tempUrl);
+        listUrl = videoPlayer.subString(url);
         System.out.println("list:" + listUrl);
    //     String url = "https://apd-1f573461e2849c2dff8de8011848088b.v.smtcdns.com/moviets.tc.qq.com/A-pfo_cZrdx-q2vFBqnpS4xcOM5Jb9Q8r8GgdIs8r8P0/uwMROfz2r5zAoaQXGdGnC2df644E7D3uP8M8pmtgwsRK9nEL/h3Ir07Asx9wg0_yDFrgKal0z4RSuVdCBIljI9eWOBAODkcEcQByGBAJMGF42Hkd48Gmf8rSFFPW5hh53XONL7LmdZpg9INujHPIJA-Y8gtK6W5P2XvMvBxKABOCWelv-mebHpqBSSTBUz6uDLGuHFhLeXt8dESEIn7_tnDs0CpU/z00310ev4nq.321002.ts.m3u8?ver=4";
 
@@ -161,13 +160,14 @@ public class MyselfActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
+       // videoPlayer.setPauseImage(R.drawable.vedio_stop_ad);
+        videoPlayer.setPauseImageURL("http://imgoss.brbe9.cn/images/cover_39195.jpg");
         //   videoPlayer.setImageAdUrl("http://www.baidu.com/");
-  //      videoPlayer.setVideoAdUrl("http://xm.ganji.com/");
+       // videoPlayer.setVideoAdUrl("http://xm.ganji.com/");
         //设置暂停图片广告的跳转地址
-   //     videoPlayer.setPauseAdImageUrl("https://www.suning.com/");
+        videoPlayer.setPauseAdUrl("https://www.suning.com/");
         //点击暂停广告图片跳转
-        videoPlayer.getMadImageView().setOnClickListener(new View.OnClickListener() {
+       /* videoPlayer.getPauseImageView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyselfActivity.this, PauseImageAdWebViewActivity.class);
@@ -177,7 +177,7 @@ public class MyselfActivity extends AppCompatActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
-        });
+        });*/
         //解决拖动视频会弹回来,因为ijk的FFMPEG对关键帧问题。
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
@@ -274,15 +274,7 @@ public class MyselfActivity extends AppCompatActivity {
         }
         return videoPlayer;
     }
-    //设置暂停图片的方法
-    public void setPauseImage(){
-        if(videoPlayer != null){
-            videoPlayer.getAdClose().setVisibility(View.VISIBLE);
-            videoPlayer.getAd().setVisibility(View.VISIBLE);
-            videoPlayer.bmp = BitmapFactory.decodeResource(this.getResources(),R.drawable.vedio_stop_ad);
-            videoPlayer.displayAd();
-        }
-    }
+
 
     public void  titleClick(View v){
         onBackPressed();
@@ -305,7 +297,8 @@ public class MyselfActivity extends AppCompatActivity {
         }
         //片头视频广告，片头图片广告的连接地址都为空 ,暂停广告的连接地址不为空
         if(TextUtils.isEmpty(videoPlayer.getVideoAdUrl()) && !TextUtils.isEmpty(videoPlayer.getPauseAdImageUrl())){
-            setPauseImage();
+            //videoPlayer.setPauseImage(R.drawable.vedio_stop_ad);
+
             if(urls.size() >= 2){
                 urls.remove(urls.get(0));
             }
@@ -321,7 +314,7 @@ public class MyselfActivity extends AppCompatActivity {
 
         //暂停广告，片头视频广告的连接地址都不为空 ,片头图片广告的连接地址为空
         if(!TextUtils.isEmpty(videoPlayer.getVideoAdUrl()) && !TextUtils.isEmpty(videoPlayer.getPauseAdImageUrl())){
-            setPauseImage();
+
             videoPlayer.setAdUp(urls, true, 0);
             videoPlayer.startPlayLogic();
         }
