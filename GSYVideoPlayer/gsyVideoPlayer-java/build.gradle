@@ -43,7 +43,11 @@ dependencies {
     //api project(':gsyVideoPlayer-base')
     api "com.shuyu:gsyVideoPlayer-base:$gsyVideoVersion"
     api "com.shuyu:gsyvideoplayer-androidvideocache:$gsyVideoVersion"
-    compile 'org.apache.httpcomponents:httpcore:4.4.2'
+    api 'org.apache.httpcomponents:httpcore:4.4.2'
+  //  api 'com.simpledlnaarr.publish:simpledlnaarr:1.0.0'
+    // Cling library
+  /*  compile 'org.fourthline.cling:cling-core:2.1.1'
+    compile 'org.fourthline.cling:cling-support:2.1.1'*/
 
 }
 
