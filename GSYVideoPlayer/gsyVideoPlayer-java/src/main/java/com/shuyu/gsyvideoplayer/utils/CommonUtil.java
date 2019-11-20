@@ -47,6 +47,81 @@ public class CommonUtil {
         }
     }
 
+    public static  int intForTime(String timeMs){
+        String[] temp = timeMs.split(":",3);
+        int mShiNum=0;
+        int mGeNum=0;
+        int sShiNum=0;
+        int sGeNum=0;
+        int hShiNum=0;
+        int hGeNum=0;
+        int totalTime=0;
+
+
+        if(temp.length == 2){
+            if(temp[0].length() == 2){
+              //   mShiNum = Integer.valueOf(temp[0].charAt(0)) * 10;
+                mShiNum = Integer.valueOf(temp[0].charAt(0)+"0");
+                 mGeNum = Integer.valueOf(temp[0].charAt(1)+"");
+            } else if(temp[0].length() == 1){
+                mShiNum = 0;
+                mGeNum = Integer.valueOf(temp[0].charAt(0) + "");
+            }
+
+            if(temp[1].length() == 2){
+                sShiNum = Integer.valueOf(temp[1].charAt(0)+"0");
+                sGeNum= Integer.valueOf(temp[1].charAt(1)+"");
+                System.out.println("sGeNum111:" + sGeNum);
+            } else if(temp[0].length() == 1){
+                sShiNum = 0;
+                sGeNum = Integer.valueOf(temp[1].charAt(0)+"");
+
+            }
+
+            System.out.println("mShiNum:"+mShiNum+",mGeNum:"+mGeNum+",sShiNum:"+sShiNum+",sGeNum:"+sGeNum);
+            totalTime = ((mShiNum+mGeNum) * 60 + sShiNum + sGeNum) * 1000;
+        } else if(temp.length == 3){
+
+            if(temp[0].length() == 2){
+                //   mShiNum = Integer.valueOf(temp[0].charAt(0)) * 10;
+                hShiNum = Integer.valueOf(temp[0].charAt(0)+"0");
+                hGeNum = Integer.valueOf(temp[0].charAt(1)+"");
+            } else if(temp[0].length() == 1){
+                mShiNum = 0;
+                mGeNum = Integer.valueOf(temp[0].charAt(0) + "");
+            }
+
+
+
+            if(temp[1].length() == 2){
+                //   mShiNum = Integer.valueOf(temp[0].charAt(0)) * 10;
+                mShiNum = Integer.valueOf(temp[0].charAt(0)+"0");
+                mGeNum = Integer.valueOf(temp[0].charAt(1)+"");
+            } else if(temp[0].length() == 1){
+                mShiNum = 0;
+                mGeNum = Integer.valueOf(temp[0].charAt(0) + "");
+            }
+
+            if(temp[2].length() == 2){
+                sShiNum = Integer.valueOf(temp[1].charAt(0)+"0");
+                sGeNum= Integer.valueOf(temp[1].charAt(1)+"");
+                System.out.println("sGeNum111:" + sGeNum);
+            } else if(temp[0].length() == 1){
+                sShiNum = 0;
+                sGeNum = Integer.valueOf(temp[1].charAt(0)+"");
+
+            }
+
+            System.out.println("mShiNum:"+mShiNum+",mGeNum:"+mGeNum+",sShiNum:"+sShiNum+",sGeNum:"+sGeNum);
+         //   totalTime = ((mShiNum+mGeNum) * 60 + sShiNum + sGeNum) * 1000;
+            totalTime = (((hShiNum+hGeNum)*60 + mShiNum + mGeNum)*60 + sShiNum + sGeNum) * 1000;
+        }
+
+        return  totalTime;
+    }
+
+
+
     public static boolean isWifiConnected(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);

@@ -13,6 +13,7 @@ import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.InflateException;
 import android.view.Surface;
 import android.view.ViewGroup;
@@ -649,16 +650,28 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
 
     @Override
     public void onError(int what, int extra) {
-
-        if (mNetChanged) {
+        Log.e("错误播放","错误播放:"+what);
+       /* if (mNetChanged) {
             mNetChanged = false;
-            netWorkErrorLogic();
+           *//* netWorkErrorLogic();
             if (mVideoAllCallBack != null) {
                 mVideoAllCallBack.onPlayError(mOriginUrl, mTitle, this);
-            }
+            }*//*
+           // return;
+        }*/
+
+        if(mNetSate.equals("NONE")){
+            Log.e("mNetSate",mNetSate);
+            setStateAndUi(CURRENT_STATE_AUTO_COMPLETE);
+          /*  netWorkErrorLogic();
+            if (mVideoAllCallBack != null) {
+                mVideoAllCallBack.onPlayError(mOriginUrl, mTitle, this);
+            }*/
             return;
         }
-
+       /* if(mNetSate.equals("NONE")){
+            return;
+        }*/
         if (what != 38 && what != -38) {
             setStateAndUi(CURRENT_STATE_ERROR);
             deleteCacheFileWhenError();
@@ -833,6 +846,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     /**
      * 创建网络监听
      */
+
     protected void createNetWorkState() {
         if (mNetInfoModule == null) {
             mNetInfoModule = new NetInfoModule(mContext.getApplicationContext(), new NetInfoModule.NetChangeListener() {

@@ -8,10 +8,12 @@ import com.shuyu.gsyvideoplayer.render.view.GSYVideoGLView;
 import com.shuyu.gsyvideoplayer.render.effect.NoEffect;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
+import com.shuyu.gsyvideoplayer.video.MySelfGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -118,6 +120,8 @@ public class GSYVideoOptionBuilder {
 
     //播放url
     protected String mUrl;
+
+    protected  ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urlList;
 
     //视频title
     protected String mVideoTitle = null;
@@ -363,6 +367,9 @@ public class GSYVideoOptionBuilder {
         this.mUrl = url;
         return this;
     }
+
+
+
 
     /**
      * 视频title
@@ -639,6 +646,81 @@ public class GSYVideoOptionBuilder {
             gsyVideoPlayer.setUpLazy(mUrl, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
         } else {
             gsyVideoPlayer.setUp(mUrl, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
+        }
+    }
+
+
+    public void build(MySelfGSYVideoPlayer gsyVideoPlayer) {
+        gsyVideoPlayer.setPlayTag(mPlayTag);
+        gsyVideoPlayer.setPlayPosition(mPlayPosition);
+        gsyVideoPlayer.setThumbPlay(mThumbPlay);
+        if (mThumbImageView != null) {
+            gsyVideoPlayer.setThumbImageView(mThumbImageView);
+        }
+
+        gsyVideoPlayer.setNeedLockFull(mNeedLockFull);
+
+        if (mLockClickListener != null) {
+            gsyVideoPlayer.setLockClickListener(mLockClickListener);
+        }
+
+        gsyVideoPlayer.setDismissControlTime(mDismissControlTime);
+
+
+        if (mSeekOnStart > 0) {
+            gsyVideoPlayer.setSeekOnStart(mSeekOnStart);
+        }
+
+        gsyVideoPlayer.setShowFullAnimation(mShowFullAnimation);
+        gsyVideoPlayer.setLooping(mLooping);
+        if (mVideoAllCallBack != null) {
+            gsyVideoPlayer.setVideoAllCallBack(mVideoAllCallBack);
+        }
+        if (mGSYVideoProgressListener != null) {
+            gsyVideoPlayer.setGSYVideoProgressListener(mGSYVideoProgressListener);
+        }
+        gsyVideoPlayer.setOverrideExtension(mOverrideExtension);
+        gsyVideoPlayer.setAutoFullWithSize(mAutoFullWithSize);
+        gsyVideoPlayer.setRotateViewAuto(mRotateViewAuto);
+        gsyVideoPlayer.setLockLand(mLockLand);
+        gsyVideoPlayer.setSpeed(mSpeed, mSounchTouch);
+        gsyVideoPlayer.setHideKey(mHideKey);
+        gsyVideoPlayer.setIsTouchWiget(mIsTouchWiget);
+        gsyVideoPlayer.setIsTouchWigetFull(mIsTouchWigetFull);
+        gsyVideoPlayer.setNeedShowWifiTip(mNeedShowWifiTip);
+        gsyVideoPlayer.setEffectFilter(mEffectFilter);
+        gsyVideoPlayer.setStartAfterPrepared(mStartAfterPrepared);
+        gsyVideoPlayer.setReleaseWhenLossAudio(mReleaseWhenLossAudio);
+        gsyVideoPlayer.setFullHideActionBar(mActionBar);
+        gsyVideoPlayer.setFullHideStatusBar(mStatusBar);
+        if (mEnlargeImageRes > 0) {
+            gsyVideoPlayer.setEnlargeImageRes(mEnlargeImageRes);
+        }
+        if (mShrinkImageRes > 0) {
+            gsyVideoPlayer.setShrinkImageRes(mShrinkImageRes);
+        }
+        gsyVideoPlayer.setShowPauseCover(mShowPauseCover);
+        gsyVideoPlayer.setSeekRatio(mSeekRatio);
+        gsyVideoPlayer.setRotateWithSystem(mRotateWithSystem);
+        ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
+        ArrayList<String> listUrl = new ArrayList<String>();
+        listUrl = gsyVideoPlayer.subString(mUrl);
+        urls = gsyVideoPlayer.getUrls();
+        System.out.println("listUrl.size():" + listUrl.size());
+        if(listUrl.size() >= 2){
+            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
+                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
+            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(1),
+                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
+        } else{
+            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
+                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
+        }
+        System.out.println("list:" + listUrl);
+        if (mSetUpLazy) {
+            gsyVideoPlayer.setUpLazy(mUrl, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
+        } else {
+            gsyVideoPlayer.setUp(urls, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
         }
     }
 

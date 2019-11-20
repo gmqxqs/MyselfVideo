@@ -312,7 +312,8 @@ public class SmartPickVideo extends StandardGSYVideoPlayer {
                 mTmpManager.prepare(mUrl, mMapHeadData, mLooping, mSpeed, mCache, mCachePath, null);
                 changeUiToPlayingBufferingShow();
             }
-        } else {
+        }
+        else {
             Toast.makeText(getContext(), "已经是 " + name, Toast.LENGTH_LONG).show();
         }
     }
