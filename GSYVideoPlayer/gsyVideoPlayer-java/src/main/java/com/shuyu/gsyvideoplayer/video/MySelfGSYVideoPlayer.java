@@ -1016,8 +1016,18 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 //playNextUrl(errortime);
 
                 if(mUriList.size() > 0){
-                    resolveStartChange();
-                    isDown = false;
+                    String url = mUriList.get(mSourcePosition).getUrl();
+                    File file = new File(url);
+                    if(file.exists()){
+                        Log.e("文件存在","文件存在");
+                        resolveStartChange();
+                        isDown = false;
+                    } else {
+                        mSourcePosition++;
+                        Log.e("文件不存在","文件不存在");
+                        setUp(mUriList.get(mSourcePosition).getUrl(),true,mUriList.get(mSourcePosition).getTitle());
+                        startPlayLogic();
+                    }
                 }
 
             } else{
@@ -1030,8 +1040,18 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         } else{
             setViewShowState(newstart,GONE);
            // playNextUrl(errortime);
-            if(mUriList.size() > 0){
-                resolveStartChange();
+            if(mUriList.size() > 0 ){
+                String url = mUriList.get(0).getUrl();
+                File file = new File(url);
+                if(file.exists()){
+                    Log.e("文件存在","文件存在");
+                    resolveStartChange();
+                } else {
+                    Log.e("文件不存在","文件不存在");
+                    setUp(mUriList.get(mSourcePosition).getUrl(),true,mUriList.get(mSourcePosition).getTitle());
+                    startPlayLogic();
+                }
+
             }
 
 

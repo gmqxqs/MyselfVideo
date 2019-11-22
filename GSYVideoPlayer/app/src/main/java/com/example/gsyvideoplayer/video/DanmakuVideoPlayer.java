@@ -231,11 +231,13 @@ public class DanmakuVideoPlayer extends StandardGSYVideoPlayer {
         overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
 
         DanamakuAdapter danamakuAdapter = new DanamakuAdapter(mDanmakuView);
+
         mDanmakuContext = DanmakuContext.create();
         mDanmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false).setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f)
                 .setCacheStuffer(new SpannedCacheStuffer(), danamakuAdapter) // 图文混排使用SpannedCacheStuffer
                 .setMaximumLines(maxLinesPair)
                 .preventOverlapping(overlappingEnablePair);
+
         if (mDanmakuView != null) {
             if (mDumakuFile != null) {
                 mParser = createParser(getIsStream(mDumakuFile));

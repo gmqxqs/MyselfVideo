@@ -207,7 +207,7 @@ public class MyselfActivity extends AppCompatActivity {
                 .setLockLand(false)
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
-              //  .setSeekOnStart(seek)
+                //  .setSeekOnStart(seek)
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPrepared(String url, Object... objects) {
@@ -224,13 +224,13 @@ public class MyselfActivity extends AppCompatActivity {
                         }
                     }
                 }).setLockClickListener(new LockClickListener() {
-            @Override
-            public void onClick(View view, boolean lock) {
-                if (orientationUtils != null) {
-                    orientationUtils.setEnable(!lock);
-                }
-            }
-        }).build(videoPlayer);
+                    @Override
+                    public void onClick(View view, boolean lock) {
+                        if (orientationUtils != null) {
+                            orientationUtils.setEnable(!lock);
+                        }
+                    }
+                }).build(videoPlayer);
         videoPlayer.startPlayLogic();
     }
 
