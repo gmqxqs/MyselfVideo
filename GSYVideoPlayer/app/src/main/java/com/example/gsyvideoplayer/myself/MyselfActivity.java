@@ -1,49 +1,29 @@
 package com.example.gsyvideoplayer.myself;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-
-import androidx.core.widget.NestedScrollView;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-
-import com.danikula.videocache.HttpProxyCacheServer;
+import androidx.appcompat.app.AppCompatActivity;
 import com.example.gsyvideoplayer.R;
-import com.example.gsyvideoplayer.video.LandLayoutVideo;
-import com.google.android.exoplayer2.SeekParameters;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
-import com.shuyu.gsyvideoplayer.cache.ProxyCacheManager;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
-import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
+import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
+import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.MySelfGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
-
-import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
-import com.shuyu.gsyvideoplayer.listener.LockClickListener;
-import com.shuyu.gsyvideoplayer.utils.Debuger;
-import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager;
 import tv.danmaku.ijk.media.exo2.ExoPlayerCacheManager;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -203,7 +183,8 @@ public class MyselfActivity extends AppCompatActivity {
         list.add(videoOptionModel);
        GSYVideoManager.instance().setOptionModelList(list);
        PlayerFactory.setPlayManager(Exo2PlayerManager.class);
-     //   CacheFactory.setCacheManager(ExoPlayerCacheManager.class);
+     //   CacheFactory.setCacheManager(new ExoPlayerCacheManager.class);
+        CacheFactory.setCacheManager(ExoPlayerCacheManager.class);
         GSYVideoManager.onResume(false);
     //    GSYVideoType.setRenderType(GSYVideoType.SUFRACE);
     //    GSYVideoType.setRenderType(GSYVideoType.GLSURFACE);
@@ -214,17 +195,14 @@ public class MyselfActivity extends AppCompatActivity {
         //GSYVideoType.enableMediaCodecTexture();
 
         //   IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_ERROR);
-       /* videoPlayer.setAdUp(urls,true,0);
-        videoPlayer.setRotateViewAuto(false);
-        videoPlayer.setAutoFullWithSize(true);
-        videoPlayer.setShowFullAnimation(false);
-        videoPlayer.setLooping(false);
-        videoPlayer.startPlayLogic();*/
+       /*     */
         gsyVideoOption = new GSYVideoOptionBuilder();
         String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-    //    String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+      //  String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+     //   String temp = "http://vott.haomaishou.com/?co=71&c=584&t=3";
         gsyVideoOption.setUrl(temp)
-                .setCacheWithPlay(true)
+                .setVideoTitle("测试视频")
+                .setCacheWithPlay(false)
                 .setRotateViewAuto(false)
                 .setLockLand(false)
                 .setShowFullAnimation(false)

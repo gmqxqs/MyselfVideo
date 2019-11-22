@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.os.Message;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Surface;
 
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
@@ -239,7 +240,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
         mainThreadHandler.post(new Runnable() {
             @Override
             public void run() {
-                cancelTimeOutBuffer();
+               // cancelTimeOutBuffer();
                 if (listener() != null) {
                     listener().onPrepared();
                 }
@@ -558,11 +559,14 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
             super.handleMessage(msg);
             switch (msg.what) {
                 case HANDLER_PREPARE:
+                    Log.e("BaseManager","HANDLER_PREPARE");
                     initVideo(msg);
                     break;
                 case HANDLER_SETDISPLAY:
+                    Log.e("BaseManager","HANDLER_SETDISPLAY");
                     break;
                 case HANDLER_RELEASE:
+                    Log.e("BaseManager","HANDLER_RELEASE");
                     if (playerManager != null) {
                         playerManager.release();
                     }
@@ -574,6 +578,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
                     cancelTimeOutBuffer();
                     break;
                 case HANDLER_RELEASE_SURFACE:
+                    Log.e("BaseManager","HANDLER_RELEASE");
                     releaseSurface(msg);
                     break;
             }

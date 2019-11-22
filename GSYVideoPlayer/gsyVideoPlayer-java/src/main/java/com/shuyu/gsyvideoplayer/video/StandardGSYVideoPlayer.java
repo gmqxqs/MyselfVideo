@@ -333,9 +333,11 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
     }
 
+
     @Override
     protected void cloneParams(GSYBaseVideoPlayer from, GSYBaseVideoPlayer to) {
         super.cloneParams(from, to);
+
         StandardGSYVideoPlayer sf = (StandardGSYVideoPlayer) from;
         StandardGSYVideoPlayer st = (StandardGSYVideoPlayer) to;
         if (st.mProgressBar != null && sf.mProgressBar != null) {

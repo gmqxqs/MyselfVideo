@@ -1,4 +1,4 @@
-package com.example.gsyvideoplayer.view;
+package com.shuyu.gsyvideoplayer.view;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -6,13 +6,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.example.gsyvideoplayer.R;
+import com.shuyu.gsyvideoplayer.R;
 
-public class LoadingDialog extends Dialog {
+
+public class LoadingDialog2 extends Dialog {
 
     private Context context;
-
-    public LoadingDialog(Context context) {
+    private moe.codeest.enviews.ENDownloadView enDownloadView;
+    public LoadingDialog2(Context context) {
         super(context, R.style.dialog_style);
         this.context = context;
     }
@@ -27,7 +28,10 @@ public class LoadingDialog extends Dialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.layout_loading_dialog2, null);
         setContentView(view);
-
+      /*  enDownloadView =findViewById(R.id.loading);
+        if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
+            enDownloadView.start();
+        }*/
         setCanceledOnTouchOutside(false);
         setCancelable(false);
     }

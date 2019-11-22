@@ -2,6 +2,7 @@ package com.example.gsyvideoplayer.video;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -351,11 +352,12 @@ public class SmartPickVideo extends StandardGSYVideoPlayer {
 
     @Override
     public boolean onSurfaceDestroyed(Surface surface) {
+
         //清空释放
         setDisplay(null);
         //同一消息队列中去release
         //todo 需要处理为什么全屏时全屏的surface会被释放了
-        //releaseSurface(surface);
+        releaseSurface(surface);
         return true;
     }
 }

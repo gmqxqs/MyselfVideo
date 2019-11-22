@@ -4,16 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ProgressBar
+    <!--<moe.codeest.enviews.ENDownloadView
         android:id="@+id/loading"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true" />-->
 
-
-    <TextView
+<!--    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/loading"
@@ -21,6 +19,6 @@
         android:layout_marginTop="15dp"
         android:textColor="#FFFFFF"
         android:text="切换中，请稍后"
-        android:textSize="18sp" />
+        android:textSize="18sp" />-->
 
 </RelativeLayout>

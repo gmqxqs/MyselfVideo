@@ -42,7 +42,6 @@
             android:layout_below="@id/surface_container"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="gone">
@@ -192,13 +191,13 @@
         android:background="#FFFFFF"
         android:progressDrawable="@drawable/video_self_bottom_progress"
         android:visibility="gone"/>
-    <ImageView
+<!--    <ImageView
         android:id="@+id/back_tiny"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginLeft="6dp"
         android:layout_marginTop="6dp"
-        android:visibility="gone" />
+        android:visibility="gone" />-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -313,6 +312,13 @@
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
     android:visibility="invisible" />
+    <moe.codeest.enviews.ENDownloadView
+        android:id="@+id/loading2"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
     <!--视频播放时的暂停，继续播放的方块背景-->
    <!-- <moe.codeest.enviews.ENPlayView
         android:id="@+id/start"
@@ -392,4 +398,12 @@
         android:layout_marginTop="-5dp"
         android:visibility="gone"
         android:src="@drawable/vedio_sent_barrage_icon" />
+    <ImageView
+        android:id="@+id/playstart2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
 </RelativeLayout>

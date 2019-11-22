@@ -52,9 +52,12 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     public static final int CURRENT_STATE_AUTO_COMPLETE = 6;
     //错误状态
     public static final int CURRENT_STATE_ERROR = 7;
+    //切換狀態
+    public static final int CURRENT_STATE_CHANGE = 8;
+
 
     //避免切换时频繁setup
-    public static final int CHANGE_DELAY_TIME = 2000;
+    public static final int CHANGE_DELAY_TIME = 5000;
 
     //当前的播放状态
     protected int mCurrentState = -1;

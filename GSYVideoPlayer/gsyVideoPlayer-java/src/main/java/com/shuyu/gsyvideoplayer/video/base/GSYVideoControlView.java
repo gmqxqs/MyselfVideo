@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -394,13 +395,14 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         }
         if (i == R.id.start) {
             clickStartIcon();
-        } else if (i == R.id.surface_container && mCurrentState == CURRENT_STATE_ERROR) {
+        } /*else if (i == R.id.surface_container && mCurrentState == CURRENT_STATE_ERROR) {
             if (mVideoAllCallBack != null) {
-                Debuger.printfLog("onClickStartError");
+                Log.e("onClickStartError","onClickStartError");
                 mVideoAllCallBack.onClickStartError(mOriginUrl, mTitle, this);
             }
-            prepareVideo();
-        } else if (i == R.id.thumb) {
+           return;
+         //   prepareVideo();
+        } */else if (i == R.id.thumb) {
             if (!mThumbPlay) {
                 return;
             }
@@ -419,7 +421,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 onClickUiToggle();
             }
         } else if (i == R.id.surface_container) {
-            if (mVideoAllCallBack != null && isCurrentMediaListener()) {
+            /*if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                 if (mIfCurrentIsFullscreen) {
                     Debuger.printfLog("onClickBlankFullscreen");
                     mVideoAllCallBack.onClickBlankFullscreen(mOriginUrl, mTitle, GSYVideoControlView.this);
@@ -428,7 +430,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                     mVideoAllCallBack.onClickBlank(mOriginUrl, mTitle, GSYVideoControlView.this);
                 }
             }
-            startDismissControlViewTimer();
+            startDismissControlViewTimer();*/
         }
     }
 
@@ -791,9 +793,11 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
      * 如果不需要，重载为空方法即可
      */
     protected void touchDoubleUp() {
+        Log.e("touchDoubleUp1","touchDoubleUp1");
         if (!mHadPlay) {
             return;
         }
+        Log.e("touchDoubleUp","touchDoubleUp");
         clickStartIcon();
     }
 
@@ -1101,7 +1105,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                                 @Override
                                 public void run() {
                                     hideAllWidget();
-                                    setViewShowState(mLockScreen, GONE);
+                                    //setViewShowState(mLockScreen, GONE);
                                     if (mHideKey && mIfCurrentIsFullscreen && mShowVKey) {
                                         hideNavKey(mContext);
                                     }

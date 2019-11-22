@@ -693,6 +693,7 @@ public class GSYVideoOptionBuilder {
         gsyVideoPlayer.setReleaseWhenLossAudio(mReleaseWhenLossAudio);
         gsyVideoPlayer.setFullHideActionBar(mActionBar);
         gsyVideoPlayer.setFullHideStatusBar(mStatusBar);
+
         if (mEnlargeImageRes > 0) {
             gsyVideoPlayer.setEnlargeImageRes(mEnlargeImageRes);
         }
@@ -709,16 +710,18 @@ public class GSYVideoOptionBuilder {
         System.out.println("listUrl.size():" + listUrl.size());
         if(listUrl.size() >= 2){
             urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
-                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
+                    mVideoTitle, MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
             urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(1),
-                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
+                    mVideoTitle, MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
         } else{
             urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
-                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
+                    mVideoTitle, MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
         }
         System.out.println("list:" + listUrl);
+        gsyVideoPlayer.setTitle(mVideoTitle);
+        gsyVideoPlayer.setCacheWithPlay(mCacheWithPlay);
         if (mSetUpLazy) {
-            gsyVideoPlayer.setUpLazy(mUrl, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
+            gsyVideoPlayer.setUpLazy(urls, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
         } else {
             gsyVideoPlayer.setUp(urls, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
         }
