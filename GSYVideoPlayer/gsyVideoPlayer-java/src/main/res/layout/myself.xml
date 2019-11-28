@@ -12,6 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </FrameLayout>
+
+    <master.flame.danmaku.ui.widget.DanmakuView
+        android:id="@+id/danmaku_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <RelativeLayout
         android:id="@+id/thumb"
         android:layout_width="match_parent"
@@ -78,7 +84,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00:00"
-
                 android:textColor="#ffffff" />
             <ImageView
                 android:id="@+id/fullscreen"
@@ -125,27 +130,31 @@
                 android:textColor="#ffffff" />
             <LinearLayout
                 android:id="@+id/danmu"
-                android:gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="293dp"
+                android:layout_height="28dp"
                 android:layout_marginTop="-7dp"
                 android:layout_marginLeft="150dp"
                 android:layout_gravity="center|center_vertical"
                 android:focusableInTouchMode="true"
-                android:visibility="gone"
-                android:background="@drawable/video_danmu">
-                <EditText
-                    android:imeOptions="flagNoExtractUi"
+                android:visibility="visible"
+                android:background="@drawable/video_danmu"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/tabbar_me_nl"/>
+                <TextView
+                    android:layout_gravity="center_vertical"
                     android:background="@null"
-                    android:id="@+id/edit_danmu"
-                    android:paddingLeft="30dp"
-                    android:layout_width="293dp"
-                    android:layout_height="28dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:textColor="#FFFFFF"
-                    android:paddingTop="5dp"
+                    android:layout_marginLeft="5dp"
                     android:textSize="12sp"
-                    android:hint="弹幕走一波"
-                    android:textColorHint="#3F000000"
+                    android:hint="弹幕走一波~"
+                    android:textColorHint="#33FFFFFF"
                     android:visibility="visible"
                     />
             </LinearLayout>

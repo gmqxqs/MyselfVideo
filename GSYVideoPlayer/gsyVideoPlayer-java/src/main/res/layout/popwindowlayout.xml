@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp"
+    android:background="#E6000000"
+    android:orientation="vertical" >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_gravity="center_vertical"
+        android:background="#991D1D1E"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/fontImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="73dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/barrage_font_setting_icon_hl"/>
+
+        <LinearLayout
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="12dp"
+            android:layout_weight="1"
+            android:id="@+id/danmu"
+            android:layout_width="564dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:focusableInTouchMode="true"
+            android:visibility="visible"
+            android:background="@drawable/video_danmu"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tabbar_me_nl"/>
+            <EditText
+                android:id="@+id/editText"
+                android:background="@null"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:hint="弹幕走一波~"
+                android:textColorHint="#33FFFFFF"
+                android:imeOptions="flagNoExtractUi"
+
+                />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/send"
+            android:layout_marginRight="72dp"
+            android:layout_width="56dp"
+            android:layout_height="28dp"
+            android:text="发送"
+            android:layout_gravity="center_vertical"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/video_send"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/fontDisplay"
+        android:layout_marginLeft="73dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:alpha="0"/>
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#CCFFFFFF"
+            android:textSize="12sp"
+            android:text="弹幕字号"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/fontSmallSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fong_size_mini_hl"/>
+
+            <ImageView
+                android:id="@+id/fontBigSize"
+                android:layout_marginLeft="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fong_size_big_nl"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="弹幕颜色"
+            android:textColor="#CCFFFFFF"
+            android:textSize="12dp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/fontColor1"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/video_fontcolor1normal"
+                />
+
+            <ImageView
+                android:layout_marginLeft="16dp"
+                android:id="@+id/fontColor2"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/video_fontcolor2normal"
+                />
+            <ImageView
+                android:layout_marginLeft="16dp"
+                android:id="@+id/fontColor3"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/video_fontcolor3normal"
+                />
+            <ImageView
+                android:layout_marginLeft="16dp"
+                android:id="@+id/fontColor4"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/video_fontcolor4normal"
+                />
+            <ImageView
+                android:layout_marginLeft="16dp"
+                android:id="@+id/fontColor5"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/video_fontcolor5normal"
+                />
+            <ImageView
+                android:layout_marginLeft="16dp"
+                android:id="@+id/fontColor6"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/video_fontcolor6normal"
+                />
+            <ImageView
+                android:layout_marginLeft="16dp"
+                android:id="@+id/fontColor7"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/video_fontcolor7normal"
+                />
+            <ImageView
+                android:layout_marginLeft="16dp"
+                android:id="@+id/fontColor8"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/video_fontcolor8normal"
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

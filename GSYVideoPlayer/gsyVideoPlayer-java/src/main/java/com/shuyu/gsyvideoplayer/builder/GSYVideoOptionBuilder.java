@@ -1,6 +1,7 @@
 package com.shuyu.gsyvideoplayer.builder;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
 import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
@@ -8,12 +9,14 @@ import com.shuyu.gsyvideoplayer.render.view.GSYVideoGLView;
 import com.shuyu.gsyvideoplayer.render.effect.NoEffect;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
+import com.shuyu.gsyvideoplayer.video.DanmuBean;
 import com.shuyu.gsyvideoplayer.video.MySelfGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +30,8 @@ import java.util.Map;
  */
 
 public class GSYVideoOptionBuilder {
+
+
 
     //退出全屏显示的案件图片
     protected int mShrinkImageRes = -1;
@@ -114,6 +119,8 @@ public class GSYVideoOptionBuilder {
 
     //是否需要在利用window实现全屏幕的时候隐藏statusbar
     protected boolean mStatusBar = false;
+
+
 
     //播放的tag，防止错误，因为普通的url也可能重复
     protected String mPlayTag = "";
@@ -263,6 +270,7 @@ public class GSYVideoOptionBuilder {
         this.mIsTouchWigetFull = isTouchWigetFull;
         return this;
     }
+
 
 
     /**
@@ -566,6 +574,8 @@ public class GSYVideoOptionBuilder {
         return this;
     }
 
+
+
     public void build(StandardGSYVideoPlayer gsyVideoPlayer) {
         if (mBottomShowProgressDrawable != null && mBottomShowProgressThumbDrawable != null) {
             gsyVideoPlayer.setBottomShowProgressBarDrawable(mBottomShowProgressDrawable, mBottomShowProgressThumbDrawable);
@@ -651,6 +661,7 @@ public class GSYVideoOptionBuilder {
 
 
     public void build(MySelfGSYVideoPlayer gsyVideoPlayer) {
+
         gsyVideoPlayer.setPlayTag(mPlayTag);
         gsyVideoPlayer.setPlayPosition(mPlayPosition);
         gsyVideoPlayer.setThumbPlay(mThumbPlay);
@@ -694,6 +705,8 @@ public class GSYVideoOptionBuilder {
         gsyVideoPlayer.setFullHideActionBar(mActionBar);
         gsyVideoPlayer.setFullHideStatusBar(mStatusBar);
 
+
+
         if (mEnlargeImageRes > 0) {
             gsyVideoPlayer.setEnlargeImageRes(mEnlargeImageRes);
         }
@@ -723,6 +736,7 @@ public class GSYVideoOptionBuilder {
         if (mSetUpLazy) {
             gsyVideoPlayer.setUpLazy(urls, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
         } else {
+
             gsyVideoPlayer.setUp(urls, mCacheWithPlay, mCachePath, mMapHeadData, mVideoTitle);
         }
     }

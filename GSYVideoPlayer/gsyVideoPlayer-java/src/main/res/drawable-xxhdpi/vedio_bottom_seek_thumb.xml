@@ -2,5 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!--圆圈的样式-->
     <item android:drawable="@drawable/vedio_seek_thumb_pressed" android:state_pressed="true" />
-    <item android:drawable="@drawable/vedio_seek_thumb_normal" />
+    <item android:drawable="@drawable/btn_keyboard_key" />
 </selector>

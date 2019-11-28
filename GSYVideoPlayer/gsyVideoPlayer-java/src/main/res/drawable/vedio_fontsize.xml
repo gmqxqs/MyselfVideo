@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--圆圈的样式-->
+    <item android:drawable="@drawable/fong_size_mini_hl" android:state_checked="true" />
+    <item android:drawable="@drawable/fong_size_mini" />
+</selector>

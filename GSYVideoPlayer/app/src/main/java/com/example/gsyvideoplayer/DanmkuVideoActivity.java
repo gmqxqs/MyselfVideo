@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -13,6 +14,8 @@ import android.widget.RelativeLayout;
 import com.example.gsyvideoplayer.video.DanmakuVideoPlayer;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
+import com.shuyu.gsyvideoplayer.video.DanmuBean;
+import com.shuyu.gsyvideoplayer.video.MySelfGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
@@ -20,6 +23,8 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +62,7 @@ public class DanmkuVideoActivity extends AppCompatActivity {
 
         //使用自定义的全屏切换图片，!!!注意xml布局中也需要设置为一样的
         //必须在setUp之前设置
+  //      danmakuVideoPlayer.initDanmaku();
         danmakuVideoPlayer.setShrinkImageRes(R.drawable.custom_shrink);
         danmakuVideoPlayer.setEnlargeImageRes(R.drawable.custom_enlarge);
 
@@ -84,7 +90,17 @@ public class DanmkuVideoActivity extends AppCompatActivity {
         danmakuVideoPlayer.setLockLand(false);
         danmakuVideoPlayer.setShowFullAnimation(false);
         danmakuVideoPlayer.setNeedLockFull(true);
-
+      /*  List<DanmuBean> danmuBeanList = new ArrayList<>();
+        DanmuBean danmuBean1 = new DanmuBean(5.0f,1,25,16711680,"第一条弹幕");
+        DanmuBean danmuBean2 = new DanmuBean(10.0f,1,25,16711680,"第二条弹幕");
+        DanmuBean danmuBean3 = new DanmuBean(15.0f,1,25,16711680,"第三条弹幕");
+        danmuBeanList.add(danmuBean1);
+        danmuBeanList.add(danmuBean2);
+        danmuBeanList.add(danmuBean3);
+      //  videoPlayer.setDanmuBeanList(danmuBeanList);
+        String fileName = "persons";*/
+       // videoPlayer.setFileName(fileName);
+       // danmakuVideoPlayer.initDanmaku(danmuBeanList,fileName);
         //detailPlayer.setOpenPreView(true);
         danmakuVideoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +120,7 @@ public class DanmkuVideoActivity extends AppCompatActivity {
                 //开始播放了才能旋转和全屏
                 orientationUtils.setEnable(true);
                 isPlay = true;
-                getDanmu();
+              //  getDanmu();
             }
 
             @Override
@@ -202,6 +218,7 @@ public class DanmkuVideoActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(File response, int id) {
+                        Log.e("FileResponse",response.getName());
                         if (!isDestory) {
                             ((DanmakuVideoPlayer) danmakuVideoPlayer.getCurrentPlayer()).setDanmaKuStream(response);
                         }

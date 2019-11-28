@@ -856,6 +856,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         } else if (mCurrentState == CURRENT_STATE_PLAYING) {
             try {
                 onVideoPause();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

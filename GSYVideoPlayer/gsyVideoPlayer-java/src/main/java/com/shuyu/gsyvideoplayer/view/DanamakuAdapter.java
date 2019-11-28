@@ -1,4 +1,4 @@
-package com.example.gsyvideoplayer.adapter;
+package com.shuyu.gsyvideoplayer.view;
 
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -39,7 +39,7 @@ public class DanamakuAdapter extends BaseCacheStuffer.Proxy {
 
     @Override
     public void prepareDrawing(final BaseDanmaku danmaku, boolean fromWorkerThread) {
-     /*   if (danmaku.text instanceof Spanned) { // 根据你的条件检查是否需要需要更新弹幕
+        if (danmaku.text instanceof Spanned) { // 根据你的条件检查是否需要需要更新弹幕
             // FIXME 这里只是简单启个线程来加载远程url图片，请使用你自己的异步线程池，最好加上你的缓存池
             new Thread() {
 
@@ -73,7 +73,7 @@ public class DanamakuAdapter extends BaseCacheStuffer.Proxy {
                     }
                 }
             }.start();
-        }*/
+        }
     }
 
 

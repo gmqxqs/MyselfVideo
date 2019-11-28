@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--圆圈的样式-->
+    <item android:drawable="@drawable/fong_size_bi_hl" android:state_pressed="true" />
+    <item android:drawable="@drawable/fong_size_big_nl" android:state_pressed="false"/>
+    <item android:drawable="@drawable/fong_size_big_nl" />
+</selector>
