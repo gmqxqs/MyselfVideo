@@ -27,10 +27,12 @@ import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.FileUtils;
 import com.shuyu.gsyvideoplayer.utils.GifCreateHelper;
+import com.shuyu.gsyvideoplayer.video.DanmuBean;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -240,6 +242,12 @@ public class DetailControlActivity extends GSYBaseActivityDetail<StandardGSYVide
     public void onQuitFullscreen(String url, Object... objects) {
         super.onQuitFullscreen(url, objects);
     }
+
+    @Override
+    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
+    }
+
 
     /*******************************竖屏全屏结束************************************/
 

@@ -58,10 +58,12 @@ import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.FileUtils;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.utils.GifCreateHelper;
+import com.shuyu.gsyvideoplayer.video.DanmuBean;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -503,6 +505,11 @@ public class DetailFilterActivity extends GSYBaseActivityDetail<StandardGSYVideo
             mTimerTask.cancel();
             mTimerTask = null;
         }
+    }
+
+    @Override
+    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
     }
 
 

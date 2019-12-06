@@ -60,17 +60,28 @@ public class MyselfActivity extends AppCompatActivity {
         setContentView(R.layout.activity_myself);
 
         List<DanmuBean> danmuBeanList = new ArrayList<>();
-        DanmuBean danmuBean1 = new DanmuBean(5.0f,1,25,16711680,"第一条弹幕");
-        DanmuBean danmuBean2 = new DanmuBean(10.0f,1,25,16711680,"第二条弹幕");
-        DanmuBean danmuBean3 = new DanmuBean(15.0f,1,25,16711680,"第三条弹幕");
+
+     //   DanmuBean danmuBean1 = new DanmuBean(5.0f,1,25,16777215,"；九年级看看\uD83D\uDE18");
+        videoPlayer =  (MySelfGSYVideoPlayer) findViewById(R.id.video_player);
+        DanmuBean danmuBean1 = new DanmuBean(5.0f,1,25,16777215,"第一条弹幕");
+        DanmuBean danmuBean2 = new DanmuBean(6.0f,6,25,16711935,"第二条弹幕");
+        DanmuBean danmuBean3 = new DanmuBean(7.0f,5,25,146114,"第三条弹幕");
+        DanmuBean danmuBean4 = new DanmuBean(8.0f,1,25, 16737996,"第四条弹幕");
+        DanmuBean danmuBean5 = new DanmuBean(9.0f,1,25,1667233,"第五条弹幕");
+        DanmuBean danmuBean6 = new DanmuBean(10.0f,1,25,255255,"第六条弹幕");
+        DanmuBean danmuBean7 = new DanmuBean(11.0f,1,25,10458123,"第七条弹幕");
+        DanmuBean danmuBean8 = new DanmuBean(12.0f,1,25,16711680,"第八条弹幕");
+        DanmuBean danmuBean9 = new DanmuBean(5327.0f,1,25,16711680,"第九条弹幕");
         danmuBeanList.add(danmuBean1);
         danmuBeanList.add(danmuBean2);
         danmuBeanList.add(danmuBean3);
-
-        videoPlayer =  (MySelfGSYVideoPlayer) findViewById(R.id.video_player);
+        danmuBeanList.add(danmuBean4);
+        danmuBeanList.add(danmuBean5);
+        danmuBeanList.add(danmuBean6);
+        danmuBeanList.add(danmuBean7);
+        danmuBeanList.add(danmuBean8);
+        danmuBeanList.add(danmuBean9);
         videoPlayer.setDanmuBeanList(danmuBeanList);
-        String fileName = "persons";
-        videoPlayer.setFileName(fileName);
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -81,33 +92,6 @@ public class MyselfActivity extends AppCompatActivity {
         orientationUtils = new OrientationUtils(this, videoPlayer);
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
-       /* Map<String, String> header = new HashMap<>();
-        header.put("ee", "33");
-        header.put("allowCrossProtocolRedirects", "true");*/
-        //   File file = new File("file:///storage/emulated/0/Android/data/com.example.gsyvideoplayer/cache/video-cache/");
-      //  url = "https://youku.com-iqiyi.net/20190303/21817_a6cd96be/index.m3u8";
-      //  url = "tvbus://1xPgeyzU1pyTkgBDeHzd2V95XVim1DSURpywwaLPHtwRibRTwh";
-      //  url = "http://static_api.maogou.vip/9e9e1b7ea4e250af8fe1f1865650d42b/a036cac2531b35692e8975f252229fcf.m3u8";
-     //   url = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
-      //    String tempUrl = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-     //   String tempUrl = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-    /*    ArrayList<String> listUrl = new ArrayList<String>();
-        listUrl = videoPlayer.subString(tempUrl);
-        System.out.println("list:" + listUrl);
-        //     String url = "https://apd-1f573461e2849c2dff8de8011848088b.v.smtcdns.com/moviets.tc.qq.com/A-pfo_cZrdx-q2vFBqnpS4xcOM5Jb9Q8r8GgdIs8r8P0/uwMROfz2r5zAoaQXGdGnC2df644E7D3uP8M8pmtgwsRK9nEL/h3Ir07Asx9wg0_yDFrgKal0z4RSuVdCBIljI9eWOBAODkcEcQByGBAJMGF42Hkd48Gmf8rSFFPW5hh53XONL7LmdZpg9INujHPIJA-Y8gtK6W5P2XvMvBxKABOCWelv-mebHpqBSSTBUz6uDLGuHFhLeXt8dESEIn7_tnDs0CpU/z00310ev4nq.321002.ts.m3u8?ver=4";
-
-        urls = videoPlayer.getUrls();
-        System.out.println("listUrl.size():" + listUrl.size());
-        if(listUrl.size() >= 2){
-            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
-                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
-            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(1),
-                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
-        } else{
-            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
-                    "", MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
-        }*/
-
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,10 +101,10 @@ public class MyselfActivity extends AppCompatActivity {
                 videoPlayer.startWindowFullscreen(MyselfActivity.this, true, true);
             }
         });
+
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 onBackPressed();
             }
         });
@@ -152,42 +136,32 @@ public class MyselfActivity extends AppCompatActivity {
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_CODEC,"skip_loop_filter",8);
         list.add(videoOptionModel);
-       videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"analyzemaxduration",100);
-       list.add(videoOptionModel);
+        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"analyzemaxduration",100);
+        list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"analyzemaxduration",1);
         list.add(videoOptionModel);
-       videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"probesize",4096);
-       list.add(videoOptionModel);
-       videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"flush_packets",1);
-       list.add(videoOptionModel);
-       videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"packet-buffering",0);
-       list.add(videoOptionModel);
-       videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",1);
-       list.add(videoOptionModel);
+        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"probesize",4096);
+        list.add(videoOptionModel);
+        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"flush_packets",1);
+        list.add(videoOptionModel);
+        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"packet-buffering",0);
+        list.add(videoOptionModel);
+        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",1);
+        list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"opensles",0);
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"overlay-format",IjkMediaPlayer.SDL_FCC_RV32);
         list.add(videoOptionModel);
-       GSYVideoManager.instance().setOptionModelList(list);
-       PlayerFactory.setPlayManager(Exo2PlayerManager.class);
-     //   CacheFactory.setCacheManager(new ExoPlayerCacheManager.class);
+        GSYVideoManager.instance().setOptionModelList(list);
+        PlayerFactory.setPlayManager(Exo2PlayerManager.class);
         CacheFactory.setCacheManager(ExoPlayerCacheManager.class);
         GSYVideoManager.onResume(false);
-    //    GSYVideoType.setRenderType(GSYVideoType.SUFRACE);
-    //    GSYVideoType.setRenderType(GSYVideoType.GLSURFACE);
         GSYVideoType.setRenderType(GSYVideoType.TEXTURE);
         IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
-
-        // GSYVideoType.enableMediaCodec();
-        //GSYVideoType.enableMediaCodecTexture();
-
-        //   IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_ERROR);
-       /*     */
-      /*  Log.e("播放弹幕22","播放弹幕");
-        videoPlayer.initDanmaku(danmuBeanList,fileName);*/
         gsyVideoOption = new GSYVideoOptionBuilder();
         String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-      //  String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+  //   String temp ="http://valipl.cp31.ott.cibntv.net/6974F340B3E4671CCBB1F35E2/03000900005DD243EBF4E796AE0B5008768271-C0CC-4986-9CFF-0A208516B433-1-39045.m3u8?ccode=0502&duration=2485&expire=18000&psid=9a8b8f534e421266e16d96854b5fbfa1&ups_client_netip=78249253&ups_ts=1575363328&ups_userid=&utid=4X2qFJ4VIQYCAXgk4VlHaRyl&vid=XNDQyODk1OTU5Mg&vkey=Ad53f5d8df44a6f6caa8b10971051f53d&sm=1&operate_type=1&dre=u37&si=28&bc=2";
+        //   String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
      //   String temp = "http://vott.haomaishou.com/?co=71&c=584&t=3";
 
     //    String temp ="/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/1/1.m3u8";
@@ -206,9 +180,7 @@ public class MyselfActivity extends AppCompatActivity {
                         //orientationUtils.setEnable(true);
                         orientationUtils.setEnable(true);
                         isPlay = true;
-                      //  getDanmu();
                     }
-
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
@@ -217,6 +189,15 @@ public class MyselfActivity extends AppCompatActivity {
                             orientationUtils.setEnable(false);
                             orientationUtils.backToProtVideo();
                         }
+                    }
+                    @Override
+                    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+                        super.onClickSend(url, danmuBean, objects);
+                        Log.e("输入弹幕数据",danmuBean.getDanmuText());
+                        Log.e("输入弹幕数据",danmuBean.getDisplayTime()+"");
+                        Log.e("输入弹幕数据",danmuBean.getFontColor()+"");
+                        Log.e("输入弹幕数据",danmuBean.getFontSize()+"");
+                        Log.e("输入弹幕数据",danmuBean.getType()+"");
                     }
                 }).setLockClickListener(new LockClickListener() {
                     @Override

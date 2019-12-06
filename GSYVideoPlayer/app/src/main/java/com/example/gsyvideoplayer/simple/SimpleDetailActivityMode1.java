@@ -8,7 +8,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.GSYBaseActivityDetail;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
+import com.shuyu.gsyvideoplayer.video.DanmuBean;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+
+import java.util.List;
 
 /**
  * 简单详情实现模式1
@@ -84,4 +87,9 @@ public class SimpleDetailActivityMode1 extends GSYBaseActivityDetail<StandardGSY
                 .into(imageView);
     }
 
+
+    @Override
+    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
+    }
 }

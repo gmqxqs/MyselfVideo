@@ -1,5 +1,9 @@
 package com.shuyu.gsyvideoplayer.listener;
 
+import com.shuyu.gsyvideoplayer.video.DanmuBean;
+
+import java.util.List;
+
 /**
  * 继承了接接口的类
  * Created by shuyu on 2016/11/23.
@@ -138,4 +142,10 @@ public class GSYSampleCallBack implements VideoAllCallBack {
     public void onClickBlankFullscreen(String url, Object... objects) {
 
     }
+
+    @Override
+    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
+    }
+
 }

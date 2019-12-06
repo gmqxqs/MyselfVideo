@@ -8,9 +8,12 @@ import com.shuyu.gsyvideoplayer.GSYBaseADActivityDetail;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.video.DanmuBean;
 import com.shuyu.gsyvideoplayer.video.NormalGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.GSYADVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
+
+import java.util.List;
 
 /**
  * 带广告播放，支持中间插入广告模式
@@ -126,6 +129,12 @@ public class DetailADPlayer2 extends GSYBaseADActivityDetail<NormalGSYVideoPlaye
         GSYVideoPlayer gsyVideoPlayer = (GSYVideoPlayer) objects[1];
         gsyVideoPlayer.getBackButton().setVisibility(View.GONE);
     }
+
+    @Override
+    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
+    }
+
 
     /**
      * 公用的视频配置

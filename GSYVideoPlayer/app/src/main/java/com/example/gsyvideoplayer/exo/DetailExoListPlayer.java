@@ -11,6 +11,7 @@ import com.shuyu.gsyvideoplayer.GSYBaseActivityDetail;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.model.GSYVideoModel;
+import com.shuyu.gsyvideoplayer.video.DanmuBean;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.util.ArrayList;
@@ -136,6 +137,11 @@ public class DetailExoListPlayer extends GSYBaseActivityDetail<GSYExo2PlayerView
         //隐藏调全屏对象的返回按键
         GSYVideoPlayer gsyVideoPlayer = (GSYVideoPlayer)objects[1];
         gsyVideoPlayer.getBackButton().setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
     }
 
 

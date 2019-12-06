@@ -15,9 +15,12 @@ import com.example.gsyvideoplayer.view.ScrollWebView;
 import com.shuyu.gsyvideoplayer.GSYBaseActivityDetail;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
+import com.shuyu.gsyvideoplayer.video.DanmuBean;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -175,5 +178,11 @@ public class WebDetailActivity extends GSYBaseActivityDetail<StandardGSYVideoPla
         //增加title
         webPlayer.getTitleTextView().setVisibility(View.GONE);
         webPlayer.getBackButton().setVisibility(View.GONE);
+    }
+
+
+    @Override
+    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
     }
 }
