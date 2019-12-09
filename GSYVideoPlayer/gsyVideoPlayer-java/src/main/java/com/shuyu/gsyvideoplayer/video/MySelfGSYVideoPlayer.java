@@ -1931,7 +1931,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mSwitchSize.setText(name);*/
         final String url = mUriList.get(mSourcePosition).getUrl();
         resolveChangeUrl(mCache, mCachePath, url);
-       // hideLoading();
+        hideLoading();
         mSwitch = true;
 
     }
@@ -1993,7 +1993,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 @Override
                 public void run() {
                     resolveChangedResult();
-                    Toast.makeText(mContext, "change Fail", Toast.LENGTH_LONG).show();
+                  //  Toast.makeText(mContext, "change Fail", Toast.LENGTH_LONG).show();
+                    hideLoading();
+                    setStateAndUi(CURRENT_STATE_AUTO_COMPLETE);
                 }
             });
         }
