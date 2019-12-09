@@ -1273,7 +1273,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
     }
     protected void changeUiToChangeClear() {
-        //  mTouch = true;
         Log.e("播放器","changeUiToChangeClear");
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(playstart2,GONE);
@@ -1332,7 +1331,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Log.e("播放器","changeUiToError");
         String time = mCurrentTimeTextView.getText().toString();
         System.out.println("time:"+time);
-
         errortime =  CommonUtil.intForTime(time);
         setViewShowState(mTopContainer, GONE);
         setViewShowState(playstart2,GONE);
@@ -1349,15 +1347,17 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 //playNextUrl(errortime);
 
                 if(mUriList.size() > 0){
+
                     String url = mUriList.get(mSourcePosition).getUrl();
                     File file = new File(url);
                     if(file.exists()){
-                        Log.e("文件存在","文件存在");
+
+                        Log.e("" , mUriList.get(mSourcePosition).getUrl());
                         resolveStartChange();
                         isDown = false;
                     } else {
                         mSourcePosition++;
-                        Log.e("文件不存在","文件不存在");
+                        Log.e("播放url转换2" , mUriList.get(mSourcePosition).getUrl());
                         setUp(mUriList.get(mSourcePosition).getUrl(),true,mUriList.get(mSourcePosition).getTitle());
                         startPlayLogic();
                     }
@@ -1372,12 +1372,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
         } else{
             setViewShowState(newstart,GONE);
-            // playNextUrl(errortime);
             if(mUriList.size() > 0 ){
                 String url = mUriList.get(0).getUrl();
                 File file = new File(url);
                 if(file.exists()){
-
                     resolveStartChange();
                 } else {
 
@@ -2512,7 +2510,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mPlayPosition = position;
         mMapHeadData = mapHeadData;
         boolean set = setUp(gsyVideoModel.getUrl(), cacheWithPlay, cachePath, gsyVideoModel.getTitle(), changeState);
-        System.out.println("gsyVideoModel.getUrl():" + gsyVideoModel.getUrl());
+        Log.e("播放url开始:" , gsyVideoModel.getUrl());
+
         if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
             mTitleTextView.setText(gsyVideoModel.getTitle());
         }
@@ -2544,10 +2543,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mCurrentState = CURRENT_STATE_NORMAL;
 
         this.mTitle = title;
-
-
-
-
         setStateAndUi(CURRENT_STATE_NORMAL);
         setAdUp(url,mCache, 0);
         return true;
@@ -2571,6 +2566,25 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setAdUp(url,mCache, 0);
         return true;
     }
+    @Override
+    public boolean setUp(String url, boolean cacheWithPlay, String title) {
+        ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
+        ArrayList<String> listUrl = new ArrayList<String>();
+        listUrl = subString(url);
+        urls = getUrls();
+        System.out.println("listUrl.size():" + listUrl.size());
+        if(listUrl.size() >= 2){
+            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
+                    title, MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
+            urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(1),
+                    title, MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_NORMAL));
+            return setUp(urls, cacheWithPlay, mCachePath, mMapHeadData, title);
+        }
+        return super.setUp(url, cacheWithPlay, ((File) null), title);
+    }
+
+
+
 
     /**
      * 带片头广告的，setAdUp
@@ -2601,38 +2615,34 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
 
     private void resolveStartChange() {
-        // final String name = mUrlList.get(position).getName();
-        // if (mSourcePosition != position) {
-        if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
-                || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE || mCurrentState == GSYVideoPlayer.CURRENT_STATE_ERROR)) {
 
-            if (mSourcePosition < (mUriList.size() - 1)) {
-                if(!isComplete){
-                    mSourcePosition += 1;
+       // final String name = mUrlList.get(position).getName();
+       // if (mSourcePosition != position) {
+            if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
+                    || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE || mCurrentState == GSYVideoPlayer.CURRENT_STATE_ERROR)) {
+
+                if (mSourcePosition < (mUriList.size() - 1)) {
+                    if(!isComplete){
+                        mSourcePosition += 1;
+                    }
                 }
+                showLoading();
+                final String url = mUriList.get(mSourcePosition).getUrl();
+                Log.e("播放url转换",url);
+                cancelProgressTimer();
+                hideAllWidget();
+                if (mTitle != null && mTitleTextView != null) {
+                    mTitleTextView.setText(mTitle);
+                }
+
+                //创建临时管理器执行加载播放
+                mTmpManager = GSYVideoManager.tmpInstance(gsyMediaPlayerListener);
+                mTmpManager.initContext(getContext().getApplicationContext());
+                resolveChangeUrl(mCache, mCachePath, url);
+                mTmpManager.prepare(mUrl, mMapHeadData, mLooping, mSpeed, mCache, mCachePath, null);
+                //changeUiToPlayingBufferingShow();
+                changeUiToChangeShow();
             }
-            showLoading();
-            Log.e("mSourcePosition",mSourcePosition+"");
-            final String url = mUriList.get(mSourcePosition).getUrl();
-            Log.e("播放url",url);
-            cancelProgressTimer();
-            hideAllWidget();
-            if (mTitle != null && mTitleTextView != null) {
-                mTitleTextView.setText(mTitle);
-            }
-                /*mPreSourcePosition = mSourcePosition;
-                isChanging = true;
-                mTypeText = name;
-                mSwitchSize.setText(name);
-                mSourcePosition = position;*/
-            //创建临时管理器执行加载播放
-            mTmpManager = GSYVideoManager.tmpInstance(gsyMediaPlayerListener);
-            mTmpManager.initContext(getContext().getApplicationContext());
-            resolveChangeUrl(mCache, mCachePath, url);
-            mTmpManager.prepare(mUrl, mMapHeadData, mLooping, mSpeed, mCache, mCachePath, null);
-            //changeUiToPlayingBufferingShow();
-            changeUiToChangeShow();
-        }
         //}
         /*else {
             Toast.makeText(getContext(), "已经是 " + name, Toast.LENGTH_LONG).show();
@@ -2659,6 +2669,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         resolveChangeUrl(mCache, mCachePath, url);
         // hideLoading();
         mSwitch = true;
+
     }
     private GSYMediaPlayerListener gsyMediaPlayerListener = new GSYMediaPlayerListener() {
         @Override

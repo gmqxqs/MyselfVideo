@@ -44,7 +44,7 @@ dependencies {
     api "com.shuyu:gsyVideoPlayer-base:$gsyVideoVersion"
     api "com.shuyu:gsyvideoplayer-androidvideocache:$gsyVideoVersion"
     api 'org.apache.httpcomponents:httpcore:4.4.2'
-    compile 'org.greenrobot:eventbus:3.0.0'
+
     api 'com.google.code.gson:gson:2.8.6'
     implementation viewDependencies.DanmakuFlameMaster
   //  api 'com.simpledlnaarr.publish:simpledlnaarr:1.0.0'

@@ -7,15 +7,15 @@ buildscript {
         maven { url 'https://maven.google.com' }
         jcenter()
         google()
-        maven {
+       /* maven {
             url 'http://4thline.org/m2'
-        }
-        maven{
+        }*/
+    /*    maven{
             // url 'https://raw.githubusercontent.com/gmqxqs/GSYVIDEOPLAYER/master'
             //  url 'file://F://WorkSpace/myaar/repository/'
             //   url 'file://D://WorkSpace/myaar/repository/'
             url 'file://F://toupin/repository/'
-        }
+        }*/
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.0'

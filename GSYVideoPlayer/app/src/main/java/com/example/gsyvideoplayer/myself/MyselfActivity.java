@@ -208,7 +208,7 @@ public class MyselfActivity extends AppCompatActivity {
                     }
                 }).build(videoPlayer);
 
-
+        videoPlayer.setUp(temp,true,"测试视频");
 
         videoPlayer.startPlayLogic();
 
