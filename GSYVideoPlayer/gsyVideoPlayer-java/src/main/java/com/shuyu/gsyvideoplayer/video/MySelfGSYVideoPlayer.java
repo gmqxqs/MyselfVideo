@@ -31,7 +31,6 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.google.gson.Gson;
 import com.shuyu.gsyvideoplayer.GSYVideoBaseManager;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -147,7 +146,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     private SeekBar mSeekBar;
     private GSYVideoManager mTmpManager;
     private boolean mTouch = true;
-    private moe.codeest.enviews.ENDownloadView enDownloadView;
+    private ProgressBar mLoading;
     protected List<GSYVideoModel> mUriList = new ArrayList<>();
     public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
     public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> getUrls(){
@@ -229,7 +228,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mDanmuImage = findViewById(R.id.danmuImage);
         mDanmuText = findViewById(R.id.danmuText);
         new TimeThread().start();
-        enDownloadView = findViewById(R.id.loading2);
+        mLoading = findViewById(R.id.loading2);
         mDanmu.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -676,7 +675,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     public void seekTo(long position) {
         try {
             if (getGSYVideoManager() != null && position > 0) {
-                System.out.println("seek2:"+position);
+
                 getGSYVideoManager().seekTo(position);
             }
             if (getGSYVideoManager() != null && position <=  0) {
@@ -689,7 +688,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        System.out.println("开始拖动进度条");
+
         startProgressTimer();
         mHadSeekTouch = true;
        /* if (getGSYVideoManager() != null && mHadPlay) {
@@ -714,7 +713,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
      */
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        System.out.println("停止拖动进度条");
+
         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
             if (isIfCurrentIsFullscreen()) {
                 Debuger.printfLog("onClickSeekbarFullscreen");
@@ -729,7 +728,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 //int progress = seekBar.getProgress();
                 int time = seekBar.getProgress() * getDuration() / 100;
 
-                System.out.println("time3:" + CommonUtil.stringForTime(time));
+
                 //  int time = progress  * getDuration() / 100;
                 getGSYVideoManager().seekTo(time);
                 mBottomProgressBar.setProgress(seekBar.getProgress());
@@ -746,14 +745,14 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     @Override
     public  void  onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-        System.out.println("进度条改变");
+
         if (getGSYVideoManager() != null && mHadPlay) {
             try {
                 //int progress = seekBar.getProgress();
                 int time = seekBar.getProgress() * getDuration() / 100;
                 errortime = seekBar.getProgress() * getDuration() / 100;
                 mBottomProgressBar.setProgress(seekBar.getProgress());
-                System.out.println("seekBarProgress():"+seekBar.getProgress());
+
                 mProgressBar.setProgress(seekBar.getProgress());
                 // setTextAndProgress(seekBar.getProgress());
                 mCurrentTimeTextView.setText(CommonUtil.stringForTime(time));
@@ -862,7 +861,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             }
 
             if (mIfCurrentIsFullscreen) {
-                System.out.println("全屏");
+
                 if (mFullscreenButton != null)
                     mFullscreenButton.setImageResource(getShrinkImageRes());
                 mFullscreenButton.setVisibility(GONE);
@@ -883,7 +882,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
 
             } else {
-                System.out.println("非全屏");
+
                 if (mFullscreenButton != null)
                     mFullscreenButton.setImageResource(getEnlargeImageRes());
                 mTitleTextView.setVisibility(GONE);
@@ -1330,7 +1329,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected void changeUiToError() {
         Log.e("播放器","changeUiToError");
         String time = mCurrentTimeTextView.getText().toString();
-        System.out.println("time:"+time);
+
         errortime =  CommonUtil.intForTime(time);
         setViewShowState(mTopContainer, GONE);
         setViewShowState(playstart2,GONE);
@@ -1407,10 +1406,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         hideLoading();
         mLoadingDialog = new LoadingDialog2(mContext);
         mLoadingDialog.show();
-        setViewShowState(enDownloadView,View.VISIBLE);
-        if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
-            enDownloadView.start();
-        }
+        setViewShowState(mLoading,View.VISIBLE);
+
     }
 
     private void hideLoading() {
@@ -1418,7 +1415,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             mLoadingDialog.dismiss();
             mLoadingDialog = null;
         }
-        setViewShowState(enDownloadView,View.GONE);
+        setViewShowState(mLoading,View.GONE);
     }
 
     protected void changeUiToPrepareingClear() {
@@ -1628,11 +1625,11 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             positionCurrent = 0;
             cancelProgressTimer();
         }*/
-        System.out.println("positionText:"+positionCurrent);
+
         int duration = getDuration();
-        System.out.println("durationText:"+duration);
+
         int progress = (int) (positionCurrent * 100 / (duration == 0 ? 1 : duration));
-        System.out.println("progressText:"+progress);
+
         if(positionCurrent <= 0 ){
             setProgressAndTime(0, 0, positionCurrent, duration);
         }else {
@@ -2338,21 +2335,16 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         ArrayList<String> list = new ArrayList<>();
         String[] temp = url.split("\\*\\*\\*");
         if(temp != null){
-            System.out.println("temp:"+temp.length);
-            for(int i = 0; i < temp.length; i++){
-                System.out.println("temp:" + temp[i]);
+            if(temp.length > 1){
+                list.add(temp[0]);
+                list.add(temp[1]);
+            } else if (temp.length <= 1){
+                list.add(temp[0]);
             }
-        }
-        if(temp.length > 1){
-            list.add(temp[0]);
-            list.add(temp[1]);
-        } else if (temp.length <= 1){
-            list.add(temp[0]);
+
         }
 
-        for(int i = 0; i < list.size(); i++){
-            System.out.println("tempUrl:"+list.get(i));
-        }
+
 
         return list;
     }
@@ -2490,13 +2482,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
      * @return
      */
     protected boolean setUp(List<GSYVideoModel> url, boolean cacheWithPlay, int position, File cachePath, Map<String, String> mapHeadData, boolean changeState) {
-        System.out.println("positionUrl:" + position);
+
         GSYVideoModel gsyVideoModel = url.get(position);
         if (gsyVideoModel instanceof MySelfGSYVideoPlayer.GSYADVideoModel) {
             MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
-            System.out.println("url.size():" + url.size());
+
             if (gsyadVideoModel.isSkip() && position < (url.size() - 1)) {
-                System.out.println("广告");
+
                 return setUp(url, cacheWithPlay, position + 1, cachePath, mapHeadData, changeState);
             }
 
@@ -2571,7 +2563,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         ArrayList<String> listUrl = new ArrayList<String>();
         listUrl = subString(url);
         urls = getUrls();
-        System.out.println("listUrl.size():" + listUrl.size());
+
         if(listUrl.size() >= 2){
             urls.add(new MySelfGSYVideoPlayer.GSYADVideoModel(listUrl.get(0),
                     title, MySelfGSYVideoPlayer.GSYADVideoModel.TYPE_DOWN));
@@ -2710,6 +2702,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 changeUiToChangeClear();
                 resolveChangedResult();
                 manager.releaseMediaPlayer();
+               
                 //  hideLoading();
 
             }

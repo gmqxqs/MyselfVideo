@@ -314,14 +314,17 @@
 
     </LinearLayout>
     <!--刚进来的缓冲动画-->
-    <moe.codeest.enviews.ENDownloadView
-    android:id="@+id/loading"
-    android:layout_width="28dp"
-    android:layout_height="28dp"
-    android:layout_centerHorizontal="true"
-    android:layout_centerVertical="true"
-    android:visibility="invisible" />
-    <moe.codeest.enviews.ENDownloadView
+    <ProgressBar
+        android:id="@+id/loading"
+        style="@android:style/Widget.ProgressBar.Large"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+
+    <ProgressBar
+        style="@android:style/Widget.ProgressBar.Large"
         android:id="@+id/loading2"
         android:layout_width="28dp"
         android:layout_height="28dp"
