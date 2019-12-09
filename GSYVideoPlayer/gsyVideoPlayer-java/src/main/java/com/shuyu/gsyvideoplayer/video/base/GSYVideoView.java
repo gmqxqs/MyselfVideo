@@ -1104,7 +1104,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     public void seekTo(long position) {
         try {
             if (getGSYVideoManager() != null && position > 0) {
-                System.out.println("seek2:"+position);
+
                 getGSYVideoManager().seekTo(position);
             }
         } catch (Exception e) {

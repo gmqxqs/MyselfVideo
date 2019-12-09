@@ -793,11 +793,11 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
      * 如果不需要，重载为空方法即可
      */
     protected void touchDoubleUp() {
-        Log.e("touchDoubleUp1","touchDoubleUp1");
+
         if (!mHadPlay) {
             return;
         }
-        Log.e("touchDoubleUp","touchDoubleUp");
+
         clickStartIcon();
     }
 

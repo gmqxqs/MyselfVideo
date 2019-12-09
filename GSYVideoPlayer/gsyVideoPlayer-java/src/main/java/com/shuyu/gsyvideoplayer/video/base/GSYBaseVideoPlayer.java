@@ -654,10 +654,10 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
                     @Override
                     public void onClick(View v) {
                         if (mBackFromFullScreenListener == null) {
-                            System.out.println("mBackFromFullScreenListener为空");
+
                             clearFullscreenLayout();
                         } else {
-                            System.out.println("mBackFromFullScreenListener不为空");
+
                             mBackFromFullScreenListener.onClick(v);
                         }
                     }
@@ -885,11 +885,11 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
      */
     public GSYBaseVideoPlayer getCurrentPlayer() {
         if (getFullWindowPlayer() != null) {
-            System.out.println("获得全屏播放器");
+
             return getFullWindowPlayer();
         }
         if (getSmallWindowPlayer() != null) {
-            System.out.println("获得小屏播放器");
+
             return getSmallWindowPlayer();
         }
         return this;

@@ -19,7 +19,7 @@ public class TempActivity extends  Activity{
 
 
     public void print() {
-        System.out.println("返回");
+
     }
 
 
