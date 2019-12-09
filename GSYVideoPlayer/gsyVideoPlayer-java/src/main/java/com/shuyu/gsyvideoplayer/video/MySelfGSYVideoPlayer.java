@@ -1160,8 +1160,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     @Override
     protected void changeUiToPlayingShow() {
         Log.e("播放器","changeUiToPlayingShow");
+        if(mSwitch){
+            hideLoading();
+        }
 
-        hideLoading();
         mTouch = true;
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(playstart2,GONE);
@@ -1252,8 +1254,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected void changeUiToChangeShow() {
         Log.e("播放器","changeUiToChangeShow");
         mTouch = false;
-
-
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(playstart2,GONE);
         setViewShowState(mBottomContainer, VISIBLE);
@@ -1801,7 +1801,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         if (gsyVideoPlayer != null) {
             MySelfGSYVideoPlayer gsyDanmaVideoPlayer = (MySelfGSYVideoPlayer) gsyVideoPlayer;
             setDanmaKuShow(gsyDanmaVideoPlayer.getDanmaKuShow());
-
             if (gsyDanmaVideoPlayer.getDanmakuView() != null &&
                     gsyDanmaVideoPlayer.getDanmakuView().isPrepared()) {
                 resolveDanmakuSeek(this, gsyDanmaVideoPlayer.getCurrentPositionWhenPlaying());
@@ -2667,7 +2666,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mSwitchSize.setText(name);*/
         final String url = mUriList.get(mSourcePosition).getUrl();
         resolveChangeUrl(mCache, mCachePath, url);
-        // hideLoading();
+        hideLoading();
         mSwitch = true;
 
     }
@@ -2689,12 +2688,12 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
         @Override
         public void onCompletion() {
-            Log.e("TCompletion","AutoCompletion");
+            Log.e("TAutoCompletion","AutoCompletion");
         }
 
         @Override
         public void onBufferingUpdate(int percent) {
-            Log.e("TBufferingUpdate111","BufferingUpdate"+percent);
+            Log.e("TAutoCompletion","BufferingUpdate"+percent);
         }
 
         @Override
@@ -2729,8 +2728,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 @Override
                 public void run() {
                     resolveChangedResult();
-                    Toast.makeText(mContext, "change Fail", Toast.LENGTH_LONG).show();
+                   // Toast.makeText(mContext, "change Fail", Toast.LENGTH_LONG).show();
                     hideLoading();
+                    setStateAndUi(CURRENT_STATE_AUTO_COMPLETE);
                 }
             });
         }
