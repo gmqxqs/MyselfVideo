@@ -25,6 +25,9 @@ android {
             //设置支持的SO库架构
             abiFilters 'armeabi', 'armeabi-v7a', 'x86'
         }
+     /*   packagingOptions {
+            exclude 'META-INF/beans.xml'
+        }*/
 
     }
 
@@ -105,9 +108,7 @@ dependencies {
     //implementation "com.shuyu:gsyVideoPlayer-x86:$gsyVideoVersion"
 
     //implementation "com.shuyu:gsyVideoPlayer-ex_so:$gsyVideoVersion"
-
     compile 'com.android.support:multidex:1.0.1'
-
     debugImplementation dataDependencies.leakcanary
     releaseImplementation dataDependencies.leakcanary_no_op
     api project(path: ':gsyVideoPlayer-java')

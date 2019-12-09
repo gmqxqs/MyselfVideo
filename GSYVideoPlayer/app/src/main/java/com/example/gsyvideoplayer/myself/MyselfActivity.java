@@ -198,10 +198,11 @@ public class MyselfActivity extends AppCompatActivity {
        /*     */
         gsyVideoOption = new GSYVideoOptionBuilder();
         String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-      //  String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+       // String temp = "/storage/emulated/0/Android/data/vip.maogou.videoplayer.maogou_video_player_example/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+        //   String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+       // String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8";
      //   String temp = "http://vott.haomaishou.com/?co=71&c=584&t=3";
-        gsyVideoOption.setUrl(temp)
-                .setVideoTitle("测试视频")
+        gsyVideoOption
                 .setCacheWithPlay(false)
                 .setRotateViewAuto(false)
                 .setLockLand(false)
@@ -231,6 +232,7 @@ public class MyselfActivity extends AppCompatActivity {
                         }
                     }
                 }).build(videoPlayer);
+        videoPlayer.setUp(temp,true,"测试视频");
         videoPlayer.startPlayLogic();
     }
 
