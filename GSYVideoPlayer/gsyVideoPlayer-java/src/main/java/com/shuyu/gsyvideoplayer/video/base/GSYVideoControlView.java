@@ -42,8 +42,6 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
  */
 
 public abstract class GSYVideoControlView extends GSYVideoView implements View.OnClickListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener {
-    //
-    //
     //    //手指放下的位置
     protected int mDownPosition;
 
@@ -231,7 +229,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
 
         if (mFullscreenButton != null) {
             mFullscreenButton.setOnClickListener(this);
-            mFullscreenButton.setOnTouchListener(this);
+
         }
 
         if (mProgressBar != null) {

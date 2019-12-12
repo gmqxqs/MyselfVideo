@@ -64,6 +64,7 @@ public class MyselfActivity extends AppCompatActivity {
         orientationUtils = new OrientationUtils(this, videoPlayer);
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
+
        /* Map<String, String> header = new HashMap<>();
         header.put("ee", "33");
         header.put("allowCrossProtocolRedirects", "true");*/
@@ -94,6 +95,9 @@ public class MyselfActivity extends AppCompatActivity {
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!videoPlayer.ismTouch()){
+                    return;
+                }
                 //直接横屏
                 orientationUtils.resolveByClick();
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
@@ -111,15 +115,6 @@ public class MyselfActivity extends AppCompatActivity {
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(videoOptionModel);
-
-  /*      videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"media",1);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"mediacodec",1);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"videotoolbox",0);
-        list.add (videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
-        list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "allowed_media_types", "video"); //根据媒体类型来配置
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", 20000);
@@ -128,29 +123,6 @@ public class MyselfActivity extends AppCompatActivity {
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);  // 无限读
         list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 10240);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
-        list.add(videoOptionModel);
-        //  关闭播放器缓冲，这个必须关闭，否则会出现播放一段时间后，一直卡主，控制台打印 FFP_MSG_BUFFERING_START
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
-        list.add(videoOptionModel);
-        videoOptionModel =new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_timeout", -1);
-        list.add(videoOptionModel);
-*/
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "allowed_media_types", "video"); //根据媒体类型来配置
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", 20000);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 1316);
-        list.add(videoOptionModel);
-        videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);  // 无限读
-        list.add(videoOptionModel);
-
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");  // 无限读
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");  // 无限读
@@ -181,27 +153,17 @@ public class MyselfActivity extends AppCompatActivity {
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"overlay-format",IjkMediaPlayer.SDL_FCC_RV32);
         list.add(videoOptionModel);
-       GSYVideoManager.instance().setOptionModelList(list);
-       PlayerFactory.setPlayManager(Exo2PlayerManager.class);
-     //   CacheFactory.setCacheManager(new ExoPlayerCacheManager.class);
-        CacheFactory.setCacheManager(ExoPlayerCacheManager.class);
+        GSYVideoManager.instance().setOptionModelList(list);
+        PlayerFactory.setPlayManager(Exo2PlayerManager.class);
+       // CacheFactory.setCacheManager(ExoPlayerCacheManager.class);
         GSYVideoManager.onResume(false);
-    //    GSYVideoType.setRenderType(GSYVideoType.SUFRACE);
-    //    GSYVideoType.setRenderType(GSYVideoType.GLSURFACE);
         GSYVideoType.setRenderType(GSYVideoType.TEXTURE);
         IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
 
-        // GSYVideoType.enableMediaCodec();
-        //GSYVideoType.enableMediaCodecTexture();
-
-        //   IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_ERROR);
-       /*     */
         gsyVideoOption = new GSYVideoOptionBuilder();
+
         String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-       // String temp = "/storage/emulated/0/Android/data/vip.maogou.videoplayer.maogou_video_player_example/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-        //   String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-       // String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8";
-     //   String temp = "http://vott.haomaishou.com/?co=71&c=584&t=3";
+        //String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
         gsyVideoOption
                 .setCacheWithPlay(false)
                 .setRotateViewAuto(false)
@@ -232,6 +194,8 @@ public class MyselfActivity extends AppCompatActivity {
                         }
                     }
                 }).build(videoPlayer);
+        GSYVideoType.setRenderType(GSYVideoType.SUFRACE);
+       
         videoPlayer.setUp(temp,true,"测试视频");
         videoPlayer.startPlayLogic();
     }

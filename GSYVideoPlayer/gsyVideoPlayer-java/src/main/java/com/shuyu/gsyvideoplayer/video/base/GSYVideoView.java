@@ -302,7 +302,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     /**
      * 开始播放逻辑
      */
-    protected void startButtonLogic() {
+    public void startButtonLogic() {
         if (mVideoAllCallBack != null && mCurrentState == CURRENT_STATE_NORMAL) {
             Debuger.printfLog("onClickStartIcon");
             mVideoAllCallBack.onClickStartIcon(mOriginUrl, mTitle, this);
@@ -653,7 +653,8 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
 
     @Override
     public void onError(int what, int extra) {
-        Log.e("错误播放","错误播放:"+what);
+        Log.e("播放器错误播放what","错误播放:"+what);
+        Log.e("播放器错误播放extra","错误播放:"+extra);
        /* if (mNetChanged) {
             mNetChanged = false;
            *//* netWorkErrorLogic();

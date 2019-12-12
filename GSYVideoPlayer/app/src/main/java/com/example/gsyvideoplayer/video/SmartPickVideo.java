@@ -203,6 +203,7 @@ public class SmartPickVideo extends StandardGSYVideoPlayer {
     private GSYMediaPlayerListener gsyMediaPlayerListener = new GSYMediaPlayerListener() {
         @Override
         public void onPrepared() {
+
             if (mTmpManager != null) {
                 mTmpManager.start();
                 mTmpManager.seekTo(getCurrentPositionWhenPlaying());
