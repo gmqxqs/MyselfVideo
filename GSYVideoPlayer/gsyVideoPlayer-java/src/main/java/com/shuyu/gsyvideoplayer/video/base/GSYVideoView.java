@@ -93,7 +93,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     protected boolean mCache = false;
 
     //当前是否全屏
-    protected boolean mIfCurrentIsFullscreen = false;
+    public boolean mIfCurrentIsFullscreen = false;
 
     //循环
     protected boolean mLooping = false;
@@ -302,12 +302,14 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     /**
      * 开始播放逻辑
      */
-    protected void startButtonLogic() {
+    public void startButtonLogic() {
+
         if (mVideoAllCallBack != null && mCurrentState == CURRENT_STATE_NORMAL) {
-            Debuger.printfLog("onClickStartIcon");
+            Log.e("onClickStartIcon","onClickStartIcon");
             mVideoAllCallBack.onClickStartIcon(mOriginUrl, mTitle, this);
         } else if (mVideoAllCallBack != null) {
-            Debuger.printfLog("onClickStartError");
+            Log.e("onClickStartError","onClickStartError");
+            //Debuger.printfLog("onClickStartError");
             mVideoAllCallBack.onClickStartError(mOriginUrl, mTitle, this);
         }
         prepareVideo();
@@ -653,7 +655,8 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
 
     @Override
     public void onError(int what, int extra) {
-        Log.e("错误播放","错误播放:"+what);
+        Log.e("播放器错误播放what","错误播放:"+what);
+        Log.e("播放器错误播放extra","错误播放:"+extra);
        /* if (mNetChanged) {
             mNetChanged = false;
            *//* netWorkErrorLogic();
@@ -1104,7 +1107,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     public void seekTo(long position) {
         try {
             if (getGSYVideoManager() != null && position > 0) {
-                System.out.println("seek2:"+position);
+
                 getGSYVideoManager().seekTo(position);
             }
         } catch (Exception e) {

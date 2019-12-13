@@ -73,7 +73,7 @@ public final class EventLogger implements Player.EventListener, MetadataOutput,
     private final MappingTrackSelector trackSelector;
     private final Timeline.Window window;
     private final Timeline.Period period;
-    private final long startTimeMs;
+    private static long startTimeMs;
 
     public EventLogger(MappingTrackSelector trackSelector) {
         this.trackSelector = trackSelector;
@@ -410,7 +410,7 @@ public final class EventLogger implements Player.EventListener, MetadataOutput,
         }
     }
 
-    private String getSessionTimeString() {
+    public static String getSessionTimeString() {
         return getTimeString(SystemClock.elapsedRealtime() - startTimeMs);
     }
 

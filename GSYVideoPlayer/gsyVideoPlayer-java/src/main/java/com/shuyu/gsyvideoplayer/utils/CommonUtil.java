@@ -71,14 +71,14 @@ public class CommonUtil {
             if(temp[1].length() == 2){
                 sShiNum = Integer.valueOf(temp[1].charAt(0)+"0");
                 sGeNum= Integer.valueOf(temp[1].charAt(1)+"");
-                System.out.println("sGeNum111:" + sGeNum);
+
             } else if(temp[0].length() == 1){
                 sShiNum = 0;
                 sGeNum = Integer.valueOf(temp[1].charAt(0)+"");
 
             }
 
-            System.out.println("mShiNum:"+mShiNum+",mGeNum:"+mGeNum+",sShiNum:"+sShiNum+",sGeNum:"+sGeNum);
+
             totalTime = ((mShiNum+mGeNum) * 60 + sShiNum + sGeNum) * 1000;
         } else if(temp.length == 3){
 
@@ -105,14 +105,14 @@ public class CommonUtil {
             if(temp[2].length() == 2){
                 sShiNum = Integer.valueOf(temp[1].charAt(0)+"0");
                 sGeNum= Integer.valueOf(temp[1].charAt(1)+"");
-                System.out.println("sGeNum111:" + sGeNum);
+
             } else if(temp[0].length() == 1){
                 sShiNum = 0;
                 sGeNum = Integer.valueOf(temp[1].charAt(0)+"");
 
             }
 
-            System.out.println("mShiNum:"+mShiNum+",mGeNum:"+mGeNum+",sShiNum:"+sShiNum+",sGeNum:"+sGeNum);
+
          //   totalTime = ((mShiNum+mGeNum) * 60 + sShiNum + sGeNum) * 1000;
             totalTime = (((hShiNum+hGeNum)*60 + mShiNum + mGeNum)*60 + sShiNum + sGeNum) * 1000;
         }

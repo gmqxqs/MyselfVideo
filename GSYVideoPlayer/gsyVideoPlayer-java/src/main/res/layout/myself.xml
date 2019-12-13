@@ -317,6 +317,7 @@
     <ProgressBar
         android:id="@+id/loading"
         style="@android:style/Widget.ProgressBar.Large"
+
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_centerHorizontal="true"
@@ -331,15 +332,8 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:visibility="invisible" />
-    <!--视频播放时的暂停，继续播放的方块背景-->
-   <!-- <moe.codeest.enviews.ENPlayView
-        android:id="@+id/start"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone"/>-->
+
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

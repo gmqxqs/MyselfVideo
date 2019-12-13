@@ -42,8 +42,6 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
  */
 
 public abstract class GSYVideoControlView extends GSYVideoView implements View.OnClickListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener {
-    //
-    //
     //    //手指放下的位置
     protected int mDownPosition;
 
@@ -231,7 +229,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
 
         if (mFullscreenButton != null) {
             mFullscreenButton.setOnClickListener(this);
-            mFullscreenButton.setOnTouchListener(this);
+
         }
 
         if (mProgressBar != null) {
@@ -345,15 +343,16 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 break;
             case CURRENT_STATE_PLAYING:
                 if (isCurrentMediaListener()) {
-                    Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ CURRENT_STATE_PLAYING");
+                    Log.e("播放器状态" , "------------------------------ CURRENT_STATE_PLAYING");
                     startProgressTimer();
                 }
                 break;
             case CURRENT_STATE_PAUSE:
                 if (isCurrentMediaListener()) {
-                    Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ CURRENT_STATE_PLAYING");
+                    Log.e("播放器状态" , "------------------------------ CURRENT_STATE_PAUSE");
                     startProgressTimer();
                 }
+
                 break;
             case CURRENT_STATE_ERROR:
                 if (isCurrentMediaListener()) {
@@ -793,11 +792,11 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
      * 如果不需要，重载为空方法即可
      */
     protected void touchDoubleUp() {
-        Log.e("touchDoubleUp1","touchDoubleUp1");
+
         if (!mHadPlay) {
             return;
         }
-        Log.e("touchDoubleUp","touchDoubleUp");
+
         clickStartIcon();
     }
 
@@ -852,6 +851,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 showWifiDialog();
                 return;
             }
+
             startButtonLogic();
         } else if (mCurrentState == CURRENT_STATE_PLAYING) {
             try {

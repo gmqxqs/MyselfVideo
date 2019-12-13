@@ -236,7 +236,7 @@ public class IjkPlayerManager implements IPlayerManager {
     @Override
     public void seekTo(long time) {
         if (mediaPlayer != null) {
-            System.out.println("seek:" + time);
+
             mediaPlayer.seekTo(time);
         }
     }

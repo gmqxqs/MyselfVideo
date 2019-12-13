@@ -86,12 +86,12 @@ public class MyselfActivity extends AppCompatActivity {
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setImageResource(R.mipmap.xxx1);
-        //detailPlayer.setThumbImageView(imageView);
-        // resolveNormalVideoUI();
+
         //外部辅助的旋转，帮助全屏
         orientationUtils = new OrientationUtils(this, videoPlayer);
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
+
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,6 +105,10 @@ public class MyselfActivity extends AppCompatActivity {
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(!videoPlayer.ismError()){
+                    videoPlayer.setmError(true);
+                }
                 onBackPressed();
             }
         });
@@ -154,17 +158,15 @@ public class MyselfActivity extends AppCompatActivity {
         list.add(videoOptionModel);
         GSYVideoManager.instance().setOptionModelList(list);
         PlayerFactory.setPlayManager(Exo2PlayerManager.class);
-        CacheFactory.setCacheManager(ExoPlayerCacheManager.class);
+
         GSYVideoManager.onResume(false);
         GSYVideoType.setRenderType(GSYVideoType.TEXTURE);
         IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
-        gsyVideoOption = new GSYVideoOptionBuilder();
-        String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-  //   String temp ="http://valipl.cp31.ott.cibntv.net/6974F340B3E4671CCBB1F35E2/03000900005DD243EBF4E796AE0B5008768271-C0CC-4986-9CFF-0A208516B433-1-39045.m3u8?ccode=0502&duration=2485&expire=18000&psid=9a8b8f534e421266e16d96854b5fbfa1&ups_client_netip=78249253&ups_ts=1575363328&ups_userid=&utid=4X2qFJ4VIQYCAXgk4VlHaRyl&vid=XNDQyODk1OTU5Mg&vkey=Ad53f5d8df44a6f6caa8b10971051f53d&sm=1&operate_type=1&dre=u37&si=28&bc=2";
-        //   String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-     //   String temp = "http://vott.haomaishou.com/?co=71&c=584&t=3";
 
-    //    String temp ="/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/1/1.m3u8";
+
+        gsyVideoOption = new GSYVideoOptionBuilder();
+
+        String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
         gsyVideoOption.setUrl(temp)
                 .setVideoTitle("测试视频")
                 .setCacheWithPlay(false)
@@ -176,16 +178,21 @@ public class MyselfActivity extends AppCompatActivity {
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPrepared(String url, Object... objects) {
+                        Log.e("onPrepared",videoPlayer.getErrorPosition()+"");
+                        videoPlayer.setSeekOnStart(videoPlayer.getErrorPosition());
                         super.onPrepared(url, objects);
                         //orientationUtils.setEnable(true);
                         orientationUtils.setEnable(true);
                         isPlay = true;
+                        orientationUtils.setEnable(true);
                     }
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
                         Log.e("点击后退","点击后退");
+
                         if (orientationUtils != null) {
+                            Log.e("旋转","旋转");
                             orientationUtils.setEnable(false);
                             orientationUtils.backToProtVideo();
                         }
@@ -208,6 +215,8 @@ public class MyselfActivity extends AppCompatActivity {
                     }
                 }).build(videoPlayer);
 
+      //  GSYVideoType.setRenderType(GSYVideoType.SUFRACE);
+
         videoPlayer.setUp(temp,true,"测试视频");
 
         videoPlayer.startPlayLogic();
@@ -217,9 +226,16 @@ public class MyselfActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
+        Log.e("ismError",videoPlayer.ismError()+"");
+      /*  if(!videoPlayer.ismError()){
+            return;
+        }*/
+
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
+
         if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }

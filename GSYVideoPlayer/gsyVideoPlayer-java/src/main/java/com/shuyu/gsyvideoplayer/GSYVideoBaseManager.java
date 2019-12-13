@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Surface;
+import android.view.View;
 
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
 import com.shuyu.gsyvideoplayer.cache.ICacheManager;
@@ -19,6 +20,7 @@ import com.shuyu.gsyvideoplayer.player.IPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoViewBridge;
+import com.shuyu.gsyvideoplayer.view.LoadingDialog2;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -63,7 +65,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
      * 配置ijk option
      */
     protected List<VideoOptionModel> optionModelList;
-
+    private LoadingDialog2 mLoadingDialog;
     /**
      * 播放的tag，防止错位置，因为普通的url也可能重复
      */
@@ -146,6 +148,9 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
         mMediaHandler = new MediaHandler((Looper.getMainLooper()));
         mainThreadHandler = new Handler();
     }
+
+
+
 
     protected IPlayerManager getPlayManager() {
         return PlayerFactory.getPlayManager();
@@ -559,14 +564,14 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
             super.handleMessage(msg);
             switch (msg.what) {
                 case HANDLER_PREPARE:
-                    Log.e("BaseManager","HANDLER_PREPARE");
+
                     initVideo(msg);
                     break;
                 case HANDLER_SETDISPLAY:
-                    Log.e("BaseManager","HANDLER_SETDISPLAY");
+
                     break;
                 case HANDLER_RELEASE:
-                    Log.e("BaseManager","HANDLER_RELEASE");
+
                     if (playerManager != null) {
                         playerManager.release();
                     }
@@ -578,7 +583,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
                     cancelTimeOutBuffer();
                     break;
                 case HANDLER_RELEASE_SURFACE:
-                    Log.e("BaseManager","HANDLER_RELEASE");
+
                     releaseSurface(msg);
                     break;
             }
@@ -632,7 +637,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
      * 取消 十秒的定时器进行 缓存操作
      */
     protected void cancelTimeOutBuffer() {
-        Debuger.printfError("cancelTimeOutBuffer");
+        Debuger.printfError("cancelTimeOutBuffer1111");
         // 取消定时
         if (needTimeOutOther)
             mainThreadHandler.removeCallbacks(mTimeOutRunnable);
