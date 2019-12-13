@@ -384,7 +384,16 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mHadSeekTouch = true;
 
     }
-    int errorPosition = 0;
+    static int errorPosition = 0;
+
+    public int getErrorPosition() {
+        return errorPosition;
+    }
+
+    public void setErrorPosition(int errorPosition) {
+        this.errorPosition = errorPosition;
+    }
+
     static int errortime = 0;
     /***
      * 拖动进度条
@@ -432,8 +441,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 // setTextAndProgress(seekBar.getProgress());
                 mCurrentTimeTextView.setText(CommonUtil.stringForTime(time));
                 mCurrentbottom.setText(CommonUtil.stringForTime(time));
-
-
             } catch (Exception e) {
                 Debuger.printfWarning(e.toString());
             }
@@ -741,19 +748,18 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected void changeUiToNormal() {
         Log.e("播放器","changeUiToNormal");
 
-        setViewShowState(mTopContainer, GONE);
+      //  setViewShowState(mTopContainer, GONE);
+        setViewShowState(mTopContainer,VISIBLE);
         setViewShowState(mBottomContainer, GONE);
         setViewShowState(controllerbottom, GONE);
-        setViewShowState(mTimeandbarray,GONE);
+        setViewShowState(mTimeandbarray,INVISIBLE);
         setViewShowState(newstart, GONE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, GONE);
         setViewShowState(mThumbImageViewLayout, VISIBLE);
         setViewShowState(mBottomProgressBar, GONE);
-
         setViewShowState(mLockScreen, mIfCurrentIsFullscreen? VISIBLE : GONE);
         updateStartImage();
-
         upPlayImage();
     }
 
@@ -762,10 +768,11 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Log.e("播放器","changeUiToPreparing");
         Log.e("mNetSatePreparing",mNetSate);
 
-        setViewShowState(mTopContainer,(mIfCurrentIsFullscreen) ? INVISIBLE : VISIBLE);
+       // setViewShowState(mTopContainer,(mIfCurrentIsFullscreen) ? INVISIBLE : VISIBLE);
+        setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
         setViewShowState(controllerbottom, GONE);
-        setViewShowState(mTimeandbarray,GONE);
+        setViewShowState(mTimeandbarray,INVISIBLE);
         setViewShowState(newstart, GONE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, VISIBLE);
@@ -845,8 +852,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected void changeUiToPlayingBufferingShow() {
 
         Log.e("播放器","changeUiToPlayingBufferingShow");
-        setViewShowState(mTopContainer,(mIfCurrentIsFullscreen) ? INVISIBLE : VISIBLE);
-        setViewShowState(mTimeandbarray,GONE);
+        //setViewShowState(mTopContainer,(mIfCurrentIsFullscreen) ? INVISIBLE : VISIBLE);
+        setViewShowState(mTopContainer,VISIBLE);
+        setViewShowState(mTimeandbarray,INVISIBLE);
         setViewShowState(newstart, GONE);
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, VISIBLE);
@@ -857,7 +865,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(controllerbottom, INVISIBLE);
         setViewShowState(newstart, INVISIBLE);
         setViewShowState(replay_text, INVISIBLE);
-        setViewShowState(mTimeandbarray,GONE);
         setViewShowState(playstart2,GONE);
         if(mIfCurrentIsFullscreen){
             setViewShowState(getFullscreenButton(),GONE);
@@ -881,7 +888,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, GONE);
         setViewShowState(controllerbottom, GONE);
-        setViewShowState(mTimeandbarray,GONE);
+        setViewShowState(mTimeandbarray,INVISIBLE);
         setViewShowState(newstart, VISIBLE);
         setViewShowState(replay, VISIBLE);
         setViewShowState(replay_text, VISIBLE);
@@ -915,11 +922,12 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Log.e("播放器","changeUiToError");
         hideAllWidget();
         String time = mCurrentTimeTextView.getText().toString();
+
         errorPosition = CommonUtil.intForTime(time);
+        Log.e("errorPosition",errorPosition+"");
         layout_bottom.setVisibility(INVISIBLE);
         setViewShowState(mBottomProgressBar, VISIBLE);
-        setViewShowState(mTopContainer, INVISIBLE);
-        setViewShowState(mTopContainer,(mIfCurrentIsFullscreen) ? INVISIBLE : VISIBLE);
+        setViewShowState(mTopContainer,VISIBLE);
         setViewShowState(playstart2,GONE);
         setViewShowState(mBottomContainer, GONE);
         setViewShowState(controllerbottom, GONE);
@@ -935,7 +943,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mSourcePosition++;
             }
             mError = false;
-            setUp(mUriList.get(mSourcePosition).getUrl(),true,"");
+            setUp(mUriList.get(mSourcePosition).getUrl(),true,mUriList.get(mSourcePosition).getTitle());
             createNetWorkState();
             listenerNetWorkState();
             Log.e("播放器播放错误",errorPosition+"");

@@ -108,9 +108,7 @@ public class MyselfActivity extends AppCompatActivity {
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!videoPlayer.ismError()){
-                    videoPlayer.setmError(true);
-                }
+
                 onBackPressed();
             }
         });
@@ -177,6 +175,8 @@ public class MyselfActivity extends AppCompatActivity {
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPrepared(String url, Object... objects) {
+                        Log.e("onPrepared",videoPlayer.getErrorPosition()+"");
+                        videoPlayer.setSeekOnStart(videoPlayer.getErrorPosition());
                         super.onPrepared(url, objects);
                         orientationUtils.setEnable(true);
                     }
@@ -198,7 +198,6 @@ public class MyselfActivity extends AppCompatActivity {
                         }
                     }
                 }).build(videoPlayer);
-      //  GSYVideoType.setRenderType(GSYVideoType.SUFRACE);
        
         videoPlayer.setUp(temp,true,"测试视频");
         videoPlayer.startPlayLogic();
@@ -207,10 +206,8 @@ public class MyselfActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Log.e("ismError",videoPlayer.ismError()+"");
-        if(!videoPlayer.ismError()){
-            return;
-        }
+
+
 
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
