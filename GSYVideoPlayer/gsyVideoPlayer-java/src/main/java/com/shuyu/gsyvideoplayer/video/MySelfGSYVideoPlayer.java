@@ -2758,13 +2758,4 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             Log.e("onVideoResume","onVideoResume"+seek);
         }
     };
-
-
-
-
-
-
-
-
-
 }
