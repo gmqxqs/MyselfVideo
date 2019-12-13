@@ -1,3 +1,4 @@
+
 package com.shuyu.gsyvideoplayer.video.base;
 
 import android.app.Activity;
@@ -7,6 +8,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import android.view.Window;
 import android.widget.FrameLayout;
 
 import com.shuyu.gsyvideoplayer.R;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoControlView;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.view.SmallVideoTouch;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
@@ -170,7 +174,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     }
 
 
-   public ViewGroup getViewGroup() {
+    public ViewGroup getViewGroup() {
         return (ViewGroup) (CommonUtil.scanForActivity(getContext())).findViewById(Window.ID_ANDROID_CONTENT);
     }
 
@@ -342,7 +346,6 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
      * 恢复
      */
     protected void resolveNormalVideoShow(View oldF, ViewGroup vp, GSYVideoPlayer gsyVideoPlayer) {
-
         if (oldF != null && oldF.getParent() != null) {
             ViewGroup viewGroup = (ViewGroup) oldF.getParent();
             vp.removeView(viewGroup);
@@ -353,6 +356,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
         }
         getGSYVideoManager().setListener(getGSYVideoManager().lastListener());
         getGSYVideoManager().setLastListener(null);
+        Log.e("退出全屏",mCurrentState+"");
         setStateAndUi(mCurrentState);
         addTextureView();
         mSaveChangeViewTIme = System.currentTimeMillis();
@@ -389,11 +393,9 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
                 mOrientationUtils = null;
             }
         }
-
         if (!mShowFullAnimation) {
             delay = 0;
         }
-
         final ViewGroup vp = getViewGroup();
         final View oldF = vp.findViewById(getFullId());
         if (oldF != null) {
@@ -404,7 +406,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
         postDelayed(new Runnable() {
             @Override
             public void run() {
-                backToNormal();
+               backToNormal();
             }
         }, delay);
     }
@@ -439,6 +441,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
                     }
                 }, 400);
             } else {
+
                 resolveNormalVideoShow(oldF, vp, gsyVideoPlayer);
             }
 
@@ -639,11 +642,11 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
                 gsyVideoPlayer.getFullscreenButton().setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    if (mBackFromFullScreenListener == null) {
-                        clearFullscreenLayout();
-                    } else {
-                        mBackFromFullScreenListener.onClick(v);
-                    }
+                        if (mBackFromFullScreenListener == null) {
+                            clearFullscreenLayout();
+                        } else {
+                            mBackFromFullScreenListener.onClick(v);
+                        }
                     }
                 });
             }
@@ -654,10 +657,10 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
                     @Override
                     public void onClick(View v) {
                         if (mBackFromFullScreenListener == null) {
-
+                            System.out.println("mBackFromFullScreenListener为空");
                             clearFullscreenLayout();
                         } else {
-
+                            System.out.println("mBackFromFullScreenListener不为空");
                             mBackFromFullScreenListener.onClick(v);
                         }
                     }
@@ -885,11 +888,11 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
      */
     public GSYBaseVideoPlayer getCurrentPlayer() {
         if (getFullWindowPlayer() != null) {
-
+            System.out.println("获得全屏播放器");
             return getFullWindowPlayer();
         }
         if (getSmallWindowPlayer() != null) {
-
+            System.out.println("获得小屏播放器");
             return getSmallWindowPlayer();
         }
         return this;

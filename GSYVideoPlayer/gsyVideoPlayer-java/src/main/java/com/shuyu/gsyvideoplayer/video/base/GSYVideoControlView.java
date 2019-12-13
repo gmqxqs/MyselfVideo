@@ -343,15 +343,16 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 break;
             case CURRENT_STATE_PLAYING:
                 if (isCurrentMediaListener()) {
-                    Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ CURRENT_STATE_PLAYING");
+                    Log.e("播放器状态" , "------------------------------ CURRENT_STATE_PLAYING");
                     startProgressTimer();
                 }
                 break;
             case CURRENT_STATE_PAUSE:
                 if (isCurrentMediaListener()) {
-                    Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ CURRENT_STATE_PLAYING");
+                    Log.e("播放器状态" , "------------------------------ CURRENT_STATE_PAUSE");
                     startProgressTimer();
                 }
+
                 break;
             case CURRENT_STATE_ERROR:
                 if (isCurrentMediaListener()) {

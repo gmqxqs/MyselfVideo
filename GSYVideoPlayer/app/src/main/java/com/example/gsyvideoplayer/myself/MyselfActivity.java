@@ -2,6 +2,7 @@ package com.example.gsyvideoplayer.myself;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -95,9 +96,9 @@ public class MyselfActivity extends AppCompatActivity {
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!videoPlayer.ismTouch()){
+              /*  if(!videoPlayer.ismTouch()){
                     return;
-                }
+                }*/
                 //直接横屏
                 orientationUtils.resolveByClick();
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
@@ -107,7 +108,9 @@ public class MyselfActivity extends AppCompatActivity {
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(!videoPlayer.ismError()){
+                    videoPlayer.setmError(true);
+                }
                 onBackPressed();
             }
         });
@@ -175,13 +178,14 @@ public class MyselfActivity extends AppCompatActivity {
                     @Override
                     public void onPrepared(String url, Object... objects) {
                         super.onPrepared(url, objects);
-                        //orientationUtils.setEnable(true);
+                        orientationUtils.setEnable(true);
                     }
 
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
                         if (orientationUtils != null) {
+                            Log.e("旋转","旋转");
                             orientationUtils.setEnable(false);
                             orientationUtils.backToProtVideo();
                         }
@@ -194,7 +198,7 @@ public class MyselfActivity extends AppCompatActivity {
                         }
                     }
                 }).build(videoPlayer);
-        GSYVideoType.setRenderType(GSYVideoType.SUFRACE);
+      //  GSYVideoType.setRenderType(GSYVideoType.SUFRACE);
        
         videoPlayer.setUp(temp,true,"测试视频");
         videoPlayer.startPlayLogic();
@@ -203,10 +207,15 @@ public class MyselfActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Log.e("ismError",videoPlayer.ismError()+"");
+        if(!videoPlayer.ismError()){
+            return;
+        }
 
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
+
         if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }

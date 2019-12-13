@@ -93,7 +93,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     protected boolean mCache = false;
 
     //当前是否全屏
-    protected boolean mIfCurrentIsFullscreen = false;
+    public boolean mIfCurrentIsFullscreen = false;
 
     //循环
     protected boolean mLooping = false;
@@ -303,11 +303,13 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
      * 开始播放逻辑
      */
     public void startButtonLogic() {
+
         if (mVideoAllCallBack != null && mCurrentState == CURRENT_STATE_NORMAL) {
-            Debuger.printfLog("onClickStartIcon");
+            Log.e("onClickStartIcon","onClickStartIcon");
             mVideoAllCallBack.onClickStartIcon(mOriginUrl, mTitle, this);
         } else if (mVideoAllCallBack != null) {
-            Debuger.printfLog("onClickStartError");
+            Log.e("onClickStartError","onClickStartError");
+            //Debuger.printfLog("onClickStartError");
             mVideoAllCallBack.onClickStartError(mOriginUrl, mTitle, this);
         }
         prepareVideo();

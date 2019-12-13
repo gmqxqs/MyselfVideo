@@ -209,7 +209,6 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
         msg.what = HANDLER_PREPARE;
         GSYModel fb = new GSYModel(url, mapHeadData, loop, speed, cache, cachePath, overrideExtension);
         msg.obj = fb;
-        Log.e("播放器msg",msg.what+"");
         sendMessage(msg);
         if (needTimeOutOther) {
             startTimeOutBuffer();

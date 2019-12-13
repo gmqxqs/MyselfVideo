@@ -80,6 +80,7 @@ public class GSYVideoManager extends GSYVideoBaseManager {
      */
     @SuppressWarnings("ResourceType")
     public static boolean backFromWindowFull(Context context) {
+
         boolean backFrom = false;
         ViewGroup vp = (ViewGroup) (CommonUtil.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
         View oldF = vp.findViewById(FULLSCREEN_ID);
@@ -88,6 +89,7 @@ public class GSYVideoManager extends GSYVideoBaseManager {
             hideNavKey(context);
             if (GSYVideoManager.instance().lastListener() != null) {
                 GSYVideoManager.instance().lastListener().onBackFullscreen();
+
             }
         }
         return backFrom;

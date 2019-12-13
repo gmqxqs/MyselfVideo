@@ -15,7 +15,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -25,18 +24,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.exoplayer.util.PlayerControl;
-import com.shuyu.gsyvideoplayer.GSYVideoBaseManager;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.MyselfView.BatteryView;
 import com.shuyu.gsyvideoplayer.R;
-import com.shuyu.gsyvideoplayer.listener.GSYMediaPlayerListener;
 import com.shuyu.gsyvideoplayer.model.GSYVideoModel;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
-import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.view.LoadingDialog2;
@@ -49,8 +42,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.security.auth.login.LoginException;
 
 import moe.codeest.enviews.ENDownloadView;
 import moe.codeest.enviews.ENPlayView;
@@ -100,16 +91,16 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected BatteryView batteryView;
     protected  LinearLayout mDanmu;
     protected  EditText edit_danmu;
-    private boolean mSwitch = false;
 
     protected boolean isDown = false;
-    protected boolean isNormal = false;
+
     protected boolean isComplete = false;
-    private SeekBar mSeekBar;
-    private GSYVideoManager mTmpManager;
+
     private boolean mTouch = true;
     private boolean mChangeClear = false;
     private boolean mChangeError = false;
+    private static boolean mError = false;
+
     private ProgressBar mLoading;
     protected List<GSYVideoModel> mUriList = new ArrayList<>();
     public ArrayList<MySelfGSYVideoPlayer.GSYADVideoModel> urls = new ArrayList<>();
@@ -123,6 +114,14 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     private int primaryWidth;               //原图片宽
     private int primaryHeight;              //原图片高
     private double scaleWidth, scaleHeight; //高宽比例
+
+    public boolean ismError() {
+        return mError;
+    }
+
+    public void setmError(boolean mError) {
+        this.mError = mError;
+    }
 
     public boolean ismTouch() {
         return mTouch;
@@ -253,7 +252,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 clickStartIcon();
             }
         });
-
         newstart.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,21 +261,21 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mPlayPosition = 0;
                 playNextUrl(0);*/
                 // startButtonLogic();
-             /*   if (mNetChanged) {
+                Log.e("点击newStart","点击newStart");
+                if (mNetChanged) {
                     mNetChanged = false;
                     netWorkErrorLogic();
                     if (mVideoAllCallBack != null) {
                         mVideoAllCallBack.onPlayError(mOriginUrl, mTitle, this);
                     }
                     return;
-                }*/
+                }
 
                 isComplete = false;
                 mSourcePosition = 0;
                 setUp(urls, cacheWithPlay, mCachePath, mMapHeadData, title);
                 if(mChangeError){
                     mChangeError = false;
-                    Log.e("mSourcePosition",errorPosition+"点击重播");
                     setSeekOnStart(errorPosition);
                     startPlayLogic();
                 } else{
@@ -336,12 +334,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
 
 
-   /* GSYBaseVideoPlayer gsyBaseVideoPlayer;
-    @Override
-    public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
-        gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar);
-        return gsyBaseVideoPlayer;
-    }*/
+
+
     /**
      * 全屏的UI逻辑
      */
@@ -390,7 +384,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mHadSeekTouch = true;
 
     }
-    static  int errorPosition = 0;
+    int errorPosition = 0;
     static int errortime = 0;
     /***
      * 拖动进度条
@@ -535,8 +529,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mTotalTimeTextView.setVisibility(GONE);
                 mPan.setVisibility(GONE);
                 bottom_progressbar.setVisibility(VISIBLE);
-              //  controllerbottom.setVisibility(VISIBLE);
-             //   playstart2.setVisibility(VISIBLE);
+                //  controllerbottom.setVisibility(VISIBLE);
+                //   playstart2.setVisibility(VISIBLE);
             } else {
                 if (mFullscreenButton != null)
                     mFullscreenButton.setImageResource(getEnlargeImageRes());
@@ -548,7 +542,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 playstart.setVisibility(VISIBLE);
                 mCurrentTimeTextView.setVisibility(VISIBLE);
                 mTotalTimeTextView.setVisibility(VISIBLE);
-                mTimeandbarray.setVisibility(GONE);
+                mTimeandbarray.setVisibility(INVISIBLE);
                 mPan.setVisibility(GONE);
                 bottom_progressbar.setVisibility(GONE);
                 playstart2.setVisibility(GONE);
@@ -653,10 +647,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
      */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-       /* if(isAdModel){
-            onClickUiToggle();
-            return false;
-        }*/
+
         int id = v.getId();
         float x = event.getX();
         float y = event.getY();
@@ -693,9 +684,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     touchSurfaceMove(deltaX, deltaY, y);
                     break;
                 case MotionEvent.ACTION_UP:
-                    // startDismissControlViewTimer();
+
                     touchSurfaceUp();
-                    //   Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ surface_container ACTION_UP");
+
                     startProgressTimer();
                     //不要和隐藏虚拟按键后，滑出虚拟按键冲突
                     if (mHideKey && mShowVKey) {
@@ -704,7 +695,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     break;
             }
             if(mTouch){
-                //  playstart2.setVisibility(VISIBLE);
 
                 gestureDetector.onTouchEvent(event);
 
@@ -719,25 +709,12 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 case MotionEvent.ACTION_MOVE:
                     Log.e("进度条移动","进度条移动");
                     startProgressTimer();
-                   /* ViewParent vpdown = getParent();
-                    while (vpdown != null) {
-                        vpdown.requestDisallowInterceptTouchEvent(true);
-                        vpdown = vpdown.getParent();
-                    }*/
-
                     break;
                 case MotionEvent.ACTION_UP:
                     Log.e("进度条抬起","进度条抬起");
                     startProgressTimer();
                     startDismissControlViewTimer();
-                    //  Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ progress ACTION_UP");
-
-                    break; /*  ViewParent vpup = getParent();
-                    while (vpup != null) {
-                        vpup.requestDisallowInterceptTouchEvent(false);
-                        vpup = vpup.getParent();
-                    }
-                    mBrightnessData = -1f;*/
+                    break;
             }
         }
 
@@ -755,23 +732,16 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(replay_text, VISIBLE);
         setViewShowState(mTimeandbarray,VISIBLE);
         setViewShowState(playstart2,VISIBLE);
-        //  mOrientationUtils.setEnable(true);
-    }
 
-
-   /* public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
-        GSYBaseVideoPlayer gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar);
-        return gsyBaseVideoPlayer;
     }
-*/
 
 
 
     @Override
     protected void changeUiToNormal() {
         Log.e("播放器","changeUiToNormal");
-        setViewShowState(mTopContainer, VISIBLE);
-        //      setViewShowState(playstart2,VISIBLE);
+
+        setViewShowState(mTopContainer, GONE);
         setViewShowState(mBottomContainer, GONE);
         setViewShowState(controllerbottom, GONE);
         setViewShowState(mTimeandbarray,GONE);
@@ -780,20 +750,19 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mLoadingProgressBar, GONE);
         setViewShowState(mThumbImageViewLayout, VISIBLE);
         setViewShowState(mBottomProgressBar, GONE);
-        // setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
+
         setViewShowState(mLockScreen, mIfCurrentIsFullscreen? VISIBLE : GONE);
         updateStartImage();
-       /* if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
-        }*/
+
         upPlayImage();
     }
 
     @Override
     protected void changeUiToPreparingShow() {
         Log.e("播放器","changeUiToPreparing");
-        setViewShowState(mTopContainer, VISIBLE);
-        //      setViewShowState(playstart2,VISIBLE);
+        Log.e("mNetSatePreparing",mNetSate);
+
+        setViewShowState(mTopContainer,(mIfCurrentIsFullscreen) ? INVISIBLE : VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
         setViewShowState(controllerbottom, GONE);
         setViewShowState(mTimeandbarray,GONE);
@@ -804,12 +773,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mBottomProgressBar, GONE);
         setViewShowState(mLockScreen, GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ENDownloadView enDownloadView = (ENDownloadView) mLoadingProgressBar;
-            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
-                ((ENDownloadView) mLoadingProgressBar).start();
-            }
-        }
+
         updateStartImage();
         upPlayImage();
     }
@@ -820,14 +784,15 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     @Override
     protected void changeUiToPlayingShow() {
         Log.e("播放器","changeUiToPlayingShow");
-        if(mSwitch){
-            hideLoading();
-        }
+
+
+        setmError(true);
         mTouch = true;
         layout_bottom.setVisibility(VISIBLE);
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(playstart2,GONE);
         setViewShowState(mBottomContainer, VISIBLE);
+        setViewShowState(mFullscreenButton,(mIfCurrentIsFullscreen) ? GONE : VISIBLE);
         setViewShowState(mTimeandbarray,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
         setViewShowState(newstart, GONE);
         setViewShowState(replay_text, GONE);
@@ -843,9 +808,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             setViewShowState(getFullscreenButton(),VISIBLE);
         }
 
-       /* if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
-        }*/
 
         updateStartImage();
         upPlayImage();
@@ -854,12 +816,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     @Override
     protected void changeUiToPauseShow() {
         Log.e("播放器","changeUiToPauseShow");
-        if(mChangeClear){
-            Log.e("播放器被暂停","播放器被暂停");
-            mChangeClear = false;
-            setStateAndUi(CURRENT_STATE_PLAYING);
-            return;
-        }
+
+
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(playstart2,VISIBLE);
         setViewShowState(mBottomContainer, VISIBLE);
@@ -885,12 +843,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     @Override
     protected void changeUiToPlayingBufferingShow() {
+
         Log.e("播放器","changeUiToPlayingBufferingShow");
-
-        setViewShowState(mTopContainer, VISIBLE);
-        //      setViewShowState(playstart2,VISIBLE);
-
-
+        setViewShowState(mTopContainer,(mIfCurrentIsFullscreen) ? INVISIBLE : VISIBLE);
         setViewShowState(mTimeandbarray,GONE);
         setViewShowState(newstart, GONE);
         setViewShowState(replay_text, GONE);
@@ -900,14 +855,11 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mLockScreen, GONE);
         setViewShowState(mBottomContainer, INVISIBLE);
         setViewShowState(controllerbottom, INVISIBLE);
-        setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(newstart, INVISIBLE);
         setViewShowState(replay_text, INVISIBLE);
         setViewShowState(mTimeandbarray,GONE);
         setViewShowState(playstart2,GONE);
-
         if(mIfCurrentIsFullscreen){
-           // setViewShowState(controllerbottom, VISIBLE);
             setViewShowState(getFullscreenButton(),GONE);
         } else{
             setViewShowState(controllerbottom, GONE);
@@ -918,58 +870,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
 
 
-    protected void changeUiToChangeShow() {
-        Log.e("播放器","changeUiToChangeShow");
-        mTouch = false;
 
-        setViewShowState(mTopContainer, VISIBLE);
-        setViewShowState(playstart2,GONE);
-        setViewShowState(mBottomContainer, VISIBLE);
-        setViewShowState(mTimeandbarray,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
-        setViewShowState(newstart, GONE);
-        setViewShowState(replay_text, GONE);
-        setViewShowState(mLoadingProgressBar, GONE);
-        setViewShowState(mThumbImageViewLayout, GONE);
-        setViewShowState(mBottomProgressBar, GONE);
-        setViewShowState(mLockScreen,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
 
-        if(mIfCurrentIsFullscreen){
-            setViewShowState(controllerbottom, VISIBLE);
-            setViewShowState(getFullscreenButton(),GONE);
-        } else{
-            setViewShowState(controllerbottom, GONE);
-            setViewShowState(getFullscreenButton(),VISIBLE);
-        }
-    }
-    protected void changeUiToChangeClear() {
-        mTouch = true;
-
-        Log.e("播放器","changeUiToChangeClear");
-        hideLoading();
-        mChangeClear = true;
-
-        setViewShowState(mTopContainer, VISIBLE);
-        setViewShowState(playstart2,GONE);
-        setViewShowState(mBottomContainer, VISIBLE);
-        setViewShowState(mTimeandbarray,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
-        setViewShowState(newstart, GONE);
-        setViewShowState(replay_text, GONE);
-        setViewShowState(mLoadingProgressBar, GONE);
-        setViewShowState(mThumbImageViewLayout, GONE);
-        setViewShowState(mBottomProgressBar, GONE);
-        setViewShowState(mLockScreen,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
-        if(mIfCurrentIsFullscreen){
-            setViewShowState(controllerbottom, VISIBLE);
-            setViewShowState(getFullscreenButton(),GONE);
-        } else{
-            setViewShowState(controllerbottom, GONE);
-            setViewShowState(getFullscreenButton(),VISIBLE);
-        }
-    }
 
 
     @Override
     protected void changeUiToCompleteShow() {
+
         Log.e("播放器","changeUiToCompleteShow");
         setViewShowState(mTopContainer, VISIBLE);
         setViewShowState(mBottomContainer, GONE);
@@ -983,7 +890,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mBottomProgressBar, VISIBLE);
         setViewShowState(mLockScreen,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
         if(mIfCurrentIsFullscreen){
-            setViewShowState(controllerbottom, VISIBLE);
+           // setViewShowState(controllerbottom, VISIBLE);
             setViewShowState(getFullscreenButton(),GONE);
         } else{
             setViewShowState(controllerbottom, GONE);
@@ -995,15 +902,24 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
     @Override
     protected void changeUiToError() {
+        Log.e("mNetSateError",mNetSate);
+        if(mNetSate.equals("NONE")){
+            Log.e("mNetSate",mNetSate);
+            setStateAndUi(CURRENT_STATE_AUTO_COMPLETE);
+            //netWorkErrorLogic();
+            if (mVideoAllCallBack != null) {
+                mVideoAllCallBack.onPlayError(mOriginUrl, mTitle, this);
+            }
+            return;
+        }
         Log.e("播放器","changeUiToError");
         hideAllWidget();
         String time = mCurrentTimeTextView.getText().toString();
-       // errortime =  CommonUtil.intForTime(time);
         errorPosition = CommonUtil.intForTime(time);
-        Log.e("mSourcePosition",errorPosition+"出错");
         layout_bottom.setVisibility(INVISIBLE);
         setViewShowState(mBottomProgressBar, VISIBLE);
-        setViewShowState(mTopContainer, VISIBLE);
+        setViewShowState(mTopContainer, INVISIBLE);
+        setViewShowState(mTopContainer,(mIfCurrentIsFullscreen) ? INVISIBLE : VISIBLE);
         setViewShowState(playstart2,GONE);
         setViewShowState(mBottomContainer, GONE);
         setViewShowState(controllerbottom, GONE);
@@ -1013,120 +929,29 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(replay_text, GONE);
         setViewShowState(mLoadingProgressBar, VISIBLE);
         setViewShowState(mThumbImageViewLayout, GONE);
-        //   setViewShowState(mBottomProgressBar, GONE);
         setViewShowState(mLockScreen,(mIfCurrentIsFullscreen) ? VISIBLE : GONE);
-        Log.e("mUrlList.size",mUriList.size()+"");
-
         if(mUriList.size() > 0 ){
-            //resolveStartChange();
             if(mSourcePosition < mUriList.size() -1){
                 mSourcePosition++;
             }
-            setUp(mUriList.get(mSourcePosition).getUrl(),true,mUriList.get(mSourcePosition).getTitle());
+            mError = false;
+            setUp(mUriList.get(mSourcePosition).getUrl(),true,"");
+            createNetWorkState();
+            listenerNetWorkState();
+            Log.e("播放器播放错误",errorPosition+"");
             setSeekOnStart(errorPosition);
-            startPlayLogic();
-
+            startButtonLogic();
         }
 
 
-
-
-      //  }
-
-        /*if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
-        }
-        updateStartImage();*/
         upPlayImage();
     }
 
-    /**
-     * 播放下一集
-     *
-     * @return true表示还有下一集
-     */
- /*   public boolean playNextUrl(int position) {
-        if (isDown){
-            if (mPlayPosition < (mUriList.size() - 1)) {
-                if(!isComplete){
-                    mPlayPosition += 1;
-                }
-
-                System.out.println("mPlayPositionNormal:" + mPlayPosition );
-                GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
-                MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
-
-                mSaveChangeViewTIme = 0;
-                setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);
-                if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
-                    mTitleTextView.setText(gsyVideoModel.getTitle());
-                }
-
-                System.out.println("当前播的位置:"+position);
-                setSeekOnStart(position);
-                startPlayLogic();
-                return true;
-            }
-
-        } else if(!isDown) {
-            if(mUriList.size() == 1 ){
-                mPlayPosition = 0;
-            } else{
-                mPlayPosition -= 1;
-            }
-
-            System.out.println("mPlayPositionDown:" + mPlayPosition);
-            System.out.println("错误的网络位置:" + position);
-            GSYVideoModel gsyVideoModel = mUriList.get(mPlayPosition);
-            MySelfGSYVideoPlayer.GSYADVideoModel gsyadVideoModel = (MySelfGSYVideoPlayer.GSYADVideoModel) gsyVideoModel;
-            isDown = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_DOWN);
-            isNormal = (gsyadVideoModel.getType() == GSYADVideoModel.TYPE_NORMAL);
-            System.out.println("是不是下载视频:" + isDown);
-            mSaveChangeViewTIme = 0;
-            setUp(mUriList, mCache, mPlayPosition, null, mMapHeadData, false);
-            if (!TextUtils.isEmpty(gsyVideoModel.getTitle())) {
-                mTitleTextView.setText(gsyVideoModel.getTitle());
-            }
-            System.out.println("当前播的本地视频位置:" + position);
-            setSeekOnStart(position);
-            startPlayLogic();
-            return true;
-        }
-    *//*        System.out.println("startTime:" + time);
-            VideoOptionModel videoOptionModel =
-                    new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "seek-at-start", time);
-            List<VideoOptionModel> list = new ArrayList<>();
-            list.add(videoOptionModel);
-            GSYVideoManager.instance().setOptionModelList(list);*//**//*
-            System.out.println("当前播的位置:"+position);
-            setSeekOnStart(position);
-            startPlayLogic();
-            return true;
-        }*//*
-
-        return false;
-    }*/
 
 
-    private void showLoading() {
-        //  hideLoading();
-        hideLoading();
-        mLoadingDialog = new LoadingDialog2(mContext);
-        mLoadingDialog.show();
-        setViewShowState(mLoading,View.VISIBLE);
-      /*  if (mLoading.getCurrentState() == ENDownloadView.STATE_PRE) {
-            mLoading.start();
-        }*/
-    }
 
-    private void hideLoading() {
-        if (mLoadingDialog != null) {
-            mLoadingDialog.dismiss();
-            mLoadingDialog = null;
-        }
-        setViewShowState(mLoading,View.GONE);
-        setViewShowState(playstart2,View.GONE);
-    }
+
+
 
     protected void changeUiToPrepareingClear() {
         Debuger.printfLog("changeUiToPrepareingClear");
@@ -1141,9 +966,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mThumbImageViewLayout, GONE);
         setViewShowState(mBottomProgressBar, GONE);
         setViewShowState(mLockScreen, GONE);
-        /*if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
-        }*/
+
         upPlayImage();
     }
 
@@ -1160,13 +983,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mThumbImageViewLayout, GONE);
         setViewShowState(mBottomProgressBar, VISIBLE);
         setViewShowState(mLockScreen, GONE);
-/*        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ENDownloadView enDownloadView = (ENDownloadView) mLoadingProgressBar;
-            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
-                ((ENDownloadView) mLoadingProgressBar).start();
-            }
-        }
-        updateStartImage();*/
+
         upPlayImage();
     }
 
@@ -1186,9 +1003,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mBottomProgressBar, GONE);
         setViewShowState(mLockScreen, GONE);
 
-      /*  if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
-        }*/
+
         upPlayImage();
     }
 
@@ -1206,10 +1021,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mThumbImageViewLayout, VISIBLE);
         setViewShowState(mBottomProgressBar, VISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
-     /*   if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
-        }
-        updateStartImage();*/
+
         upPlayImage();
     }
 
@@ -1247,13 +1059,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             ImageView imageView = (ImageView) mStartButton;
             if (mCurrentState == CURRENT_STATE_PLAYING) {
                 imageView.setImageResource(R.drawable.video_click_pause_selector);
-                // playbottom.setImageResource(R.drawable.vedio_stop_icon);
+
             } else if (mCurrentState == CURRENT_STATE_ERROR) {
                 imageView.setImageResource(R.drawable.video_click_error_selector);
-                // playbottom.setImageResource(R.drawable.vedio_play_icon);
+
             } else {
                 imageView.setImageResource(R.drawable.video_click_play_selector);
-                // playbottom.setImageResource(R.drawable.vedio_play_icon);
+
             }
         }
 
@@ -1457,47 +1269,22 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     }
 
 
-    public void resolveNormalVideoShow(View oldF, ViewGroup vp, GSYVideoPlayer gsyVideoPlayer) {
 
-        if (oldF != null && oldF.getParent() != null) {
-            ViewGroup viewGroup = (ViewGroup) oldF.getParent();
-            vp.removeView(viewGroup);
-        }
-        mCurrentState = getGSYVideoManager().getLastState();
-        if (gsyVideoPlayer != null) {
-            cloneParams(gsyVideoPlayer, this);
-        }
-        getGSYVideoManager().setListener(getGSYVideoManager().lastListener());
-        getGSYVideoManager().setLastListener(null);
-        setStateAndUi(mCurrentState);
-        addTextureView();
-        mSaveChangeViewTIme = System.currentTimeMillis();
-        if (mVideoAllCallBack != null) {
-            Debuger.printfError("onQuitFullscreen");
-            mVideoAllCallBack.onQuitFullscreen(mOriginUrl, mTitle, this);
-        }
-        mIfCurrentIsFullscreen = false;
-        if (mHideKey) {
-            showNavKey(mContext, mSystemUiVisibility);
-        }showSupportActionBar(mContext, mActionBar, mStatusBar);
-        if(getFullscreenButton() != null) {
-            getFullscreenButton().setImageResource(getEnlargeImageRes());
-        }
-    }
     int fullCount = 0;
     @Override
     public void cloneParams(GSYBaseVideoPlayer from, GSYBaseVideoPlayer to) {
-
+        Log.e("播放器横竖屏切换","横竖屏切换");
         MySelfGSYVideoPlayer sf = (MySelfGSYVideoPlayer) from;
         MySelfGSYVideoPlayer st = (MySelfGSYVideoPlayer) to;
         st.surface_container = sf.surface_container;
         st.mUriList = sf.mUriList;
         st.urls = sf.urls;
-        st.isDown = sf.isDown;
         st.mTouch = sf.mTouch;
+        st.mError = sf.mError;
         st.errortime = sf.errortime;
         st.errorPosition = sf.errorPosition;
-        Log.e("mSourcePosition",st.errorPosition+"全屏");
+        st.mCurrentState = sf.mCurrentState;
+        Log.e("播放器st",st.errorPosition+"");
         st.mCurrentbottom.setText(sf.mCurrentbottom.getText());
         st.mTotalbottom.setText(sf.mTotalbottom.getText());
         st.mCurrentTimeTextView.setText(sf.mCurrentTimeTextView.getText());
@@ -1620,6 +1407,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             setStateAndUi(CURRENT_STATE_PLAYING);
         } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
             layout_bottom.setVisibility(GONE);
+
             startButtonLogic();
         }
     }
@@ -1849,7 +1637,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setStateAndUi(CURRENT_STATE_NORMAL);
         if(mChangeError){
             mSourcePosition++;
-            Log.e("mSourcePosition333",mSourcePosition+"");
+
         }
 
         setAdUp(url,mCache, mSourcePosition);
@@ -1922,168 +1710,15 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     }
 
 
-    private void resolveStartChange() {
 
-        if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
-                || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE || mCurrentState == GSYVideoPlayer.CURRENT_STATE_ERROR)) {
 
-            if (mSourcePosition < (mUriList.size() - 1)) {
-                if(!isComplete){
-                    mSourcePosition += 1;
-                }
-            }
-            showLoading();
-            final String url = mUriList.get(mSourcePosition).getUrl();
-            cancelProgressTimer();
-            if (mTitle != null && mTitleTextView != null) {
-                mTitleTextView.setText(mTitle);
-            }
-            //创建临时管理器执行加载播放
-         /*   mTmpManager = GSYVideoManager.tmpInstance(gsyMediaPlayerListener);
-            mTmpManager.initContext(getContext().getApplicationContext());
-            resolveChangeUrl(mCache, mCachePath, url);
-            mTmpManager.prepare(mUrl, mMapHeadData, mLooping, mSpeed, mCache, mCachePath, null);
-*/
-            changeUiToChangeShow();
-        }
-        //}
-        /*else {
-            Toast.makeText(getContext(), "已经是 " + name, Toast.LENGTH_LONG).show();
-        }*/
-    }
 
-    private void resolveChangeUrl(boolean cacheWithPlay, File cachePath, String url) {
-        if (mTmpManager != null) {
-            mCache = cacheWithPlay;
-            mCachePath = cachePath;
-            mOriginUrl = url;
-            this.mUrl = url;
-        }
-    }
     private int mSourcePosition = 0;
-    private void resolveChangedResult() {
-        // isChanging = false;
-        mTmpManager = null;
-    /*    final String name = mUrlList.get(mSourcePosition).getName();
-        final String url = mUrlList.get(mSourcePosition).getUrl();
-        mTypeText = name;
-        mSwitchSize.setText(name);*/
-        final String url = mUriList.get(mSourcePosition).getUrl();
-        resolveChangeUrl(mCache, mCachePath, url);
-        mSwitch = true;
-        //hideLoading();
-    }
-    private GSYMediaPlayerListener gsyMediaPlayerListener = new GSYMediaPlayerListener() {
-        @Override
-        public void onPrepared() {
-            Log.e("播放器mTmpManager",mTmpManager+"");
-            if (mTmpManager != null) {
-                mTmpManager.start();
-
-                mTmpManager.seekTo(errortime);
-
-            } else{
-                setStateAndUi(CURRENT_STATE_AUTO_COMPLETE);
-            }
-        }
-
-        @Override
-        public void onAutoCompletion() {
-
-        }
-
-        @Override
-        public void onCompletion() {
-
-        }
-
-        @Override
-        public void onBufferingUpdate(int percent) {
-
-        }
-
-        @Override
-        public void onSeekComplete() {
-            if (mTmpManager != null) {
-                GSYVideoBaseManager manager = GSYVideoManager.instance();
-                GSYVideoManager.changeManager(mTmpManager);
-                mTmpManager.setLastListener(manager.lastListener());
-                mTmpManager.setListener(manager.listener());
-                manager.setDisplay(null);
-              /*  Debuger.printfError("**** showDisplay onSeekComplete ***** " + mSurface);
-                Debuger.printfError("**** showDisplay onSeekComplete isValid ***** " + mSurface.isValid());*/
-                mTmpManager.setDisplay(mSurface);
-                changeUiToChangeClear();
-                resolveChangedResult();
-                manager.releaseMediaPlayer();
-
-                setSeekOnStart(errorPosition);
-                startPlayLogic();
-                //prepareVideo();
-              //  setStateAndUi(CURRENT_STATE_PLAYING);
-                //  hideLoading();
-              /*  setSeekOnStart(errorPosition);
-                prepareVideo();*/
-                // startPlayLogic();
-               // onSurfaceDestroyed(mSurface);
-
-            }
-        }
 
 
 
-        @Override
-        public void onError(int what, int extra) {
-            //   mSourcePosition = mPreSourcePosition;
-            Log.e("播放器转换urlwhat",what+"");
-            if (mTmpManager != null) {
-                mTmpManager.releaseMediaPlayer();
-            }
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    Log.e("播放器转换url","错误");
-                    resolveChangedResult();
-                    hideLoading();
-                    setStateAndUi(CURRENT_STATE_AUTO_COMPLETE);
-                    mChangeError = true;
-                }
-            });
-        }
 
-        @Override
-        public void onInfo(int what, int extra) {
-
-        }
-
-        @Override
-        public void onVideoSizeChanged() {
-
-        }
-
-        @Override
-        public void onBackFullscreen() {
-
-        }
-
-        @Override
-        public void onVideoPause() {
-
-        }
-
-        @Override
-        public void onVideoResume() {
-
-        }
-
-        @Override
-        public void onVideoResume(boolean seek) {
-
-        }
-    };
-
-
-    @Override
+ /*   @Override
     public boolean onSurfaceDestroyed(Surface surface) {
         Log.e("播放器","播放器清空");
         //清空释放
@@ -2092,6 +1727,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         //todo 需要处理为什么全屏时全屏的surface会被释放了
         releaseSurface(surface);
         return true;
-    }
+    }*/
 
 }
