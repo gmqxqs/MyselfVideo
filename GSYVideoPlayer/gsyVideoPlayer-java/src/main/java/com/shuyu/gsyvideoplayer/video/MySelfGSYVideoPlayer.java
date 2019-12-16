@@ -1,6 +1,5 @@
 package com.shuyu.gsyvideoplayer.video;
 
-import android.app.Service;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,16 +31,13 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import com.google.gson.Gson;
-import com.shuyu.gsyvideoplayer.GSYVideoBaseManager;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.MyselfView.BatteryView;
 import com.shuyu.gsyvideoplayer.R;
-import com.shuyu.gsyvideoplayer.listener.GSYMediaPlayerListener;
 import com.shuyu.gsyvideoplayer.model.GSYVideoModel;
 import com.shuyu.gsyvideoplayer.utils.BiliDanmukuParser;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
-import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.view.DanamakuAdapter;
@@ -51,7 +47,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,7 +59,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import master.flame.danmaku.controller.IDanmakuView;
 import master.flame.danmaku.danmaku.loader.ILoader;
 import master.flame.danmaku.danmaku.loader.IllegalDataException;
@@ -78,7 +72,6 @@ import master.flame.danmaku.danmaku.model.android.SpannedCacheStuffer;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import master.flame.danmaku.danmaku.parser.IDataSource;
 import master.flame.danmaku.ui.widget.DanmakuView;
-import moe.codeest.enviews.ENDownloadView;
 import moe.codeest.enviews.ENPlayView;
 
 public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements SeekBar.OnSeekBarChangeListener {
@@ -419,22 +412,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             byte[] byteArray = str.getBytes();
             ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
             mParser = createParser(bis);
-           /* savexml(list,name);
-            File file = new File(mContext.getExternalCacheDir(),
-                    "persons.xml");
-
-            try {
-                InputStream in = new FileInputStream(file);
-                Log.e("mParser",in+"");
-                mParser = createParser(in);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-
-            Log.e("mParser",mParser.toString());*/
-
-
 
             mDanmakuView.setCallback(new master.flame.danmaku.controller.DrawHandler.Callback() {
                 @Override
@@ -610,7 +587,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         danmuBean.setFontColor(mChooseColor);
         danmuBean.setDanmuText(content);
         danmuBean.setFontSize(size);
-
         if (mVideoAllCallBack != null){
             mVideoAllCallBack.onClickSend(mOriginUrl, danmuBean, MySelfGSYVideoPlayer.this);
         }
