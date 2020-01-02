@@ -1,6 +1,7 @@
 package com.example.gsyvideoplayer.listener;
 
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
+import com.shuyu.gsyvideoplayer.screening.bean.DeviceInfo;
 import com.shuyu.gsyvideoplayer.video.DanmuBean;
 
 import java.util.List;
@@ -145,6 +146,11 @@ public class SampleListener implements VideoAllCallBack {
 
     @Override
     public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
+    }
+
+    @Override
+    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
 
     }
 

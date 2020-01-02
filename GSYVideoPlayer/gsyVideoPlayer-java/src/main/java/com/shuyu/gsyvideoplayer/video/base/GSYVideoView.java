@@ -18,7 +18,6 @@ import android.view.InflateException;
 import android.view.Surface;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.listener.GSYMediaPlayerListener;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
@@ -52,6 +51,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     public static final int CURRENT_STATE_AUTO_COMPLETE = 6;
     //错误状态
     public static final int CURRENT_STATE_ERROR = 7;
+
     //切換狀態
     public static final int CURRENT_STATE_CHANGE = 8;
 

@@ -1,5 +1,6 @@
 package com.shuyu.gsyvideoplayer.listener;
 
+import com.shuyu.gsyvideoplayer.screening.bean.DeviceInfo;
 import com.shuyu.gsyvideoplayer.video.DanmuBean;
 
 import java.util.List;
@@ -77,6 +78,8 @@ public interface VideoAllCallBack {
     void onClickBlankFullscreen(String url, Object... objects);
 
     void onClickSend(String url,DanmuBean danmuBean,Object...objects);
+
+    void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object...objects);
 
 
 }

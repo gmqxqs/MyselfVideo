@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#000000"
-    >
+    android:background="#000000">
     <FrameLayout
         android:id="@+id/surface_container"
         android:layout_centerHorizontal="true"
@@ -12,12 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </FrameLayout>
-
     <master.flame.danmaku.ui.widget.DanmakuView
         android:id="@+id/danmaku_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
     <RelativeLayout
         android:id="@+id/thumb"
         android:layout_width="match_parent"
@@ -301,6 +298,7 @@
                     android:visibility="gone"
                     android:paddingLeft="30dp"/>
                 <ImageView
+                    android:id="@+id/more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/vedio_more_icon"

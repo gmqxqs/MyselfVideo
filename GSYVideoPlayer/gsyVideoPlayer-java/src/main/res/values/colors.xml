@@ -3,5 +3,9 @@
 
     <color name="style_color">#005fff</color><!--主题色-->
     <color name="bottom_container_bg">#99000000</color><!--主题色-->
-
+    <color name="white">#fff</color>
+    <color name="black">#11030D</color>
+    <color name="colorPrimary">#3A99D8</color>
+    <color name="colorPrimaryDark">#3A99D8</color>
+    <color name="colorAccent">#D81B60</color>
 </resources>

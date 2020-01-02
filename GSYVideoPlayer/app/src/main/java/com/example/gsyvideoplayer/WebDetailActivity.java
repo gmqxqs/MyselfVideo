@@ -14,6 +14,7 @@ import com.example.gsyvideoplayer.video.PreViewGSYVideoPlayer;
 import com.example.gsyvideoplayer.view.ScrollWebView;
 import com.shuyu.gsyvideoplayer.GSYBaseActivityDetail;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
+import com.shuyu.gsyvideoplayer.screening.bean.DeviceInfo;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.video.DanmuBean;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
@@ -183,6 +184,11 @@ public class WebDetailActivity extends GSYBaseActivityDetail<StandardGSYVideoPla
 
     @Override
     public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
+    }
+
+    @Override
+    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
 
     }
 }

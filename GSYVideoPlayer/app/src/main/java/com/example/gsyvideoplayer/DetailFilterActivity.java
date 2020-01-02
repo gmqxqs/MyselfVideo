@@ -54,6 +54,7 @@ import com.shuyu.gsyvideoplayer.render.effect.TintEffect;
 import com.shuyu.gsyvideoplayer.render.effect.VignetteEffect;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotListener;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.screening.bean.DeviceInfo;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.FileUtils;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
@@ -509,6 +510,11 @@ public class DetailFilterActivity extends GSYBaseActivityDetail<StandardGSYVideo
 
     @Override
     public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
+    }
+
+    @Override
+    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
 
     }
 

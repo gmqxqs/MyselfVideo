@@ -8,6 +8,7 @@ import com.shuyu.gsyvideoplayer.GSYBaseADActivityDetail;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.screening.bean.DeviceInfo;
 import com.shuyu.gsyvideoplayer.video.DanmuBean;
 import com.shuyu.gsyvideoplayer.video.NormalGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.GSYADVideoPlayer;
@@ -132,6 +133,11 @@ public class DetailADPlayer2 extends GSYBaseADActivityDetail<NormalGSYVideoPlaye
 
     @Override
     public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
+
+    }
+
+    @Override
+    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
 
     }
 

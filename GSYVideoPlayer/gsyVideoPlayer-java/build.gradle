@@ -13,6 +13,7 @@ android {
         targetSdkVersion globalConfiguration.androidTargetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
     }
     buildTypes {
@@ -28,6 +29,10 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 
 }
@@ -47,11 +52,26 @@ dependencies {
 
     api 'com.google.code.gson:gson:2.8.6'
     implementation viewDependencies.DanmakuFlameMaster
-  //  api 'com.simpledlnaarr.publish:simpledlnaarr:1.0.0'
+    //   api 'com.simpledlnaarr.publish:simpledlnaarr:1.0.0'
     // Cling library
-  /*  compile 'org.fourthline.cling:cling-core:2.1.1'
-    compile 'org.fourthline.cling:cling-support:2.1.1'*/
+    api 'org.fourthline.cling:cling-core:2.1.1'
+    api 'org.fourthline.cling:cling-support:2.1.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
+    // Jetty library
+    api 'org.eclipse.jetty:jetty-server:8.1.12.v20130726'
+    api 'org.eclipse.jetty:jetty-servlet:8.1.12.v20130726'
+    api 'org.eclipse.jetty:jetty-client:8.1.12.v20130726'
+    api 'org.slf4j:slf4j-simple:1.7.21'
+    api 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    api 'com.jrummyapps:android-shell:1.0.0'
+    api 'com.google.android.material:material:1.0.0'
+    api 'com.github.ChillingVan:android-openGL-canvas:v1.4.0.0'
+    api 'net.butterflytv.utils:rtmp-client:3.0.1'
+    //eventbus事件总线
+    api 'org.greenrobot:eventbus:3.0.0'
+    api 'com.android.support:multidex:1.0.3'
 }
 
 

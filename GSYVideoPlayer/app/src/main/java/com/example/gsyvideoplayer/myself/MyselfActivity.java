@@ -19,6 +19,7 @@ import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
+import com.shuyu.gsyvideoplayer.screening.bean.DeviceInfo;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.DanmuBean;
@@ -38,15 +39,11 @@ public class MyselfActivity extends AppCompatActivity {
     //CustomGSYVideoPlayer部分功能处于试验阶段
     @BindView(R.id.detail_player)
     MySelfGSYVideoPlayer videoPlayer;
-
     LinearLayout danmu;
     EditText edit_danmu;
-
     private boolean isPlay;
     private boolean isPause;
     private boolean isDestory;
-
-
     private GSYVideoOptionBuilder gsyVideoOption;
     private OrientationUtils orientationUtils;
     private String url ="";
@@ -116,7 +113,6 @@ public class MyselfActivity extends AppCompatActivity {
         VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"enable-accurate-seek", 1);
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(videoOptionModel);
-
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "allowed_media_types", "video"); //根据媒体类型来配置
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", 20000);
@@ -125,7 +121,6 @@ public class MyselfActivity extends AppCompatActivity {
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);  // 无限读
         list.add(videoOptionModel);
-
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");  // 无限读
         list.add(videoOptionModel);
         videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");  // 无限读
@@ -158,15 +153,12 @@ public class MyselfActivity extends AppCompatActivity {
         list.add(videoOptionModel);
         GSYVideoManager.instance().setOptionModelList(list);
         PlayerFactory.setPlayManager(Exo2PlayerManager.class);
-
         GSYVideoManager.onResume(false);
         GSYVideoType.setRenderType(GSYVideoType.TEXTURE);
         IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
-
-
         gsyVideoOption = new GSYVideoOptionBuilder();
-
-        String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+    //    String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+        String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
         gsyVideoOption.setUrl(temp)
                 .setVideoTitle("测试视频")
                 .setCacheWithPlay(false)
@@ -190,12 +182,16 @@ public class MyselfActivity extends AppCompatActivity {
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
                         Log.e("点击后退","点击后退");
-
                         if (orientationUtils != null) {
-                            Log.e("旋转","旋转");
                             orientationUtils.setEnable(false);
                             orientationUtils.backToProtVideo();
                         }
+                        if(videoPlayer.isDestory()){
+                            Log.e("销毁投屏","销毁投屏");
+                            videoPlayer.destroy();
+                            videoPlayer.setDestory(false);
+                        }
+                       // videoPlayer.destroy();
                     }
                     @Override
                     public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
@@ -205,6 +201,31 @@ public class MyselfActivity extends AppCompatActivity {
                         Log.e("输入弹幕数据",danmuBean.getFontColor()+"");
                         Log.e("输入弹幕数据",danmuBean.getFontSize()+"");
                         Log.e("输入弹幕数据",danmuBean.getType()+"");
+                    }
+
+                    @Override
+                    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
+                        super.onCastScreen(url, deviceInfos, objects);
+                        for(DeviceInfo deviceInfo : deviceInfos){
+                            Log.e("投屏设备",deviceInfo.toString());
+                            Log.e("投屏设备",deviceInfo.getName());
+                            if(deviceInfo.getName().equals("VIDAA-cc DMR")){
+                                videoPlayer.startScreen(deviceInfo);
+                                return;
+                            }
+                        }
+
+                        /*if(videoPlayer.getDeviceInfos()!= null){
+                            Log.e("deviceInfos",videoPlayer.getDeviceInfos().size()+"");
+                        } else {
+                            Log.e("deviceInfos","deviceInfos为空");
+                        }
+                        if(deviceInfos.size() > 0){
+
+                            videoPlayer.startScreen(videoPlayer.getDeviceInfos().get(0));
+                        }*/
+
+                       // videoPlayer.onDestroy();
                     }
                 }).setLockClickListener(new LockClickListener() {
                     @Override
@@ -218,8 +239,9 @@ public class MyselfActivity extends AppCompatActivity {
       //  GSYVideoType.setRenderType(GSYVideoType.SUFRACE);
 
         videoPlayer.setUp(temp,true,"测试视频");
-
         videoPlayer.startPlayLogic();
+
+
 
     }
 
@@ -231,11 +253,13 @@ public class MyselfActivity extends AppCompatActivity {
       /*  if(!videoPlayer.ismError()){
             return;
         }*/
-
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
-
+        if(videoPlayer.isDestory()){
+            videoPlayer.destroy();
+            videoPlayer.setDestory(false);
+        }
         if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }

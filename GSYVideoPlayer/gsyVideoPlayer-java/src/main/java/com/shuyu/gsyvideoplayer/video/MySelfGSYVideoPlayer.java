@@ -1,6 +1,11 @@
 package com.shuyu.gsyvideoplayer.video;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -10,8 +15,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.util.Log;
-import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,15 +31,34 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+
+import androidx.annotation.Nullable;
+
 import com.google.gson.Gson;
+import com.shuyu.gsyvideoplayer.BuildConfig;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.MyselfView.BatteryView;
 import com.shuyu.gsyvideoplayer.R;
+
+import com.shuyu.gsyvideoplayer.event.ScreenEvent;
 import com.shuyu.gsyvideoplayer.model.GSYVideoModel;
+import com.shuyu.gsyvideoplayer.screening.DLNAManager;
+import com.shuyu.gsyvideoplayer.screening.DLNAPlayer;
+import com.shuyu.gsyvideoplayer.screening.bean.DeviceInfo;
+import com.shuyu.gsyvideoplayer.screening.bean.MediaInfo;
+import com.shuyu.gsyvideoplayer.screening.listener.DLNAControlCallback;
+import com.shuyu.gsyvideoplayer.screening.listener.DLNADeviceConnectListener;
+import com.shuyu.gsyvideoplayer.screening.listener.DLNARegistryListener;
+import com.shuyu.gsyvideoplayer.screening.listener.DLNAStateCallback;
+import com.shuyu.gsyvideoplayer.simplepermission.PermissionsManager;
+import com.shuyu.gsyvideoplayer.simplepermission.PermissionsRequestCallback;
 import com.shuyu.gsyvideoplayer.utils.BiliDanmukuParser;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
@@ -42,12 +66,16 @@ import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.view.DanamakuAdapter;
 import com.shuyu.gsyvideoplayer.view.LoadingDialog2;
-import org.xmlpull.v1.XmlSerializer;
+
+import org.fourthline.cling.model.action.ActionInvocation;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -74,9 +102,10 @@ import master.flame.danmaku.danmaku.parser.IDataSource;
 import master.flame.danmaku.ui.widget.DanmakuView;
 import moe.codeest.enviews.ENPlayView;
 
-public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements SeekBar.OnSeekBarChangeListener {
+public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements SeekBar.OnSeekBarChangeListener, DLNADeviceConnectListener {
     private static final int msgKey1 = 1;
     protected  int count = 0;
+    private  Handler handler;
     private  Context contextFirst;
     private static   List<DanmuBean> danmuBeanList = new ArrayList<>();
     public List<DanmuBean> getDanmuBeanList() {
@@ -92,24 +121,11 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-    public MySelfGSYVideoPlayer(Context context, Boolean fullFlag) {
-        super(context, fullFlag);
-        this.contextFirst = context;
-    }
-    public MySelfGSYVideoPlayer(Context context) {
-        super(context);
-        this.contextFirst = context;
-    }
-    public MySelfGSYVideoPlayer(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.contextFirst = context;
-    }
     private  BaseDanmakuParser mParser;//解析器对象
     private  IDanmakuView mDanmakuView;//弹幕view
     private  DanmakuContext mDanmakuContext;
     private long mDanmakuStartSeekPosition = -1;
     private boolean mDanmaKuShow = false;
-    private File mDumakuFile;
     private LoadingDialog2 mLoadingDialog;
     protected  TextView mSystemTime;
     protected LinearLayout mTimeandbarray;
@@ -118,6 +134,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected  ImageView playbottom;
     protected  ImageView mBarrage;
     protected  ImageView mShare;
+    protected  ImageView mMore;
     protected  TextView mCurrentbottom;
     protected  TextView mTotalbottom;
     protected  ImageView mPan;
@@ -156,6 +173,25 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     private boolean mfontColor1=false,mfontColor2=false,mfontColor3=false,mfontColor4=false,mfontColor5=false,mfontColor6=false,mfontColor7=false,mfontColor8=false,mfontSmallSize = false,mfontBigSize = false;
     private long mChooseColor = 16777215;
     private List<Boolean> fontColorList;
+
+    private static final int CODE_REQUEST_PERMISSION = 1010;
+    private static final int CODE_REQUEST_MEDIA = 1011;
+    private int curItemType = MediaInfo.TYPE_VIDEO;
+    private String mMediaPath;
+    private DeviceInfo mDeviceInfo;
+    private static DLNAPlayer mDLNAPlayer;
+    private DLNARegistryListener mDLNARegistryListener;
+    private DevicesAdapter mDevicesAdapter;
+    private ListView mDeviceListView;
+
+
+    public boolean isDestory() {
+        return DLNAManager.getInstance().isDestory();
+    }
+
+    public void setDestory(boolean destory) {
+        DLNAManager.getInstance().setDestory(destory);
+    }
 
     public static boolean ismError() {
         return mError;
@@ -205,9 +241,75 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     public FrameLayout getSurface(){
         return surface_container;
     }
+    public ImageView getPlaystart(){
+        return playstart;
+    }
+
+    public TextView getCurrentTimeTextView(){
+        return mCurrentTimeTextView;
+    }
+
+    public  TextView getTotalTimeTextView(){
+        return mTotalTimeTextView;
+    }
+
+    public ImageView getLockScreen(){
+        return mLockScreen;
+    }
+
+    public DanmakuContext getDanmakuContext() {
+        return mDanmakuContext;
+    }
+
+    public IDanmakuView getDanmakuView() {
+        return mDanmakuView;
+    }
+
+    public long getDanmakuStartSeekPosition() {
+        return mDanmakuStartSeekPosition;
+    }
+
+    public void setDanmakuStartSeekPosition(long danmakuStartSeekPosition) {
+        this.mDanmakuStartSeekPosition = danmakuStartSeekPosition;
+    }
+
+    public void setDanmaKuShow(boolean danmaKuShow) {
+        this.mDanmaKuShow = danmaKuShow;
+    }
+
+    public boolean getDanmaKuShow() {
+        return mDanmaKuShow;
+    }
+
+    int errorPosition = 0;
+
+    public int getErrorPosition() {
+        return errorPosition;
+    }
+
+    public void setErrorPosition(int errorPosition) {
+        this.errorPosition = errorPosition;
+    }
+
+    int errortime = 0;
+
+    public MySelfGSYVideoPlayer(Context context, Boolean fullFlag) {
+        super(context, fullFlag);
+        this.contextFirst = context;
+    }
+    public MySelfGSYVideoPlayer(Context context) {
+        super(context);
+        this.contextFirst = context;
+    }
+    public MySelfGSYVideoPlayer(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.contextFirst = context;
+    }
 
     protected void init(final Context context) {
         super.init(context);
+
+        handler = new Handler(context.getMainLooper());
         mDanmakuView = (DanmakuView) findViewById(R.id.danmaku_view);
         surface_container = findViewById(R.id.surface_container);
         batteryView = findViewById(R.id.battery);
@@ -222,6 +324,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         playbottom = findViewById(R.id.playbottom);
         mBarrage = findViewById(R.id.barrage);
         mShare = findViewById(R.id.share);
+        mMore = findViewById(R.id.more);
         mCurrentbottom = findViewById(R.id.currentbottom);
         mTotalbottom = findViewById(R.id.totalbottom);
         replay = findViewById(R.id.replay);
@@ -271,6 +374,90 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 resolveDanmakuShow();
             }
         });
+        mShare.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*final CustomDialog confirmDialog = new CustomDialog(mContext, "请选择投屏设备", "", "开始投屏", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                },"放弃");
+
+                final View view = View.inflate(mContext, R.layout.custom_dialog_layout, null);
+
+                TextView dialog_confirm = view.findViewById(R.id.dialog_confirm);
+                dialog_confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                      //  EditText editText = view.findViewById(R.id.telephone);
+
+                    }
+                });
+
+                confirmDialog.show();*/
+                BrowserActivity.forward(mContext);
+
+
+            }
+        });
+
+        mMore.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DLNAManager.setIsDebugMode(BuildConfig.DEBUG);
+                Activity activity = findActivity(mContext);
+                if(activity != null){
+                    PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(CODE_REQUEST_PERMISSION,
+                            activity, new PermissionsRequestCallback() {
+                                @Override
+                                public void onGranted(int requestCode, String permission) {
+                                    boolean hasPermission = PackageManager.PERMISSION_GRANTED ==
+                                            (mContext.checkCallingOrSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                                    & mContext.checkCallingOrSelfPermission(Manifest.permission.RECORD_AUDIO));
+                                    if (hasPermission) {
+                                        DLNAManager.getInstance().init(mContext, new DLNAStateCallback() {
+                                            @Override
+                                            public void onConnected() {
+                                                Log.e("投屏", "DLNAManager ,onConnected");
+                                                initDlna();
+                                            }
+
+                                            @Override
+                                            public void onDisconnected() {
+                                                Log.e("投屏", "DLNAManager ,onDisconnected");
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onDenied(int requestCode, String permission) {
+
+                                }
+
+                                @Override
+                                public void onDeniedForever(int requestCode, String permission) {
+
+                                }
+
+                                @Override
+                                public void onFailure(int requestCode, String[] deniedPermissions) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(int requestCode) {
+
+                                }
+                            });
+                }
+
+
+            }
+        });
+
+
         playstart.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -322,59 +509,90 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         playstart2.setImageBitmap(newBmp);
         initDanmaku(danmuBeanList);
 
-    }
+        getBackButton().setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("点击后退","点击后退2");
+                if(mContext != null){
+                    destroy();
+                }
 
-    public ImageView getPlaystart(){
-        return playstart;
-    }
-
-    public TextView getCurrentTimeTextView(){
-        return mCurrentTimeTextView;
-    }
-
-    public  TextView getTotalTimeTextView(){
-        return mTotalTimeTextView;
-    }
-
-    public ImageView getLockScreen(){
-        return mLockScreen;
-    }
-
-
-    /**
-     * 向SD卡写入一个XML文件
-     *
-     * @param
-     */
-    public void savexml(List<DanmuBean> list,String name) {
-        try {
-            File file = new File(mContext.getExternalCacheDir(),
-                    name + ".xml");
-            if(file.exists()){
-                file.delete();
             }
-            file.createNewFile();
-            Log.e("弹幕文件",file.getAbsolutePath());
-            FileOutputStream fos = new FileOutputStream(file);
-            // 获得一个序列化工具
-            XmlSerializer serializer = Xml.newSerializer();
-            serializer.setOutput(fos, "utf-8");
-            // 设置文件头
-            serializer.startTag(null, "i");
-            for (int i = 0; i < list.size(); i++) {
-                serializer.startTag(null, "d");
-                serializer.attribute(null, "p",list.get(i).getDisplayTime()+","+list.get(i).getType()+","+list.get(i).getFontSize()+","+list.get(i).getFontColor());
-                serializer.text(list.get(i).getDanmuText());
-                serializer.endTag(null, "d");
-            }
-            serializer.endTag(null, "i");
-            serializer.endDocument();
-            fos.close();
-            // Toast.makeText(CommonUtil.getActivityContext(mContext), "写入成功", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            //  Toast.makeText(CommonUtil.getActivityContext(mContext), "写入失败", Toast.LENGTH_SHORT).show();
+        });
+
+
+
+    }
+
+    public static Activity findActivity(Context context) {
+        if (context instanceof Activity) {
+            return (Activity) context;
         }
+        if (context instanceof ContextWrapper) {
+            ContextWrapper wrapper = (ContextWrapper) context;
+            return findActivity(wrapper.getBaseContext());
+        } else {
+            return null;
+        }
+    }
+
+    public void destroy(){
+        if (mDLNAPlayer != null && mContext != null) {
+            mDLNAPlayer.destroy();
+            DLNAManager.getInstance().unregisterListener(mDLNARegistryListener);
+            DLNAManager.getInstance().destroy();
+        }
+
+    }
+
+    public void startScreen(DeviceInfo deviceInfo){
+        if(mDLNAPlayer != null){
+            mDLNAPlayer.connect(deviceInfo);
+        } else{
+           Log.e("mDLNAPLayer","mDLNAPlayer为空");
+        }
+
+    }
+
+   static List<DeviceInfo> deviceInfos =  new ArrayList<>();;
+
+    public List<DeviceInfo> getDeviceInfos() {
+        return deviceInfos;
+    }
+
+    public void setDeviceInfos(List<DeviceInfo> deviceInfos) {
+        this.deviceInfos = deviceInfos;
+    }
+
+    private void initDlna() {
+        Log.e("投屏设备initDlna","投屏initDlna");
+        mDLNAPlayer = new DLNAPlayer(mContext);
+        mDLNAPlayer.setConnectListener(this);
+        mDLNARegistryListener = new DLNARegistryListener() {
+            @Override
+            public void onDeviceChanged(List<DeviceInfo> deviceInfoList) {
+                /*mDevicesAdapter.clear();
+                mDevicesAdapter.addAll(deviceInfoList);
+                mDevicesAdapter.notifyDataSetChanged();*/
+             /*  for(DeviceInfo deviceInfo : deviceInfoList){
+                   Log.e("投屏设备",deviceInfo.toString());
+               }*/
+               /* for(DeviceInfo deviceInfo : deviceInfoList){
+                    Log.e("投屏设备添加数据",deviceInfo.toString());
+                    deviceInfos.add(deviceInfo);
+
+                }*/
+              //  EventBus.getDefault().post(new ScreenEvent(deviceInfoList));
+                for(DeviceInfo deviceInfo : deviceInfoList){
+                    Log.e("投屏设备添加数据",deviceInfo.toString());
+                    deviceInfos.add(deviceInfo);
+
+                }
+                mVideoAllCallBack.onCastScreen(mOriginUrl,deviceInfoList,MySelfGSYVideoPlayer.this);
+            }
+        };
+
+        DLNAManager.getInstance().registerListener(mDLNARegistryListener);
 
     }
 
@@ -400,10 +618,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 .preventOverlapping(overlappingEnablePair);
         Log.e("mDanmakuView",mDanmakuView+"");
         if (mDanmakuView != null) {
-            Log.e("mDumakuFile",mDumakuFile+"");
-            if (mDumakuFile != null) {
-                mParser = createParser(getIsStream(mDumakuFile));
-            }
+
 
             //todo 这是为了demo效果，实际上需要去掉这个，外部传输文件进来
             Gson gson = new Gson();
@@ -447,29 +662,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
     }
 
-    private InputStream getIsStream(File file) {
-        try {
-            InputStream instream = new FileInputStream(file);
-            InputStreamReader inputreader = new InputStreamReader(instream);
-            BufferedReader buffreader = new BufferedReader(inputreader);
-            String line;
-            StringBuilder sb1 = new StringBuilder();
-            sb1.append("<i>");
-            //分行读取
-            while ((line = buffreader.readLine()) != null) {
-                sb1.append(line);
-            }
-            sb1.append("</i>");
-            Log.e("3333333", sb1.toString());
-            instream.close();
-            return new ByteArrayInputStream(sb1.toString().getBytes());
-        } catch (java.io.FileNotFoundException e) {
-            Log.d("TestFile", "The File doesn't not exist.");
-        } catch (IOException e) {
-            Log.d("TestFile", e.getMessage());
-        }
-        return null;
-    }
 
     /**
      弹幕的显示与关闭
@@ -482,10 +674,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 if (mDanmaKuShow) {
                     if (!getDanmakuView().isShown())
                         getDanmakuView().show();
-
                     mBarrage.setImageResource(R.drawable.veido_barrage_icon_hl);
-
-
                 } else {
 
                     if (getDanmakuView().isShown()) {
@@ -592,38 +781,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
     }
     public BaseDanmakuParser getParser() {
-        if (mParser == null) {
-            if (mDumakuFile != null) {
-                mParser = createParser(getIsStream(mDumakuFile));
-            }
-        }
+
         return mParser;
     }
-
-    public DanmakuContext getDanmakuContext() {
-        return mDanmakuContext;
-    }
-
-    public IDanmakuView getDanmakuView() {
-        return mDanmakuView;
-    }
-
-    public long getDanmakuStartSeekPosition() {
-        return mDanmakuStartSeekPosition;
-    }
-
-    public void setDanmakuStartSeekPosition(long danmakuStartSeekPosition) {
-        this.mDanmakuStartSeekPosition = danmakuStartSeekPosition;
-    }
-
-    public void setDanmaKuShow(boolean danmaKuShow) {
-        this.mDanmaKuShow = danmaKuShow;
-    }
-
-    public boolean getDanmaKuShow() {
-        return mDanmaKuShow;
-    }
-
 
     @Override
     public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
@@ -640,32 +800,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     }
 
 
-    /**
-     * 全屏的UI逻辑
-     */
-    private void initFullUI(MySelfGSYVideoPlayer mySelfGSYVideoPlayer) {
-
-        if (mBottomProgressDrawable != null) {
-            mySelfGSYVideoPlayer.setBottomProgressBarDrawable(mBottomProgressDrawable);
-        }
-
-        if (mBottomShowProgressDrawable != null && mBottomShowProgressThumbDrawable != null) {
-            mySelfGSYVideoPlayer.setBottomShowProgressBarDrawable(mBottomShowProgressDrawable,
-                    mBottomShowProgressThumbDrawable);
-        }
-
-        if (mVolumeProgressDrawable != null) {
-            mySelfGSYVideoPlayer.setDialogVolumeProgressBar(mVolumeProgressDrawable);
-        }
-
-        if (mDialogProgressBarDrawable != null) {
-            mySelfGSYVideoPlayer.setDialogProgressBar(mDialogProgressBarDrawable);
-        }
-
-        if (mDialogProgressHighLightColor >= 0 && mDialogProgressNormalColor >= 0) {
-            mySelfGSYVideoPlayer.setDialogProgressColor(mDialogProgressHighLightColor, mDialogProgressNormalColor);
-        }
-    }
 
     public void seekTo(long position) {
         try {
@@ -686,32 +820,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
         startProgressTimer();
         mHadSeekTouch = true;
-       /* if (getGSYVideoManager() != null && mHadPlay) {
-            try {
-                //int progress = seekBar.getProgress();
-                int time = seekBar.getProgress() * getDuration() / 100;
-                System.out.println("time4:" + time);
-                //  int time = progress  * getDuration() / 100;
-                getGSYVideoManager().seekTo(time);
-                mBottomProgressBar.setProgress(seekBar.getProgress());
-                mProgressBar.setProgress(seekBar.getProgress());
-                setTextAndProgress(seekBar.getProgress());
-            } catch (Exception e) {
-                Debuger.printfWarning(e.toString());
-            }
-        };*/
-    }
-    int errorPosition = 0;
-
-    public int getErrorPosition() {
-        return errorPosition;
     }
 
-    public void setErrorPosition(int errorPosition) {
-        this.errorPosition = errorPosition;
-    }
-
-    int errortime = 0;
     /***
      * 拖动进度条
      */
@@ -731,13 +841,28 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             try {
                 //int progress = seekBar.getProgress();
                 int time = seekBar.getProgress() * getDuration() / 100;
-
-
                 //  int time = progress  * getDuration() / 100;
                 getGSYVideoManager().seekTo(time);
                 mBottomProgressBar.setProgress(seekBar.getProgress());
                 mProgressBar.setProgress(seekBar.getProgress());
+                if(mDLNAPlayer != null){
+                    mDLNAPlayer.seekTo(time+"", new DLNAControlCallback() {
+                        @Override
+                        public void onSuccess(@Nullable ActionInvocation invocation) {
+                            Log.e("投屏跳转Success","投屏跳转Success");
+                        }
 
+                        @Override
+                        public void onReceived(@Nullable ActionInvocation invocation, @Nullable Object... extra) {
+                            Log.e("投屏跳转onReceived","投屏跳转onReceived");
+                        }
+
+                        @Override
+                        public void onFailure(@Nullable ActionInvocation invocation, int errorCode, @Nullable String errorMsg) {
+                            Log.e("投屏跳转onFailure","投屏跳转onFailure");
+                        }
+                    });
+                }
             } catch (Exception e) {
                 Debuger.printfWarning(e.toString());
             }
@@ -768,8 +893,54 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
     }
 
+    @Override
+    public void onConnect(DeviceInfo deviceInfo, int errorCode) {
+        if (errorCode == CONNECT_INFO_CONNECT_SUCCESS) {
+            mDeviceInfo = deviceInfo;
+            Toast.makeText(mContext, "连接设备成功", Toast.LENGTH_SHORT).show();
+            startPlay();
+        }
+    }
+
+    @Override
+    public void onDisconnect(DeviceInfo deviceInfo, int type, int errorCode) {
+
+    }
 
 
+    /**
+     * 开始投屏播放
+     */
+    private void startPlay() {
+        Log.e("投屏开始播放","投屏开始播放");
+        Log.e("mOrginUrl",mOriginUrl+"");
+        String sourceUrl = mOriginUrl;
+        final MediaInfo mediaInfo = new MediaInfo();
+        if (!TextUtils.isEmpty(sourceUrl)) {
+            mediaInfo.setMediaId(Base64.encodeToString(sourceUrl.getBytes(), Base64.NO_WRAP));
+            mediaInfo.setUri(sourceUrl);
+        }
+        mediaInfo.setMediaType(curItemType);
+        Log.e("投屏信息",mediaInfo.toString());
+        mDLNAPlayer.setDataSource(mediaInfo);
+        mDLNAPlayer.start("",new DLNAControlCallback() {
+            @Override
+            public void onSuccess(@Nullable ActionInvocation invocation) {
+                Toast.makeText(mContext, "投屏成功", Toast.LENGTH_SHORT).show();
+                setStateAndUi(CURRENT_STATE_PAUSE);
+            }
+
+            @Override
+            public void onReceived(@Nullable ActionInvocation invocation, @Nullable Object... extra) {
+
+            }
+
+            @Override
+            public void onFailure(@Nullable ActionInvocation invocation, int errorCode, @Nullable String errorMsg) {
+                Toast.makeText(mContext, "投屏失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     public class TimeThread extends  Thread{
         @Override
@@ -804,23 +975,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     public int getFullId() {
         return GSYVideoManager.FULLSCREEN_ID;
     }
-  /*  @Override
-    public boolean dispatchKeyEvent( KeyEvent event) {
-        super.dispatchKeyShortcutEvent(event);
-        if ( event.getKeyCode() == KeyEvent.KEYCODE_DEL){//监听到删除按钮被按下
-            System.out.println("删除");
-            String text = edit_danmu.getText().toString();
-            if(text.length() > 0 ){//判断文本框是否有文字，如果有就去掉最后一位
-                String newText = text.substring(0, text.length() - 1);
-                edit_danmu.setText(newText);
-                edit_danmu.setSelection(newText.length());//设置焦点在最后
-            };
-        }
-        return super.dispatchKeyShortcutEvent(event);
-    }*/
-
-
-
 
 
     private Handler mHandler = new Handler(){
@@ -865,13 +1019,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             }
 
             if (mIfCurrentIsFullscreen) {
-
                 if (mFullscreenButton != null)
                     mFullscreenButton.setImageResource(getShrinkImageRes());
                 mFullscreenButton.setVisibility(GONE);
                 mTitleTextView.setVisibility(VISIBLE);
                 mLockScreen.setVisibility(VISIBLE);
-                mShare.setVisibility(GONE);
+                mShare.setVisibility(VISIBLE);
+                mMore.setVisibility(VISIBLE);
                 mBarrage.setVisibility(VISIBLE);
                 mTimeandbarray.setVisibility(VISIBLE);
                 playstart.setVisibility(GONE);
@@ -883,15 +1037,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 if(mCurrentState == CURRENT_STATE_PAUSE){
                     playstart2.setVisibility(VISIBLE);
                 }
-
-
             } else {
-
                 if (mFullscreenButton != null)
                     mFullscreenButton.setImageResource(getEnlargeImageRes());
                 mTitleTextView.setVisibility(GONE);
                 mLockScreen.setVisibility(GONE);
                 mShare.setVisibility(GONE);
+                mMore.setVisibility(GONE);
                 mBarrage.setVisibility(GONE);
                 controllerbottom.setVisibility(GONE);
                 playstart.setVisibility(VISIBLE);
@@ -1088,6 +1240,118 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     }
 
 
+
+
+    /**
+     * 触摸音量dialog，如需要自定义继承重写即可，记得重写dismissVolumeDialog
+     */
+    @Override
+    protected void showVolumeDialog(float deltaY, int volumePercent) {
+        if (mVolumeDialog == null) {
+            View localView = LayoutInflater.from(getActivityContext()).inflate(getVolumeLayoutId(), null);
+            if (localView.findViewById(getVolumeProgressId()) instanceof ProgressBar) {
+                mDialogVolumeProgressBar = ((ProgressBar) localView.findViewById(getVolumeProgressId()));
+                if (mVolumeProgressDrawable != null && mDialogVolumeProgressBar != null) {
+                    mDialogVolumeProgressBar.setProgressDrawable(mVolumeProgressDrawable);
+                }
+            }
+            mVolumeDialog = new Dialog(getActivityContext(), R.style.video_style_dialog_progress);
+            mVolumeDialog.setContentView(localView);
+            mVolumeDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            mVolumeDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+            mVolumeDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            mVolumeDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            WindowManager.LayoutParams localLayoutParams = mVolumeDialog.getWindow().getAttributes();
+            localLayoutParams.gravity = Gravity.TOP | Gravity.START;
+            localLayoutParams.width = getWidth();
+            localLayoutParams.height = getHeight();
+            int location[] = new int[2];
+            getLocationOnScreen(location);
+            localLayoutParams.x = location[0];
+            localLayoutParams.y = location[1];
+            mVolumeDialog.getWindow().setAttributes(localLayoutParams);
+
+        }
+        if (!mVolumeDialog.isShowing()) {
+            mVolumeDialog.show();
+        }
+        if (mDialogVolumeProgressBar != null) {
+            mDialogVolumeProgressBar.setProgress(volumePercent);
+        }
+        if(mDLNAPlayer!=null){
+            mDLNAPlayer.setVolume(volumePercent, new DLNAControlCallback() {
+                @Override
+                public void onSuccess(@Nullable ActionInvocation invocation) {
+                    Log.e("投屏设置音量onSuccess","投屏设置音量onSuccess");
+                }
+
+                @Override
+                public void onReceived(@Nullable ActionInvocation invocation, @Nullable Object... extra) {
+                    Log.e("投屏设置音量onReceived","投屏设置音量onReceived");
+                }
+
+                @Override
+                public void onFailure(@Nullable ActionInvocation invocation, int errorCode, @Nullable String errorMsg) {
+                    Log.e("投屏设置音量onFailure","投屏设置音量onFailure");
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void dismissVolumeDialog() {
+        if (mVolumeDialog != null) {
+            mVolumeDialog.dismiss();
+            mVolumeDialog = null;
+        }
+    }
+
+
+    /**
+     * 触摸亮度dialog，如需要自定义继承重写即可，记得重写dismissBrightnessDialog
+     */
+    @Override
+    protected void showBrightnessDialog(float percent) {
+        if (mBrightnessDialog == null) {
+            View localView = LayoutInflater.from(getActivityContext()).inflate(getBrightnessLayoutId(), null);
+            if (localView.findViewById(getBrightnessTextId()) instanceof TextView) {
+                mBrightnessDialogTv = (TextView) localView.findViewById(getBrightnessTextId());
+            }
+            mBrightnessDialog = new Dialog(getActivityContext(), R.style.video_style_dialog_progress);
+            mBrightnessDialog.setContentView(localView);
+            mBrightnessDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            mBrightnessDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+            mBrightnessDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            mBrightnessDialog.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+            mBrightnessDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            WindowManager.LayoutParams localLayoutParams = mBrightnessDialog.getWindow().getAttributes();
+            localLayoutParams.gravity = Gravity.TOP | Gravity.END;
+            localLayoutParams.width = getWidth();
+            localLayoutParams.height = getHeight();
+            int location[] = new int[2];
+            getLocationOnScreen(location);
+            localLayoutParams.x = location[0];
+            localLayoutParams.y = location[1];
+            mBrightnessDialog.getWindow().setAttributes(localLayoutParams);
+        }
+        if (!mBrightnessDialog.isShowing()) {
+            mBrightnessDialog.show();
+        }
+        if (mBrightnessDialogTv != null)
+            mBrightnessDialogTv.setText((int) (percent * 100) + "%");
+    }
+
+
+    @Override
+    protected void dismissBrightnessDialog() {
+        if (mBrightnessDialog != null) {
+            mBrightnessDialog.dismiss();
+            mBrightnessDialog = null;
+        }
+    }
+
+
+
     protected void showAllWidget() {
         setViewShowState(mBottomContainer, VISIBLE);
         setViewShowState(controllerbottom, VISIBLE);
@@ -1155,8 +1419,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     @Override
     protected void changeUiToPlayingShow() {
         Log.e("播放器","changeUiToPlayingShow");
-
-
         setmError(true);
         mTouch = true;
         layout_bottom.setVisibility(VISIBLE);
@@ -1178,8 +1440,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             setViewShowState(controllerbottom, GONE);
             setViewShowState(getFullscreenButton(),VISIBLE);
         }
-
-
         updateStartImage();
         upPlayImage();
         danmakuOnResume();
@@ -1328,7 +1588,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mThumbImageViewLayout, GONE);
         setViewShowState(mBottomProgressBar, GONE);
         setViewShowState(mLockScreen, GONE);
-
         upPlayImage();
     }
 
@@ -1345,7 +1604,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         setViewShowState(mThumbImageViewLayout, GONE);
         setViewShowState(mBottomProgressBar, VISIBLE);
         setViewShowState(mLockScreen, GONE);
-
         upPlayImage();
     }
 
@@ -1496,20 +1754,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
     }
 
-    /*protected int  positionCurrent = 0;
-    protected boolean taskOk = false;*/
     public void setTextAndProgress(int secProgress) {
-      /*  if(positionCurrent == -1){
-            taskOk = true;
-           // return;
-        } else{
-            taskOk = false;
-        }*/
+
         int positionCurrent = getCurrentPositionWhenPlaying();
-    /*    if(taskOk){
-            positionCurrent = 0;
-            cancelProgressTimer();
-        }*/
 
         int duration = getDuration();
 
@@ -1519,7 +1766,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             setProgressAndTime(0, 0, positionCurrent, duration);
         }else {
             setProgressAndTime(progress, secProgress, positionCurrent, duration);
-            //  setProgressAndTime(progress, secProgress, position, duration);
+
         }
     }
 
@@ -1620,12 +1867,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
     }
 
-    public void setDanmaKuStream(File is) {
-        mDumakuFile = is;
-        if (!getDanmakuView().isPrepared()) {
-            onPrepareDanmaku((MySelfGSYVideoPlayer) getCurrentPlayer());
-        }
-    }
+
 
     protected void setProgressAndTime(int progress, int secProgress, int currentTime, int totalTime) {
 
@@ -1698,6 +1940,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         MySelfGSYVideoPlayer sf = (MySelfGSYVideoPlayer) from;
         MySelfGSYVideoPlayer st = (MySelfGSYVideoPlayer) to;
         st.surface_container = sf.surface_container;
+        st.mContext = sf.mContext;
         st.mUriList = sf.mUriList;
         st.urls = sf.urls;
         st.mTouch = sf.mTouch;
@@ -1724,12 +1967,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             }
         }
         super.cloneParams(from, to);
-        //  addDanmaku(true);
 
-
-   /*     bmp = BitmapFactory.decodeResource(this.getResources(), R.drawable.video_play_pressed);
-        sf.playstart2.setImageBitmap(bmp);*/
-        //  st.playstart2 = sf.playstart2;
     }
 
 
@@ -1799,9 +2037,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         // 在底部显示
         window.showAtLocation(this.findViewById(R.id.danmu),
                 Gravity.BOTTOM, 0, 0);
-
-
-
 
         final ImageView fontColor1 = view.findViewById(R.id.fontColor1);
         final ImageView fontColor2 = view.findViewById(R.id.fontColor2);
@@ -2394,13 +2629,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     public boolean setUp(ArrayList<GSYADVideoModel> url, boolean cacheWithPlay, File cachePath, Map<String, String> mapHeadData, String title){
         mCache = cacheWithPlay;
         mCachePath = cachePath;
-
-
         if (isCurrentMediaListener() &&
                 (System.currentTimeMillis() - mSaveChangeViewTIme) < CHANGE_DELAY_TIME)
             return false;
         mCurrentState = CURRENT_STATE_NORMAL;
-
         this.mTitle = title;
         setStateAndUi(CURRENT_STATE_NORMAL);
         setAdUp(url,mCache, 0);
@@ -2475,6 +2707,33 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
 
     private int mSourcePosition = 0;
+
+  /*  public class BrowseRegistryListener extends DefaultRegistryListener {
+        @Override
+        public void deviceAdded(Registry registry, final Device device) {
+            super.deviceAdded(registry, device);
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    mDevicesAdapter.add(device);
+                }
+            });
+        }
+
+        @Override
+        public void deviceRemoved(Registry registry, final Device device) {
+            super.deviceRemoved(registry, device);
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    mDevicesAdapter.remove(device);
+                }
+            });
+        }
+    }
+
+
+    private void runOnUiThread(Runnable r) {
+        handler.post(r);
+    }*/
 
 
 }

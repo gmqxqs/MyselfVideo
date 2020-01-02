@@ -25,9 +25,9 @@ android {
             //设置支持的SO库架构
             abiFilters 'armeabi', 'armeabi-v7a', 'x86'
         }
-     /*   packagingOptions {
+        packagingOptions {
             exclude 'META-INF/beans.xml'
-        }*/
+        }
 
     }
 
@@ -109,8 +109,12 @@ dependencies {
 
     //implementation "com.shuyu:gsyVideoPlayer-ex_so:$gsyVideoVersion"
     compile 'com.android.support:multidex:1.0.1'
+
     debugImplementation dataDependencies.leakcanary
     releaseImplementation dataDependencies.leakcanary_no_op
     api project(path: ':gsyVideoPlayer-java')
+
+ //   compile 'com.github.ChillingVan:android-openGL-canvas:v1.4.0.0'
+
 
 }

@@ -57,7 +57,6 @@ public class FloatingVideo extends StandardGSYVideoPlayer {
 
         mTextureViewContainer = (ViewGroup) findViewById(R.id.surface_container);
         mStartButton = findViewById(R.id.start);
-
         if (isInEditMode())
             return;
         mScreenWidth = getActivityContext().getResources().getDisplayMetrics().widthPixels;
