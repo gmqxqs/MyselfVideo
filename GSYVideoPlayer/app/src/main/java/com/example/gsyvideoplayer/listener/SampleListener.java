@@ -143,10 +143,9 @@ public class SampleListener implements VideoAllCallBack {
 
     }
 
-    @Override
-    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
 
-    }
+
+
 
 
 }

@@ -76,7 +76,7 @@ public interface VideoAllCallBack {
     //点击了全屏播放中的空白区域，objects[0]是title，object[1]是当前所处播放器（全屏或非全屏）
     void onClickBlankFullscreen(String url, Object... objects);
 
-    void onClickSend(String url,DanmuBean danmuBean,Object...objects);
+
 
 
 }

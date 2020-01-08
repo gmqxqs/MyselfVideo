@@ -3,6 +3,7 @@ package com.shuyu.gsyvideoplayer.video;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -52,6 +53,7 @@ public class GSYSampleADVideoPlayer extends ListGSYVideoPlayer {
     @Override
     protected void init(Context context) {
         super.init(context);
+        Log.e("list初始化","list初始化");
         mJumpAd = findViewById(R.id.jump_ad);
         mADTime = (TextView) findViewById(R.id.ad_time);
         mWidgetContainer = (ViewGroup) findViewById(R.id.widget_container);

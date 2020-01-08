@@ -181,8 +181,5 @@ public class WebDetailActivity extends GSYBaseActivityDetail<StandardGSYVideoPla
     }
 
 
-    @Override
-    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
 
-    }
 }

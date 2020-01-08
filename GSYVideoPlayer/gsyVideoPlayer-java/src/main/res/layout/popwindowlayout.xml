@@ -51,6 +51,7 @@
                 android:singleLine="true"
                 android:hint="@string/danmu"
                 android:textColorHint="#33FFFFFF"
+                android:maxLength="25"
                 android:imeOptions="flagNoExtractUi"/>
         </LinearLayout>
 

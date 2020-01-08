@@ -62,9 +62,7 @@ public class DetailADPlayer extends GSYBaseActivityDetail<ListGSYVideoPlayer> {
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setImageResource(R.mipmap.xxx1);
         detailPlayer.setThumbImageView(imageView);
-
         resolveNormalVideoUI();
-
         detailPlayer.setIsTouchWiget(true);
         //关闭自动旋转
         detailPlayer.setRotateViewAuto(false);
@@ -120,10 +118,7 @@ public class DetailADPlayer extends GSYBaseActivityDetail<ListGSYVideoPlayer> {
         gsyVideoPlayer.getBackButton().setVisibility(View.GONE);
     }
 
-    @Override
-    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
 
-    }
 
 
     private void resolveNormalVideoUI() {

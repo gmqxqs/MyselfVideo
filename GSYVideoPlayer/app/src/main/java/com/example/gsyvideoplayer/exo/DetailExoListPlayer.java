@@ -139,10 +139,7 @@ public class DetailExoListPlayer extends GSYBaseActivityDetail<GSYExo2PlayerView
         gsyVideoPlayer.getBackButton().setVisibility(View.GONE);
     }
 
-    @Override
-    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
 
-    }
 
 
     private void resolveNormalVideoUI() {

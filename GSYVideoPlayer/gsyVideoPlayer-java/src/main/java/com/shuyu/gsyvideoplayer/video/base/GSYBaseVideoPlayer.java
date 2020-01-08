@@ -569,6 +569,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
         }
 
     }
+    static GSYBaseVideoPlayer gsyVideoPlayer;
 
     /**
      * 利用window层播放全屏效果
@@ -579,64 +580,48 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
      */
     @SuppressWarnings("ResourceType, unchecked")
     public GSYBaseVideoPlayer startWindowFullscreen(final Context context, final boolean actionBar, final boolean statusBar) {
-
         mSystemUiVisibility = ((Activity) context).getWindow().getDecorView().getSystemUiVisibility();
-
         hideSupportActionBar(context, actionBar, statusBar);
-
         if (mHideKey) {
             hideNavKey(context);
         }
-
         this.mActionBar = actionBar;
-
         this.mStatusBar = statusBar;
-
         mListItemRect = new int[2];
-
         mListItemSize = new int[2];
-
         final ViewGroup vp = getViewGroup();
-
         removeVideo(vp, getFullId());
-
         //处理暂停的逻辑
         pauseFullCoverLogic();
-
         if (mTextureViewContainer.getChildCount() > 0) {
             mTextureViewContainer.removeAllViews();
         }
-
         saveLocationStatus(context, statusBar, actionBar);
-
         //切换时关闭非全屏定时器
         cancelProgressTimer();
-
         boolean hadNewConstructor = true;
-
         try {
             GSYBaseVideoPlayer.this.getClass().getConstructor(Context.class, Boolean.class);
         } catch (Exception e) {
             hadNewConstructor = false;
         }
-
         try {
             //通过被重载的不同构造器来选择
             Constructor<GSYBaseVideoPlayer> constructor;
-            final GSYBaseVideoPlayer gsyVideoPlayer;
+
+            Log.e("hadNewConstructor",hadNewConstructor+"");
             if (!hadNewConstructor) {
                 constructor = (Constructor<GSYBaseVideoPlayer>) GSYBaseVideoPlayer.this.getClass().getConstructor(Context.class);
                 gsyVideoPlayer = constructor.newInstance(mContext);
             } else {
                 constructor = (Constructor<GSYBaseVideoPlayer>) GSYBaseVideoPlayer.this.getClass().getConstructor(Context.class, Boolean.class);
-                gsyVideoPlayer = constructor.newInstance(mContext, true);
-            }
+                gsyVideoPlayer = constructor.newInstance(mContext,true);
 
+            }
             gsyVideoPlayer.setId(getFullId());
             gsyVideoPlayer.setIfCurrentIsFullscreen(true);
             gsyVideoPlayer.setVideoAllCallBack(mVideoAllCallBack);
             cloneParams(this, gsyVideoPlayer);
-
             if (gsyVideoPlayer.getFullscreenButton() != null) {
                 gsyVideoPlayer.getFullscreenButton().setImageResource(getShrinkImageRes());
                 gsyVideoPlayer.getFullscreenButton().setOnClickListener(new OnClickListener() {
@@ -650,7 +635,6 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
                     }
                 });
             }
-
             if (gsyVideoPlayer.getBackButton() != null) {
                 gsyVideoPlayer.getBackButton().setVisibility(VISIBLE);
                 gsyVideoPlayer.getBackButton().setOnClickListener(new OnClickListener() {
@@ -666,11 +650,9 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
                     }
                 });
             }
-
             final LayoutParams lpParent = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             final FrameLayout frameLayout = new FrameLayout(context);
             frameLayout.setBackgroundColor(Color.BLACK);
-
             if (mShowFullAnimation) {
                 mFullAnimEnd = false;
                 LayoutParams lp = new LayoutParams(getWidth(), getHeight());
@@ -695,13 +677,11 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
             }
 
             gsyVideoPlayer.addTextureView();
-
             gsyVideoPlayer.startProgressTimer();
-
             getGSYVideoManager().setLastListener(this);
             getGSYVideoManager().setListener(gsyVideoPlayer);
-
             checkoutState();
+
             return gsyVideoPlayer;
         } catch (Exception e) {
             e.printStackTrace();
@@ -888,7 +868,6 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
      */
     public GSYBaseVideoPlayer getCurrentPlayer() {
         if (getFullWindowPlayer() != null) {
-            System.out.println("获得全屏播放器");
             return getFullWindowPlayer();
         }
         if (getSmallWindowPlayer() != null) {

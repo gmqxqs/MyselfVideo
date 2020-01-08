@@ -91,6 +91,7 @@ public class DanmakuVideoPlayer extends StandardGSYVideoPlayer {
 
     @Override
     protected void init(Context context) {
+        Log.e("DanmakuVideoPlayer","DanmakuVideoPlayer");
         super.init(context);
 
         mDanmakuView = (DanmakuView) findViewById(R.id.danmaku_view);
@@ -258,7 +259,7 @@ public class DanmakuVideoPlayer extends StandardGSYVideoPlayer {
         mDanmakuContext = DanmakuContext.create();
         mDanmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false).setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f)
                 .setCacheStuffer(new SpannedCacheStuffer(), danamakuAdapter) // 图文混排使用SpannedCacheStuffer
-                .setMaximumLines(maxLinesPair)
+                //.setMaximumLines(maxLinesPair)
                 .preventOverlapping(overlappingEnablePair);
 
         if (mDanmakuView != null) {
@@ -267,7 +268,7 @@ public class DanmakuVideoPlayer extends StandardGSYVideoPlayer {
             }
 
             //todo 这是为了demo效果，实际上需要去掉这个，外部传输文件进来
-            mParser = createParser(this.getResources().openRawResource(R.raw.comments));
+            mParser = createParser(this.getResources().openRawResource(R.raw.comments2));
 
             mDanmakuView.setCallback(new master.flame.danmaku.controller.DrawHandler.Callback() {
                 @Override

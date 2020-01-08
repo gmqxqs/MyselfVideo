@@ -130,10 +130,8 @@ public class DetailADPlayer2 extends GSYBaseADActivityDetail<NormalGSYVideoPlaye
         gsyVideoPlayer.getBackButton().setVisibility(View.GONE);
     }
 
-    @Override
-    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
 
-    }
+
 
 
     /**

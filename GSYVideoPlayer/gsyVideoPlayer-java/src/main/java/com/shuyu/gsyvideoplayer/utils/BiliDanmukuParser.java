@@ -37,6 +37,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,7 +64,9 @@ public class BiliDanmukuParser extends BaseDanmakuParser {
 
   public BaseDanmaku item = null;
 
+  public long tempTime;
 
+  public List<DanmuBean> danmuBeanListAll = new ArrayList<>();
 
   @Override
   public Danmakus parse() {
@@ -79,35 +82,44 @@ public class BiliDanmukuParser extends BaseDanmakuParser {
           sb.append((char) ch);
         }
         String str = sb.toString();
-        Log.e("dataSource",str);
+        Log.e("dataSourcetest",str);
         Gson gson = new Gson();
         List<DanmuBean> danmuBeanList = gson.fromJson(str, new TypeToken<List<DanmuBean>>(){}.
                 getType());
         for(int i = 0; i < danmuBeanList.size(); i++){
-         /* Log.e("dataSource",danmuBeanList.get(i).getDisplayTime()+"");
-          Log.e("dataSource",danmuBeanList.get(i).getFontSize()+"");
-          Log.e("dataSource",danmuBeanList.get(i).getFontColor()+"");
-          Log.e("dataSource",danmuBeanList.get(i).getType()+"");
-          Log.e("dataSource",danmuBeanList.get(i).getDanmuText()+"");*/
-          long time = (long) (danmuBeanList.get(i).getDisplayTime() * 1000); // 出现时间
+
+          Log.e("dataSourceText",danmuBeanList.get(i).getDanmuText()+"");
+         // long time = (long) (danmuBeanList.get(i).getDisplayTime() * 1000); // 出现时间
+          long time = (long) (danmuBeanList.get(i).getDisplayTime()); // 出现时间
+          for(DanmuBean danmuBean: danmuBeanListAll){
+            if(danmuBean != null){
+              if(time == danmuBean.getDisplayTime()){
+                time = time + 1;
+              }
+            }
+          }
+          Log.e("testTime",time+"");
           int type = danmuBeanList.get(i).getType(); // 弹幕类型
-          float textSize = danmuBeanList.get(i).getFontSize(); // 字体大小
+          int textSize = danmuBeanList.get(i).getFontSize(); // 字体大小
           int color = (int) ((0x00000000ff000000 | danmuBeanList.get(i).getFontColor()) & 0x00000000ffffffff); // 颜色
+          String text = danmuBeanList.get(i).getDanmuText();
           // int poolType = Integer.parseInt(values[5]); // 弹幕池类型（忽略
           item = mContext.mDanmakuFactory.createDanmaku(type, mContext);
           if (item != null) {
             item.setTime(time);
             item.textSize = textSize * (mDispDensity - 0.6f);
             item.textColor = color;
+            item.priority = 8;
             item.textShadowColor = color <= Color.BLACK ? Color.WHITE : Color.BLACK;
-            item.text = danmuBeanList.get(i).getDanmuText();
+            item.text = text;
+            //DanmuBean(long displayTime,int type,int fontSize, long fontColor,String danmuText)
+            DanmuBean danmuBean = new DanmuBean(time,type,textSize,color,text);
+            danmuBeanListAll.add(danmuBean);
           }
           item.setTimer(mTimer);
           item.flags = mContext.mGlobalFlagValues;
-          Object lock = result.obtainSynchronizer();
-          synchronized (lock) {
-            result.addItem(item);
-          }
+
+          result.addItem(item);
           item = null;
 
         }

@@ -88,8 +88,5 @@ public class SimpleDetailActivityMode1 extends GSYBaseActivityDetail<StandardGSY
     }
 
 
-    @Override
-    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
 
-    }
 }
