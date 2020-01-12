@@ -209,7 +209,11 @@ public class MyselfActivity extends AppCompatActivity {
                         for(DeviceInfo deviceInfo : deviceInfos){
                             Log.e("投屏设备",deviceInfo.toString());
                             Log.e("投屏设备",deviceInfo.getName());
-                            if(deviceInfo.getName().equals("VIDAA-cc DMR")){
+                            /*if(deviceInfo.getName().equals("VIDAA-cc DMR")){
+                                videoPlayer.startScreen(deviceInfo);
+                                return;
+                            }*/
+                            if(deviceInfo.getName().equals("VIDAA-cc")){
                                 videoPlayer.startScreen(deviceInfo);
                                 return;
                             }

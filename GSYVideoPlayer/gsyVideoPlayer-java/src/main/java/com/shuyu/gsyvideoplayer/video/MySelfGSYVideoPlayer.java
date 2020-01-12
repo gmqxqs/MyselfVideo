@@ -842,9 +842,11 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 //int progress = seekBar.getProgress();
                 int time = seekBar.getProgress() * getDuration() / 100;
                 //  int time = progress  * getDuration() / 100;
+
                 getGSYVideoManager().seekTo(time);
                 mBottomProgressBar.setProgress(seekBar.getProgress());
                 mProgressBar.setProgress(seekBar.getProgress());
+                Log.e("投屏跳转",time+"");
                 if(mDLNAPlayer != null){
                     mDLNAPlayer.seekTo(time+"", new DLNAControlCallback() {
                         @Override
@@ -923,7 +925,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mediaInfo.setMediaType(curItemType);
         Log.e("投屏信息",mediaInfo.toString());
         mDLNAPlayer.setDataSource(mediaInfo);
-        mDLNAPlayer.start("",new DLNAControlCallback() {
+        mDLNAPlayer.start("30000",new DLNAControlCallback() {
             @Override
             public void onSuccess(@Nullable ActionInvocation invocation) {
                 Toast.makeText(mContext, "投屏成功", Toast.LENGTH_SHORT).show();

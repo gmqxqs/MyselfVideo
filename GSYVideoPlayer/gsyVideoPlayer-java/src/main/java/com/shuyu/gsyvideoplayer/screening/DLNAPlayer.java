@@ -432,7 +432,7 @@ public class DLNAPlayer {
             @Override
             public void success(ActionInvocation invocation) {
                 super.success(invocation);
-                seekTo(time,callback);
+               // seekTo(time,callback);
                 play(callback);
             }
 
