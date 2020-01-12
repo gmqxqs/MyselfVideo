@@ -42,7 +42,7 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
  */
 
 public abstract class GSYVideoControlView extends GSYVideoView implements View.OnClickListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener {
-    //    //手指放下的位置
+    //手指放下的位置
     protected int mDownPosition;
 
     //手势调节音量的大小
@@ -215,10 +215,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         mBottomProgressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
         mThumbImageViewLayout = (RelativeLayout) findViewById(R.id.thumb);
         mLockScreen = (ImageView) findViewById(R.id.lock_screen);
-
         mLoadingProgressBar = findViewById(R.id.loading);
-
-
 
         if (isInEditMode())
             return;

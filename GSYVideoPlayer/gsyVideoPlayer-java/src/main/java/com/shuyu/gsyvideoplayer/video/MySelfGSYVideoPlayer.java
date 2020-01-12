@@ -74,6 +74,7 @@ import master.flame.danmaku.danmaku.loader.IllegalDataException;
 import master.flame.danmaku.danmaku.loader.android.DanmakuLoaderFactory;
 import master.flame.danmaku.danmaku.model.BaseDanmaku;
 import master.flame.danmaku.danmaku.model.DanmakuTimer;
+import master.flame.danmaku.danmaku.model.Duration;
 import master.flame.danmaku.danmaku.model.IDisplayer;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
 import master.flame.danmaku.danmaku.model.android.Danmakus;
@@ -89,8 +90,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     private  Context contextFirst;
     private  static List<DanmuBean> danmuBeanList = new ArrayList<>();
     public void setDanmuBeanList(List<DanmuBean> danmuBeanList) {
-       this.danmuBeanList = danmuBeanList;
-
+        this.danmuBeanList = danmuBeanList;
     }
     private static  List<DanmuBean> danmuBeanListAll = new ArrayList<>();
     public void  setDanmuBeanListAll(List<DanmuBean> danmuBeanList) {
@@ -99,14 +99,23 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
            danmuBeanListAll.add(danmuBean);
         }
 
-        if(requestDanmu > 0){
-            //initDanmaku(danmuBeanList);
-            for(DanmuBean danmuBean : danmuBeanList){
 
+        for(int i = 0; i < danmuBeanList.size(); i++){
+            for(int j = i+1; j < danmuBeanList.size(); j++){
+                if(danmuBeanList.get(j).getDisplayTime() == danmuBeanList.get(i).getDisplayTime()){
+                    danmuBeanList.get(j).setDisplayTime(danmuBeanList.get(j).getDisplayTime()+1);
+                }
+            }
+
+        }
+
+        if(mCurrentState == CURRENT_STATE_PLAYING){
+            for(DanmuBean danmuBean : danmuBeanList){
                 addDanmaku2(danmuBean);
             }
-           // initDanmaku(danmuBeanList,60000L);
         }
+
+
 
 
     }
@@ -133,7 +142,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     private  static IDanmakuView mDanmakuView;//弹幕view
     private  DanmakuContext mDanmakuContext;
     private long mDanmakuStartSeekPosition = -1;
-    private static boolean mDanmaKuShow = false;
+    private  boolean mDanmaKuShow = false;
     private File mDumakuFile;
     private LoadingDialog2 mLoadingDialog;
     protected  TextView mSystemTime;
@@ -150,7 +159,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected  ImageView newstart;
     protected  LinearLayout replay;
     protected  TextView replay_text;
-    protected ProgressBar bottom_progressbar;
+
     protected  LinearLayout layout_bottom;
     protected  TextView batteryText;
     protected BatteryView batteryView;
@@ -266,6 +275,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         controllerbottom = findViewById(R.id.controllerbottom);
         playstart = findViewById(R.id.playstart);
         playstart2 = findViewById(R.id.playstart2);
+        playstart2 = findViewById(R.id.playstart2);
         playbottom = findViewById(R.id.playbottom);
         mBarrage = findViewById(R.id.barrage);
         mShare = findViewById(R.id.share);
@@ -273,7 +283,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mTotalbottom = findViewById(R.id.totalbottom);
         replay = findViewById(R.id.replay);
         replay_text = findViewById(R.id.replay_text);
-        bottom_progressbar = findViewById(R.id.bottom_progressbar);
+     //   bottom_progressbar = findViewById(R.id.bottom_progressbar);
         mDanmu = findViewById(R.id.danmu);
         mDanmuImage = findViewById(R.id.danmuImage);
         mDanmuText = findViewById(R.id.danmuText);
@@ -448,6 +458,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     public void onSendDanmuEvent (SendDanmuEvent e) {
 
         if(danmuCallBack!=null){
+            Log.e("初始化弹幕发送",e.getDanmuBean().toString());
             danmuCallBack.onClickSend(e.getDanmuBean());
         }
 
@@ -473,83 +484,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
     }
 
-    public void initDanmaku(List<DanmuBean> list) {
 
-        if(list == null){
-
-            return;
-        }
-
-        // 设置最大显示行数
-        HashMap<Integer, Integer> maxLinesPair = new HashMap<Integer, Integer>();
-        maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_RL, 5); // 滚动弹幕最大显示5行
-        // 设置是否禁止重叠
-        HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<Integer, Boolean>();
-        overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, true);
-        overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
-
-        DanamakuAdapter  danamakuAdapter = new DanamakuAdapter(mDanmakuView);
-        mDanmakuContext = DanmakuContext.create();
-        mDanmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false).setScrollSpeedFactor(1.2f).setScaleTextSize(1.2f)
-                .setCacheStuffer(new SpannedCacheStuffer(), danamakuAdapter) // 图文混排使用SpannedCacheStuffer
-              //  .setMaximumLines(maxLinesPair)
-                .preventOverlapping(overlappingEnablePair);
-        if (mDanmakuView != null) {
-
-            //todo 这是为了demo效果，实际上需要去掉这个，外部传输文件进来
-            Gson gson = new Gson();
-            String str =  gson.toJson(list);
-
-            byte[] byteArray = str.getBytes();
-            ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
-            mParser = createParser(bis);
-
-            //    mDanmakuView.enableDanmakuDrawingCache(true);
-            mDanmakuView.prepare(mParser,mDanmakuContext);
-            //  mDanmakuView.showFPS(true);
-            mDanmakuView.enableDanmakuDrawingCache(true);
-            mDanmakuView.setCallback(new master.flame.danmaku.controller.DrawHandler.Callback() {
-                @Override
-                public void updateTimer(DanmakuTimer timer) {
-                  //  Log.e("初始化弹幕","弹幕准备4");
-                }
-
-                @Override
-                public void drawingFinished() {
-
-                   // getDanmakuView().start();
-
-                }
-
-                @Override
-                public void danmakuShown(BaseDanmaku danmaku) {
-
-
-                }
-
-                @Override
-                public void prepared() {
-
-                    if (getDanmakuView() != null) {
-
-
-
-                        getDanmakuView().start();
-
-
-                        if (getDanmakuStartSeekPosition() != -1) {
-                            resolveDanmakuSeek(MySelfGSYVideoPlayer.this, getDanmakuStartSeekPosition());
-                            setDanmakuStartSeekPosition(-1);
-                        }
-                        resolveDanmakuShow();
-                    } else{
-
-                    }
-                }
-            });
-
-        }
-    }
 
 
     private InputStream getIsStream(File file) {
@@ -661,49 +596,135 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
     }
 
-    private void addDanmaku2(DanmuBean danmuBean){
 
+    public void initDanmaku(List<DanmuBean> list) {
+
+        if(list == null){
+
+            return;
+        }
+
+        // 设置最大显示行数
+        HashMap<Integer, Integer> maxLinesPair = new HashMap<Integer, Integer>();
+        maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_RL, 5); // 滚动弹幕最大显示5行
+        // 设置是否禁止重叠
+        HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<Integer, Boolean>();
+        overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, true);
+        overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
+
+        DanamakuAdapter  danamakuAdapter = new DanamakuAdapter(mDanmakuView);
+
+        if (mDanmakuView != null) {
+            //todo 这是为了demo效果，实际上需要去掉这个，外部传输文件进来
+            Gson gson = new Gson();
+            String str =  gson.toJson(list);
+            byte[] byteArray = str.getBytes();
+            ByteArrayInputStream bis = new ByteArrayInputStream(byteArray);
+            mParser = createParser(bis);
+            mDanmakuContext = DanmakuContext.create();
+              /*  mDanmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false).setScrollSpeedFactor(2.0f).setScaleTextSize(1.2f)
+                        .setCacheStuffer(new SpannedCacheStuffer(), danamakuAdapter) // 图文混排使用SpannedCacheStuffer
+                        //  .setMaximumLines(maxLinesPair)
+                        .preventOverlapping(overlappingEnablePair);*/
+            mDanmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false).setScrollSpeedFactor(2.0f)
+                    .setCacheStuffer(new SpannedCacheStuffer(), danamakuAdapter) // 图文混排使用SpannedCacheStuffer
+                    //  .setMaximumLines(maxLinesPair)
+                    .preventOverlapping(overlappingEnablePair);
+
+            //    mDanmakuView.enableDanmakuDrawingCache(true);
+         /*   mDanmakuView.prepare(mParser,mDanmakuContext);
+            //  mDanmakuView.showFPS(true);*/
+            mDanmakuView.enableDanmakuDrawingCache(false);
+            mDanmakuView.setCallback(new master.flame.danmaku.controller.DrawHandler.Callback() {
+                @Override
+                public void updateTimer(DanmakuTimer timer) {
+                    //  Log.e("初始化弹幕","弹幕准备4");
+                }
+
+                @Override
+                public void drawingFinished() {
+
+                    // getDanmakuView().start();
+
+                }
+
+                @Override
+                public void danmakuShown(BaseDanmaku danmaku) {
+
+
+                }
+
+                @Override
+                public void prepared() {
+
+                    if (getDanmakuView() != null) {
+
+                        getDanmakuView().start();
+
+                        if (getDanmakuStartSeekPosition() != -1) {
+                            resolveDanmakuSeek(MySelfGSYVideoPlayer.this, getDanmakuStartSeekPosition());
+                            setDanmakuStartSeekPosition(-1);
+                        }
+                        resolveDanmakuShow();
+                    }
+                }
+            });
+
+        }
+    }
+
+    private void addDanmaku2(DanmuBean danmuBean){
+        int[] margins = {200,300,400};
+        int maginTop = 0;
+        int index = (int) (Math.random() * margins.length);
+        maginTop = margins[index];
+        if(mDanmakuContext != null){
+            mDanmakuContext = null;
+        }
         mDanmakuContext = DanmakuContext.create();
-        mDanmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false).setScrollSpeedFactor(2.0f).setScaleTextSize(1.2f);
-               // .setCacheStuffer(new SpannedCacheStuffer(), danamakuAdapter) // 图文混排使用SpannedCacheStuffer
-                //  .setMaximumLines(maxLinesPair)
-               // .preventOverlapping(overlappingEnablePair);
+      //  mDanmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false).setScrollSpeedFactor(4.0f).setScaleTextSize(1.2f);
+        mDanmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false);
         BaseDanmaku danmaku = mDanmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL,mDanmakuContext);
         if (danmaku == null || mDanmakuView == null) {
 
             return;
         }
         danmaku.text = danmuBean.getDanmuText();
-
-        danmaku.padding = 5;
-        danmaku.priority = 8;  // 可能会被各种过滤器过滤并隐藏显示，所以提高等级
-        danmaku.isLive = true;
-
+        danmaku.padding = 10;
+        danmaku.priority = 16;  // 可能会被各种过滤器过滤并隐藏显示，所以提高等级
+        danmaku.isLive = false;
+    //    danmaku.paintHeight = 10.0f;
         danmaku.setTime(danmuBean.getDisplayTime());
-
-         danmaku.textSize = danmuBean.getFontSize() * (2.75f - 0.6f);
+        danmaku.duration = new Duration(10000);
+        danmaku.textSize = danmuBean.getFontSize() * (2.75f - 0.6f);
         danmaku.textColor = (int) ((0x00000000ff000000 | danmuBean.getFontColor()) & 0x00000000ffffffff); // 颜色;
         mDanmakuView.addDanmaku(danmaku);
-
+        Log.e("初始化弹幕添加数据",danmuBean.toString()+","+maginTop);
     }
 
     /**
      模拟添加弹幕数据
      */
     private void addDanmaku(String content,int size,boolean islive) {
-        BaseDanmaku danmaku = mDanmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
+        mDanmakuContext = DanmakuContext.create();
+        mDanmakuContext.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3).setDuplicateMergingEnabled(false).setScrollSpeedFactor(2.0f).setScaleTextSize(1.2f);
+        // .setCacheStuffer(new SpannedCacheStuffer(), danamakuAdapter) // 图文混排使用SpannedCacheStuffer
+        //  .setMaximumLines(maxLinesPair)
+        // .preventOverlapping(overlappingEnablePair);
+        BaseDanmaku danmaku = mDanmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL,mDanmakuContext);
+        if(danmaku == null){
+            Log.e("初始化弹幕输入弹幕数据","danmaku为空");
+        }
         if (danmaku == null || mDanmakuView == null) {
             return;
         }
         danmaku.text = content;
-
         danmaku.padding = 5;
        // danmaku.priority = 8;  // 可能会被各种过滤器过滤并隐藏显示，所以提高等级
-        danmaku.isLive = islive;
+        danmaku.isLive = false;
+        danmaku.duration = new Duration(10000);
         danmaku.setTime(mDanmakuView.getCurrentTime() + 500);
-
         danmaku.textSize = size * (mParser.getDisplayer().getDensity() - 0.6f);
-
         danmaku.textColor = (int)mChooseColor;
         mDanmakuView.addDanmaku(danmaku);
         DanmuBean danmuBean = new DanmuBean();
@@ -712,7 +733,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         danmuBean.setFontColor(mChooseColor);
         danmuBean.setDanmuText(content);
         danmuBean.setFontSize(size);
-       EventBus.getDefault().post(new SendDanmuEvent(danmuBean));
+        Log.e("初始化弹幕输入",danmuBean.toString());
+        EventBus.getDefault().post(new SendDanmuEvent(danmuBean));
     }
     public BaseDanmakuParser getParser() {
         if (mParser == null) {
@@ -869,11 +891,14 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             requestDanmu = time / (timeCycle * 1000);
 
             danmuBeanListAll.clear();
+            danmuBeanList.clear();
+            mDanmakuView.removeAllDanmakus(true);
+
             EventBus.getDefault().post(new ProgressEvent(requestDanmu));
         }
     }
 
-    protected void SurfaceUp() {
+    protected void touchSurfaceUp() {
         if (mChangePosition) {
             int duration = getDuration();
             int progress = mSeekTimePosition * 100 / (duration == 0 ? 1 : duration);
@@ -889,14 +914,24 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             try {
 
                 getGSYVideoManager().seekTo(mSeekTimePosition);
-
+                Log.e("初始化弹幕mSeekTimePosition",mSeekTimePosition + "");
+                if(timeCycle > 0 && mSeekTimePosition < 0){
+                    danmuBeanListAll.clear();
+                    danmuBeanList.clear();
+                    requestDanmu = 0;
+                    mDanmakuView.removeAllDanmakus(true);
+                    EventBus.getDefault().post(new ProgressEvent(0));
+                    danmakuOnPause();
+                }
                 if(timeCycle > 0 && mSeekTimePosition >= 0){
                     requestDanmu = mSeekTimePosition / (timeCycle * 1000);
                     if(requestDanmu >= 0){
                         danmuBeanListAll.clear();
+                        danmuBeanList.clear();
+                        mDanmakuView.removeAllDanmakus(true);
                         EventBus.getDefault().post(new ProgressEvent(requestDanmu));
+                        danmakuOnPause();
                     }
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1054,15 +1089,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mCurrentTimeTextView.setVisibility(GONE);
                 mTotalTimeTextView.setVisibility(GONE);
                 mPan.setVisibility(GONE);
-                bottom_progressbar.setVisibility(VISIBLE);
+             //   bottom_progressbar.setVisibility(GONE);
                 controllerbottom.setVisibility(VISIBLE);
                 if(mCurrentState == CURRENT_STATE_PAUSE){
                     playstart2.setVisibility(VISIBLE);
                 }
 
-
             } else {
-
                 if (mFullscreenButton != null)
                     mFullscreenButton.setImageResource(getEnlargeImageRes());
                 mTitleTextView.setVisibility(GONE);
@@ -1075,7 +1108,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mTotalTimeTextView.setVisibility(VISIBLE);
                 mTimeandbarray.setVisibility(GONE);
                 mPan.setVisibility(GONE);
-                bottom_progressbar.setVisibility(GONE);
+             //   bottom_progressbar.setVisibility(GONE);
                 playstart2.setVisibility(GONE);
             }
 
@@ -1413,6 +1446,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             setViewShowState(getFullscreenButton(),VISIBLE);
         }
         upPlayImage();
+        danmakuOnPause();
     }
 
 
@@ -1529,7 +1563,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     //将其他组件隐藏起来
     protected void changeUiToClear() {
         Debuger.printfLog("changeUiToClear");
-
         setViewShowState(mTopContainer, GONE);
         setViewShowState(playstart2,GONE);
         setViewShowState(mBottomContainer, GONE);
@@ -1790,8 +1823,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         super.onSeekComplete();
         int time = mProgressBar.getProgress() * getDuration() / 100;
         //如果已经初始化过的，直接seek到对于位置
+        Log.e("初始化弹幕isPrepared",getDanmakuView().isPrepared()+"");
         if (mHadPlay && getDanmakuView() != null && getDanmakuView().isPrepared()) {
             resolveDanmakuSeek(this, time);
+          //  setDanmakuStartSeekPosition(time);
         } else if (mHadPlay && getDanmakuView() != null && !getDanmakuView().isPrepared()) {
             //如果没有初始化过的，记录位置等待
             Log.e("弹幕初始化等待time",time+"");
@@ -1876,12 +1911,12 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 isRequest = true;
             }
             if(isFirst){
-                Log.e("初始化弹幕First","初始化弹幕First");
+
                 EventBus.getDefault().post(new ProgressEvent(0));
                 isFirst = false;
             } else {
+               // Log.e("初始化弹幕",isRequest+"");
                 if(isRequest){
-
                     Log.e("当前视频",getCurrentPlayer().toString());
                     EventBus.getDefault().post(new ProgressEvent(requestDanmu));
                 }
@@ -1911,6 +1946,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         MySelfGSYVideoPlayer sf = (MySelfGSYVideoPlayer) from;
         MySelfGSYVideoPlayer st = (MySelfGSYVideoPlayer) to;
         st.danmuBeanList = sf.danmuBeanList;
+        st.mDanmakuView = sf.mDanmakuView;
        // st.danmuCallBack = sf.danmuCallBack;
         st.surface_container = sf.surface_container;
         st.mUriList = sf.mUriList;
@@ -2033,6 +2069,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         final ImageView fontSmallSize = view.findViewById(R.id.fontSmallSize);
         final ImageView fontBigSize = view.findViewById(R.id.fontBigSize);
         final ImageView fontImage = view.findViewById(R.id.fontImage);
+        final LinearLayout fontImageLinearLayout = view.findViewById(R.id.fontImageLinearLayout);
         final LinearLayout fontDisplay = view.findViewById(R.id.fontDisplay);
         final EditText editText = view.findViewById(R.id.editText);
         final Button send = view.findViewById(R.id.send);
@@ -2087,6 +2124,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 InputMethodManager inputManager = (InputMethodManager) editText
                         .getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputManager.showSoftInput(editText, 0);
+
             }
         },200);
         editText.requestFocus();
@@ -2095,6 +2133,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             @Override
             public void onClick(View v) {
                 fontDisplay.setVisibility(GONE);
+                onVideoPause();
             }
         });
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -2104,15 +2143,15 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 fontDisplay.setVisibility(GONE);
                 if(!hasFocus){
                     //    InputMethodManager manager = ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
-                    if (imm != null)
-                        imm.hideSoftInputFromWindow(view.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+                   /* if (imm != null)
+                        imm.hideSoftInputFromWindow(view.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);*/
                 }
                 // hasFocus = !hasFocus;
                 count++;
             }
         });
 
-        fontImage.setOnClickListener(new OnClickListener() {
+     /*   fontImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -2131,6 +2170,24 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 }
 
 
+            }
+        });*/
+        fontImageLinearLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                count++;
+
+                InputMethodManager imm = (InputMethodManager)
+                        mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                if(count % 2 != 0){
+                    fontDisplay.startAnimation(mShowAction);
+                    fontDisplay.setVisibility(VISIBLE);
+                } else{
+                    //  fontDisplay.startAnimation(mHiddenAction);
+                    fontDisplay.setVisibility(GONE);
+                }
             }
         });
         fontSmallSize.setOnClickListener(new OnClickListener() {

@@ -192,7 +192,7 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    <ProgressBar
+  <!--  <ProgressBar
         android:id="@+id/bottom_progressbar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
@@ -201,7 +201,7 @@
         android:max="100"
         android:background="#FFFFFF"
         android:progressDrawable="@drawable/video_self_bottom_progress"
-        android:visibility="gone"/>
+        android:visibility="gone"/>-->
 <!--    <ImageView
         android:id="@+id/back_tiny"
         android:layout_width="24dp"
@@ -291,7 +291,8 @@
                     android:src="@drawable/veido_barrage_icon_nl"
                     android:layout_gravity="right|center_vertical"
                     android:visibility="gone"
-                    android:paddingLeft="30dp" />
+                    android:paddingLeft="30dp"
+                    android:layout_marginRight="27dp"/>
                 <ImageView
                     android:id="@+id/share"
                     android:layout_width="wrap_content"
@@ -358,8 +359,6 @@
             android:id="@+id/newstart"
             android:src="@drawable/vedio_default_play_icon"
             android:visibility="visible"/>
-
-
         <!--重播文字提示-->
         <TextView
             android:id="@+id/replay_text"

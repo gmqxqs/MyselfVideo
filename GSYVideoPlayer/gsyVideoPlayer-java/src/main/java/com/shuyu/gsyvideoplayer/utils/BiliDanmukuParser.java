@@ -103,7 +103,6 @@ public class BiliDanmukuParser extends BaseDanmakuParser {
           int textSize = danmuBeanList.get(i).getFontSize(); // 字体大小
           int color = (int) ((0x00000000ff000000 | danmuBeanList.get(i).getFontColor()) & 0x00000000ffffffff); // 颜色
           String text = danmuBeanList.get(i).getDanmuText();
-          // int poolType = Integer.parseInt(values[5]); // 弹幕池类型（忽略
           item = mContext.mDanmakuFactory.createDanmaku(type, mContext);
           if (item != null) {
             item.setTime(time);
@@ -112,12 +111,14 @@ public class BiliDanmukuParser extends BaseDanmakuParser {
             item.priority = 8;
             item.textShadowColor = color <= Color.BLACK ? Color.WHITE : Color.BLACK;
             item.text = text;
+            item.duration = new Duration(10000);
             //DanmuBean(long displayTime,int type,int fontSize, long fontColor,String danmuText)
             DanmuBean danmuBean = new DanmuBean(time,type,textSize,color,text);
             danmuBeanListAll.add(danmuBean);
+            item.setTimer(mTimer);
+            item.flags = mContext.mGlobalFlagValues;
           }
-          item.setTimer(mTimer);
-          item.flags = mContext.mGlobalFlagValues;
+
 
           result.addItem(item);
           item = null;
