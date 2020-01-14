@@ -93,6 +93,21 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     private  Handler handler;
     private  Context contextFirst;
     private static boolean mStopTrack,mStartTrack;
+    private boolean showDanmuIcon = true;
+
+    public void setShowDanmuIcon(boolean showDanmuIcon) {
+        this.showDanmuIcon = showDanmuIcon;
+        if(showDanmuIcon){
+            mBarrage.setVisibility(VISIBLE);
+            mDanmu.setVisibility(VISIBLE);
+            danmuSwitch.setVisibility(VISIBLE);
+        } else{
+            mBarrage.setVisibility(GONE);
+            mDanmu.setVisibility(GONE);
+            danmuSwitch.setVisibility(GONE);
+        }
+    }
+
     private  static List<DanmuBean> danmuBeanList = new ArrayList<>();
     public void setDanmuBeanList(List<DanmuBean> danmuBeanList) {
         this.danmuBeanList = danmuBeanList;
@@ -358,6 +373,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mDanmu = findViewById(R.id.danmu);
         mDanmuImage = findViewById(R.id.danmuImage);
         mDanmuText = findViewById(R.id.danmuText);
+
         new TimeThread().start();
         mLoading = findViewById(R.id.loading2);
         mDanmu.setOnClickListener(new OnClickListener() {
@@ -370,6 +386,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
             }
         });
+
         mDanmuImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -542,7 +559,10 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         playstart2.setImageBitmap(newBmp);
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> downloadDanmu
     }
 
     public static Activity findActivity(Context context) {
@@ -764,11 +784,15 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
         if (getGSYVideoManager() != null && mHadPlay) {
             try {
+<<<<<<< HEAD
                 //int progress = seekBar.getProgress();
 
                 time = seekBar.getProgress() * getDuration() / 100;
                 //  int time = progress  * getDuration() / 100;
 
+=======
+                time = seekBar.getProgress() * getDuration() / 100;
+>>>>>>> downloadDanmu
                 getGSYVideoManager().seekTo(time);
                 mBottomProgressBar.setProgress(seekBar.getProgress());
                 mProgressBar.setProgress(seekBar.getProgress());
@@ -1031,9 +1055,14 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mFullscreenButton.setVisibility(GONE);
                 mTitleTextView.setVisibility(VISIBLE);
                 mLockScreen.setVisibility(VISIBLE);
+<<<<<<< HEAD
                 mShare.setVisibility(VISIBLE);
                 mtv.setVisibility(VISIBLE);
                 mBarrage.setVisibility(VISIBLE);
+=======
+                mShare.setVisibility(GONE);
+               // mBarrage.setVisibility(VISIBLE);
+>>>>>>> downloadDanmu
                 mTimeandbarray.setVisibility(VISIBLE);
                 playstart.setVisibility(GONE);
                 mCurrentTimeTextView.setVisibility(GONE);
@@ -1045,6 +1074,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     playstart2.setVisibility(VISIBLE);
                 }
                 danmuSwitch.setVisibility(GONE);
+                if(showDanmuIcon){
+                    mBarrage.setVisibility(VISIBLE);
+                    mDanmu.setVisibility(VISIBLE);
+                } else{
+                    mBarrage.setVisibility(GONE);
+                    mDanmu.setVisibility(GONE);
+                }
 
             } else {
                 if (mFullscreenButton != null)
@@ -1060,9 +1096,12 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mTotalTimeTextView.setVisibility(VISIBLE);
                 mTimeandbarray.setVisibility(GONE);
                 mPan.setVisibility(GONE);
-             //   bottom_progressbar.setVisibility(GONE);
                 playstart2.setVisibility(GONE);
-                danmuSwitch.setVisibility(VISIBLE);
+                if(showDanmuIcon){
+                    danmuSwitch.setVisibility(VISIBLE);
+                } else{
+                    danmuSwitch.setVisibility(GONE);
+                }
             }
 
             return true;
@@ -2024,6 +2063,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Log.e("播放器横竖屏切换","横竖屏切换");
         MySelfGSYVideoPlayer sf = (MySelfGSYVideoPlayer) from;
         MySelfGSYVideoPlayer st = (MySelfGSYVideoPlayer) to;
+        st.showDanmuIcon = sf.showDanmuIcon;
         st.danmuBeanList = sf.danmuBeanList;
         st.mDLNAPlayer = sf.mDLNAPlayer;
         st.danmuCount = sf.danmuCount;

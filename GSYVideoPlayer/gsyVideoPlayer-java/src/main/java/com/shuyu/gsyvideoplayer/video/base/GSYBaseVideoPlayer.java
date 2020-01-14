@@ -450,6 +450,21 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
         }
     }
 
+    public void backToNormal2() {
+        final ViewGroup vp = getViewGroup();
+        final View oldF = this;
+        final GSYVideoPlayer gsyVideoPlayer;
+        Log.e("oldF",oldF.toString()+"111");
+        if (oldF != null) {
+            gsyVideoPlayer = (GSYVideoPlayer) oldF;
+            //如果暂停了
+            pauseFullBackCoverLogic(gsyVideoPlayer);
+            resolveNormalVideoShow(oldF, vp, gsyVideoPlayer);
+        } else {
+            resolveNormalVideoShow(null, vp, null);
+        }
+    }
+
     protected Runnable mCheckoutTask = new Runnable() {
         @Override
         public void run() {

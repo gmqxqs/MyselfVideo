@@ -73,7 +73,11 @@ public class MyselfActivity extends AppCompatActivity {
                 //直接横屏
                 orientationUtils.resolveByClick();
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+<<<<<<< HEAD
                 videoPlayer.startWindowFullscreen(MyselfActivity.this, true, true);
+=======
+               videoPlayer.startWindowFullscreen(MyselfActivity.this, true, true);
+>>>>>>> downloadDanmu
             }
         });
 
@@ -133,9 +137,11 @@ public class MyselfActivity extends AppCompatActivity {
         GSYVideoManager.onResume(false);
         GSYVideoType.setRenderType(GSYVideoType.TEXTURE);
         IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
-        videoPlayer.setTimeCycle(60);
+
         gsyVideoOption = new GSYVideoOptionBuilder();
         String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+        videoPlayer.setTimeCycle(60);
+        videoPlayer.setShowDanmuIcon(false);
         gsyVideoOption.setUrl(temp)
                 .setVideoTitle("测试视频")
                 .setCacheWithPlay(false)
@@ -153,6 +159,10 @@ public class MyselfActivity extends AppCompatActivity {
                         if(minutes == 0){
                             time = 5000;
                         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> downloadDanmu
                         DanmuBean danmuBean3 = new DanmuBean(time,1,25,1,"第"+minutes+"条弹幕111111111111111111111");
                         DanmuBean danmuBean33 = new DanmuBean(time,1,25,1,"第33条弹幕");
                         DanmuBean danmuBean4 = new DanmuBean(time,1,25, 2,"第"+minutes+"条弹幕");
@@ -165,7 +175,6 @@ public class MyselfActivity extends AppCompatActivity {
                         DanmuBean danmuBean11 = new DanmuBean(time+8000,1,25,8,"第"+minutes+"条弹幕");
                         DanmuBean danmuBean12 = new DanmuBean(time+9000,1,25,8,"第"+minutes+"条弹幕");
                         DanmuBean danmuBean13 = new DanmuBean(30000,1,25,8,"第n条弹幕");
-
                         danmuBeanList.add(danmuBean3);
                         danmuBeanList.add(danmuBean33);
                         danmuBeanList.add(danmuBean4);
