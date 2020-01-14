@@ -66,6 +66,21 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected  int count = 0;
     private  Context contextFirst;
     private static boolean mStopTrack,mStartTrack;
+    private boolean showDanmuIcon = true;
+
+    public void setShowDanmuIcon(boolean showDanmuIcon) {
+        this.showDanmuIcon = showDanmuIcon;
+        if(showDanmuIcon){
+            mBarrage.setVisibility(VISIBLE);
+            mDanmu.setVisibility(VISIBLE);
+            danmuSwitch.setVisibility(VISIBLE);
+        } else{
+            mBarrage.setVisibility(GONE);
+            mDanmu.setVisibility(GONE);
+            danmuSwitch.setVisibility(GONE);
+        }
+    }
+
     private  static List<DanmuBean> danmuBeanList = new ArrayList<>();
     public void setDanmuBeanList(List<DanmuBean> danmuBeanList) {
         this.danmuBeanList = danmuBeanList;
@@ -252,6 +267,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mDanmu = findViewById(R.id.danmu);
         mDanmuImage = findViewById(R.id.danmuImage);
         mDanmuText = findViewById(R.id.danmuText);
+
         new TimeThread().start();
         mLoading = findViewById(R.id.loading2);
         mDanmu.setOnClickListener(new OnClickListener() {
@@ -264,6 +280,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
 
             }
         });
+
         mDanmuImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -368,6 +385,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         //扩大后的BitMap
         Bitmap newBmp = Bitmap.createBitmap(bmp, 0, 0, primaryWidth, primaryHeight, matrix, true);
         playstart2.setImageBitmap(newBmp);
+
+
     }
 
     public ImageView getPlaystart(){
@@ -565,9 +584,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         }
         if (getGSYVideoManager() != null && mHadPlay) {
             try {
-                //int progress = seekBar.getProgress();
                 time = seekBar.getProgress() * getDuration() / 100;
-                //  int time = progress  * getDuration() / 100;
                 getGSYVideoManager().seekTo(time);
                 mBottomProgressBar.setProgress(seekBar.getProgress());
                 mProgressBar.setProgress(seekBar.getProgress());
@@ -785,7 +802,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mTitleTextView.setVisibility(VISIBLE);
                 mLockScreen.setVisibility(VISIBLE);
                 mShare.setVisibility(GONE);
-                mBarrage.setVisibility(VISIBLE);
+               // mBarrage.setVisibility(VISIBLE);
                 mTimeandbarray.setVisibility(VISIBLE);
                 playstart.setVisibility(GONE);
                 mCurrentTimeTextView.setVisibility(GONE);
@@ -797,6 +814,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     playstart2.setVisibility(VISIBLE);
                 }
                 danmuSwitch.setVisibility(GONE);
+                if(showDanmuIcon){
+                    mBarrage.setVisibility(VISIBLE);
+                    mDanmu.setVisibility(VISIBLE);
+                } else{
+                    mBarrage.setVisibility(GONE);
+                    mDanmu.setVisibility(GONE);
+                }
 
             } else {
                 if (mFullscreenButton != null)
@@ -811,9 +835,12 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mTotalTimeTextView.setVisibility(VISIBLE);
                 mTimeandbarray.setVisibility(GONE);
                 mPan.setVisibility(GONE);
-             //   bottom_progressbar.setVisibility(GONE);
                 playstart2.setVisibility(GONE);
-                danmuSwitch.setVisibility(VISIBLE);
+                if(showDanmuIcon){
+                    danmuSwitch.setVisibility(VISIBLE);
+                } else{
+                    danmuSwitch.setVisibility(GONE);
+                }
             }
 
             return true;
@@ -1679,6 +1706,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         Log.e("播放器横竖屏切换","横竖屏切换");
         MySelfGSYVideoPlayer sf = (MySelfGSYVideoPlayer) from;
         MySelfGSYVideoPlayer st = (MySelfGSYVideoPlayer) to;
+        st.showDanmuIcon = sf.showDanmuIcon;
         st.danmuBeanList = sf.danmuBeanList;
         st.danmuCount = sf.danmuCount;
         st.danmuCount2 = sf.danmuCount2;

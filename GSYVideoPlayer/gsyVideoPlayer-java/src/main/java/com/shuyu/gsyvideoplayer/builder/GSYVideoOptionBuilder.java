@@ -118,6 +118,9 @@ public class GSYVideoOptionBuilder {
     //视频title
     protected String mVideoTitle = null;
 
+    //是否显示弹幕图标
+    protected boolean showDanmuIcon = true;
+
     // 是否需要覆盖拓展类型
     protected String mOverrideExtension;
 
@@ -205,6 +208,10 @@ public class GSYVideoOptionBuilder {
         return this;
     }
 
+    public GSYVideoOptionBuilder setShowDanmuIcon(boolean showDanmuIcon) {
+        this.showDanmuIcon = showDanmuIcon;
+        return this;
+    }
 
     /**
      * 设置播放过程中的回调
@@ -628,6 +635,12 @@ public class GSYVideoOptionBuilder {
         if(danmuCallBack != null){
             gsyVideoPlayer.setDanmuCallBack(danmuCallBack);
         }
+
+        if(!showDanmuIcon){
+            gsyVideoPlayer.setShowDanmuIcon(showDanmuIcon);
+        }
+
+
         build((GSYBaseVideoPlayer) gsyVideoPlayer);
     }
 
