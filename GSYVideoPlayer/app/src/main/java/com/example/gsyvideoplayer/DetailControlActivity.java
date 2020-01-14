@@ -244,10 +244,7 @@ public class DetailControlActivity extends GSYBaseActivityDetail<StandardGSYVide
         super.onQuitFullscreen(url, objects);
     }
 
-    @Override
-    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
 
-    }
 
     @Override
     public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {

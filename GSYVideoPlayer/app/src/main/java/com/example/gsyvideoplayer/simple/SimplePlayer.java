@@ -3,10 +3,13 @@ package com.example.gsyvideoplayer.simple;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.example.gsyvideoplayer.R;
+import com.example.gsyvideoplayer.myself.MyselfActivity;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 
@@ -46,7 +49,9 @@ public class SimplePlayer extends AppCompatActivity {
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("初始化init","全屏");
                 orientationUtils.resolveByClick();
+               // videoPlayer.startWindowFullscreen(SimplePlayer.this, true, true);
             }
         });
         //是否可以滑动调整

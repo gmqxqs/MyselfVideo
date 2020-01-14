@@ -1,22 +1,21 @@
 package com.shuyu.gsyvideoplayer.builder;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 
+import com.shuyu.gsyvideoplayer.listener.DanmuCallBack;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoProgressListener;
+import com.shuyu.gsyvideoplayer.listener.TouPinCallBack;
 import com.shuyu.gsyvideoplayer.render.view.GSYVideoGLView;
 import com.shuyu.gsyvideoplayer.render.effect.NoEffect;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
-import com.shuyu.gsyvideoplayer.video.DanmuBean;
 import com.shuyu.gsyvideoplayer.video.MySelfGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,33 +29,22 @@ import java.util.Map;
  */
 
 public class GSYVideoOptionBuilder {
-
-
-
     //退出全屏显示的案件图片
     protected int mShrinkImageRes = -1;
-
     //全屏显示的案件图片
     protected int mEnlargeImageRes = -1;
-
     //播放的tag，防止错误，因为普通的url也可能重复
     protected int mPlayPosition = -22;
-
     //触摸快进dialog的进度高量颜色
     protected int mDialogProgressHighLightColor = -11;
-
     //触摸快进dialog的进度普通颜色
     protected int mDialogProgressNormalColor = -11;
-
     //触摸隐藏等待时间
     protected int mDismissControlTime = 2500;
-
     //从哪个开始播放
     protected long mSeekOnStart = -1;
-
     //触摸滑动进度的比例系数
     protected float mSeekRatio = 1;
-
     //播放速度
     protected float mSpeed = 1;
 
@@ -120,8 +108,6 @@ public class GSYVideoOptionBuilder {
     //是否需要在利用window实现全屏幕的时候隐藏statusbar
     protected boolean mStatusBar = false;
 
-
-
     //播放的tag，防止错误，因为普通的url也可能重复
     protected String mPlayTag = "";
 
@@ -144,6 +130,12 @@ public class GSYVideoOptionBuilder {
 
     //视频状体回调
     protected VideoAllCallBack mVideoAllCallBack;
+
+    //弹幕回调
+    protected DanmuCallBack danmuCallBack;
+
+    //投屏回调
+    protected TouPinCallBack touPinCallBack;
 
     //点击锁屏的回调
     protected LockClickListener mLockClickListener;
@@ -173,6 +165,24 @@ public class GSYVideoOptionBuilder {
     protected GSYVideoProgressListener mGSYVideoProgressListener;
 
 
+   // protected DanmuCallBack danmuInitCallBack;
+
+    protected int timeCycle;
+
+    public GSYVideoOptionBuilder setTimeCycle(int timeCycle) {
+        this.timeCycle = timeCycle;
+        return this;
+    }
+
+    public GSYVideoOptionBuilder setDanmuCallBack(DanmuCallBack danmuCallBack) {
+        this.danmuCallBack = danmuCallBack;
+        return this;
+    }
+    public GSYVideoOptionBuilder setTouPinCallBack(TouPinCallBack touPinCallBack) {
+        this.touPinCallBack = touPinCallBack;
+        return this;
+    }
+
     /**
      * 是否根据视频尺寸，自动选择竖屏全屏或者横屏全屏，注意，这时候默认旋转无效
      *
@@ -182,6 +192,8 @@ public class GSYVideoOptionBuilder {
         this.mAutoFullWithSize = autoFullWithSize;
         return this;
     }
+
+
 
     /**
      * 全屏动画
@@ -598,12 +610,42 @@ public class GSYVideoOptionBuilder {
         build((GSYBaseVideoPlayer) gsyVideoPlayer);
     }
 
+
+    public void build(MySelfGSYVideoPlayer gsyVideoPlayer) {
+        if (mBottomShowProgressDrawable != null && mBottomShowProgressThumbDrawable != null) {
+            gsyVideoPlayer.setBottomShowProgressBarDrawable(mBottomShowProgressDrawable, mBottomShowProgressThumbDrawable);
+        }
+        if (mBottomProgressDrawable != null) {
+            gsyVideoPlayer.setBottomProgressBarDrawable(mBottomProgressDrawable);
+        }
+        if (mVolumeProgressDrawable != null) {
+            gsyVideoPlayer.setDialogVolumeProgressBar(mVolumeProgressDrawable);
+        }
+
+        if (mDialogProgressBarDrawable != null) {
+            gsyVideoPlayer.setDialogProgressBar(mDialogProgressBarDrawable);
+        }
+
+        if (mDialogProgressHighLightColor > 0 && mDialogProgressNormalColor > 0) {
+            gsyVideoPlayer.setDialogProgressColor(mDialogProgressHighLightColor, mDialogProgressNormalColor);
+        }
+
+        if(timeCycle > 0 ){
+            gsyVideoPlayer.setTimeCycle(timeCycle);
+        }
+        if(danmuCallBack != null){
+            gsyVideoPlayer.setDanmuCallBack(danmuCallBack);
+        }
+        if(touPinCallBack != null){
+            gsyVideoPlayer.setTouPinCallBack(touPinCallBack);
+        }
+        build((GSYBaseVideoPlayer) gsyVideoPlayer);
+    }
+
     public void build(GSYBaseVideoPlayer gsyVideoPlayer) {
         gsyVideoPlayer.setPlayTag(mPlayTag);
         gsyVideoPlayer.setPlayPosition(mPlayPosition);
-
         gsyVideoPlayer.setThumbPlay(mThumbPlay);
-
         if (mThumbImageView != null) {
             gsyVideoPlayer.setThumbImageView(mThumbImageView);
         }

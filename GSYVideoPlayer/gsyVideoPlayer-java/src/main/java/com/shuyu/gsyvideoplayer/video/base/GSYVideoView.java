@@ -517,6 +517,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     @Override
     public void onVideoResume() {
         onVideoResume(true);
+
     }
 
     /**

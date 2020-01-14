@@ -1,7 +1,7 @@
 package com.shuyu.gsyvideoplayer.video;
 
 public class DanmuBean {
-    private float displayTime;
+    private long displayTime;
     private int type;
     private int fontSize;
     private long fontColor;
@@ -15,11 +15,11 @@ public class DanmuBean {
         this.danmuText = danmuText;
     }
 
-    public float getDisplayTime() {
+    public long getDisplayTime() {
         return displayTime;
     }
 
-    public void setDisplayTime(float displayTime) {
+    public void setDisplayTime(long displayTime) {
         this.displayTime = displayTime;
     }
 
@@ -51,7 +51,7 @@ public class DanmuBean {
 
     }
 
-    public DanmuBean( float displayTime,int type,int fontSize, long fontColor,String danmuText){
+    public DanmuBean(long displayTime,int type,int fontSize, long fontColor,String danmuText){
         this.displayTime = displayTime;
         this.type = type;
         this.fontSize = fontSize;
@@ -59,4 +59,14 @@ public class DanmuBean {
         this.danmuText = danmuText;
     }
 
+    @Override
+    public String toString() {
+        return "DanmuBean{" +
+                "displayTime=" + displayTime +
+                ", type=" + type +
+                ", fontSize=" + fontSize +
+                ", fontColor=" + fontColor +
+                ", danmuText='" + danmuText + '\'' +
+                '}';
+    }
 }

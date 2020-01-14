@@ -71,10 +71,8 @@ public class DetailListPlayer extends GSYBaseActivityDetail<ListGSYVideoPlayer> 
         detailPlayer.setShowFullAnimation(false);
         //detailPlayer.setNeedLockFull(true);
         detailPlayer.setAutoFullWithSize(true);
-
         detailPlayer.setVideoAllCallBack(this);
-
-        detailPlayer.setLockClickListener(new LockClickListener() {
+              detailPlayer.setLockClickListener(new LockClickListener() {
             @Override
             public void onClick(View view, boolean lock) {
                 if (orientationUtils != null) {
@@ -127,10 +125,6 @@ public class DetailListPlayer extends GSYBaseActivityDetail<ListGSYVideoPlayer> 
         gsyVideoPlayer.getBackButton().setVisibility(View.GONE);
     }
 
-    @Override
-    public void onClickSend(String url, DanmuBean danmuBean, Object... objects) {
-
-    }
 
     @Override
     public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {

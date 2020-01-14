@@ -18,6 +18,7 @@ package com.example.gsyvideoplayer.utils;
 
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,6 +61,7 @@ public class BiliDanmukuParser extends BaseDanmakuParser {
                 XmlContentHandler contentHandler = new XmlContentHandler();
                 xmlReader.setContentHandler(contentHandler);
                 xmlReader.parse(new InputSource(source.data()));
+              //  Log.e("dataSourcetest",contentHandler.getResult()+"");
                 return contentHandler.getResult();
             } catch (SAXException e) {
                 e.printStackTrace();
@@ -123,6 +125,7 @@ public class BiliDanmukuParser extends BaseDanmakuParser {
                     int color = (int) ((0x00000000ff000000 | Long.parseLong(values[3])) & 0x00000000ffffffff); // 颜色
                     // int poolType = Integer.parseInt(values[5]); // 弹幕池类型（忽略
                     item = mContext.mDanmakuFactory.createDanmaku(type, mContext);
+
                     if (item != null) {
                         item.setTime(time);
                         item.textSize = textSize * (mDispDensity - 0.6f);
