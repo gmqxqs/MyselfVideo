@@ -13,8 +13,13 @@
         android:layout_height="wrap_content">
     </FrameLayout>
 
-    <master.flame.danmaku.ui.widget.DanmakuView
+<!--    <master.flame.danmaku.ui.widget.DanmakuView
         android:id="@+id/danmaku_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />-->
+    <com.shuyu.gsyvideoplayer.danmu.DanmuView
+        android:id="@+id/danmaku_view"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

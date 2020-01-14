@@ -46,6 +46,7 @@ dependencies {
     api 'org.apache.httpcomponents:httpcore:4.4.2'
     api 'com.google.code.gson:gson:2.8.6'
     api  'org.greenrobot:eventbus:3.0.0'
+    api 'com.wx.goodview:goodview:1.0.0'
     implementation viewDependencies.DanmakuFlameMaster
 }
 

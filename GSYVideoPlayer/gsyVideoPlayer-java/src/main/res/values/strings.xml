@@ -8,4 +8,5 @@
     <string name="no_url">播放地址无效</string>
     <string name="jump_ad">跳过</string>
     <string name="danmu">弹幕走一波~</string>
+    <item type="id" name="tag_inner_entity"></item>
 </resources>

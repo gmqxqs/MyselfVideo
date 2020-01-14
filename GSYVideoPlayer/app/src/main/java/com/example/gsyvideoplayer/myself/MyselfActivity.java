@@ -136,8 +136,7 @@ public class MyselfActivity extends AppCompatActivity {
         GSYVideoManager.onResume(false);
         GSYVideoType.setRenderType(GSYVideoType.TEXTURE);
         IjkPlayerManager.setLogLevel(IjkMediaPlayer.IJK_LOG_SILENT);
-
-        videoPlayer.setTimeCycle(30);
+        videoPlayer.setTimeCycle(60);
         gsyVideoOption = new GSYVideoOptionBuilder();
         String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
         gsyVideoOption.setUrl(temp)
@@ -152,7 +151,6 @@ public class MyselfActivity extends AppCompatActivity {
                     @Override
                     public void onSetDanmu(int minutes) {
                         Log.e("初始化弹幕1",minutes+"");
-                        Log.e("初始化弹幕1",minutes * 30+"");
                        /* List<DanmuBean> danmuBeanList = new ArrayList<>();
                             DanmuBean danmuBean1 = new DanmuBean(15000,1,25,16777215,"第三条弹幕");
                             DanmuBean danmuBean2 = new DanmuBean(15000,1,25,16711935,"第四条弹幕");
@@ -173,7 +171,7 @@ public class MyselfActivity extends AppCompatActivity {
                         danmuBeanList.add(danmuBean4);
                         videoPlayer.setDanmuBeanListAll(danmuBeanList);*/
                         List<DanmuBean> danmuBeanList = new ArrayList<>();
-                        long time = minutes * 30 * 1000 + 5000;
+                        long time = minutes * 60 * 1000 + 5000;
                         if(minutes == 0){
                             time = 5000;
                         }
@@ -194,16 +192,21 @@ public class MyselfActivity extends AppCompatActivity {
                         DanmuBean danmuBean9 = new DanmuBean(time+5000,1,25,16711680,"第"+minutes+"条弹幕");
                         DanmuBean danmuBean10 = new DanmuBean(time+6000,1,25,16711680,"第"+minutes+"条弹幕");*/
 
-                        DanmuBean danmuBean3 = new DanmuBean(time,1,25,146114,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(time+1000,1,25, 16737996,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean5 = new DanmuBean(time+2000,1,25,1667233,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean6 = new DanmuBean(time+3000,1,25,255255,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean7 = new DanmuBean(time+4000,1,25,10458123,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean8 = new DanmuBean(time+5000,1,25,16711680,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean9 = new DanmuBean(time+6000,1,25,16711680,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean10 = new DanmuBean(time+7000,12000,25,16711680,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean3 = new DanmuBean(time,1,25,1,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean33 = new DanmuBean(time,1,25,1,"第33条弹幕");
+                        DanmuBean danmuBean4 = new DanmuBean(time+1000,1,25, 2,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean5 = new DanmuBean(time+2000,1,25,3,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean6 = new DanmuBean(time+3000,1,25,4,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean7 = new DanmuBean(time+4000,1,25,5,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean8 = new DanmuBean(time+5000,1,25,6,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean9 = new DanmuBean(time+6000,1,25,7,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean10 = new DanmuBean(time+7000,1,25,8,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean11 = new DanmuBean(time+8000,1,25,8,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean12 = new DanmuBean(time+9000,1,25,8,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean13 = new DanmuBean(30000,1,25,8,"第n条弹幕");
 
                         danmuBeanList.add(danmuBean3);
+                        danmuBeanList.add(danmuBean33);
                         danmuBeanList.add(danmuBean4);
                         danmuBeanList.add(danmuBean5);
                         danmuBeanList.add(danmuBean6);
@@ -211,6 +214,14 @@ public class MyselfActivity extends AppCompatActivity {
                         danmuBeanList.add(danmuBean8);
                         danmuBeanList.add(danmuBean9);
                         danmuBeanList.add(danmuBean10);
+                        danmuBeanList.add(danmuBean11);
+                        danmuBeanList.add(danmuBean12);
+                        danmuBeanList.add(danmuBean13);
+
+                    /*    DanmuBean danmuBean3 = new DanmuBean(5000,1,25,1,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean4 = new DanmuBean(18000,1,25, 2,"第"+minutes+"条弹幕");
+                        danmuBeanList.add(danmuBean3);
+                        danmuBeanList.add(danmuBean4);*/
                         videoPlayer.setDanmuBeanListAll(danmuBeanList);
 
                       /*  DanmuBean danmuBean1 = new DanmuBean(5000,1,25,16777215,"第一条弹幕");
@@ -291,14 +302,15 @@ public class MyselfActivity extends AppCompatActivity {
     protected void onPause() {
         getCurPlay().onVideoPause();
         super.onPause();
-        isPause = true;
+
     }
 
     @Override
     protected void onResume(){
         getCurPlay().onVideoResume(false);
         super.onResume();
-        isPause = false;
+        videoPlayer.getDanmu().resume();
+
     }
                                                 
 
