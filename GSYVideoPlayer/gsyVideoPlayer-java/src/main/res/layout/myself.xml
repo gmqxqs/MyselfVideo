@@ -88,9 +88,17 @@
                 android:textColor="#ffffff" />
 
             <ImageView
+                android:id="@+id/danmuSwitch"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+
+                android:scaleType="center"
+                android:src="@drawable/veido_barrage_icon_hl"/>
+            <ImageView
                 android:id="@+id/fullscreen"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:scaleType="center"
                 android:src="@drawable/vedio_full_screen_icon"/>
         </LinearLayout>
@@ -294,10 +302,10 @@
                     android:visibility="gone"
                     android:paddingLeft="30dp"/>
                 <ImageView
-                    android:id="@+id/more"
+                    android:id="@+id/tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/vedio_more_icon"
+                    android:src="@drawable/tv"
                     android:layout_gravity="right|center_vertical"
                     android:visibility="gone"
                     android:paddingLeft="30dp" />

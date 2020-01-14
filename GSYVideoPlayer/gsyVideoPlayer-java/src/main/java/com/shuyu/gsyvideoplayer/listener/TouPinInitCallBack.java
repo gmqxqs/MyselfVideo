@@ -14,7 +14,7 @@ public class TouPinInitCallBack implements TouPinCallBack {
 
 
     @Override
-    public void onCastScreen(List<DeviceInfo> deviceInfos) {
+    public void onCastScreen(DeviceInfo deviceInfo) {
 
     }
 }

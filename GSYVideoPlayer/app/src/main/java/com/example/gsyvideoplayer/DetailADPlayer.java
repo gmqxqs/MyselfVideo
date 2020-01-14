@@ -121,11 +121,6 @@ public class DetailADPlayer extends GSYBaseActivityDetail<ListGSYVideoPlayer> {
 
 
 
-    @Override
-    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
-
-    }
-
 
     private void resolveNormalVideoUI() {
         //增加title

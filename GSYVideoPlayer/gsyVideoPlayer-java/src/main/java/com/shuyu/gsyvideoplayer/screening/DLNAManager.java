@@ -205,6 +205,11 @@ public final class DLNAManager {
     public void init(@NonNull Context context, @Nullable DLNAStateCallback stateCallback) {
         Log.e("投屏initDlna","init");
         setDestory(true);
+        Log.e("投屏initDlna",registryListenerList.toString());
+        if(registryListenerList != null){
+            registryListenerList = null;
+        }
+
         if(registryListenerList == null){
             registryListenerList = new ArrayList<>();
             mHandler = new Handler(Looper.getMainLooper());
@@ -320,10 +325,10 @@ public final class DLNAManager {
         }
 
 
-        if (null != mContext) {
-            logW("ReInit DLNAManager");
+       /* if (null != mContext) {
+            Log.e("投屏","ReInit DLNAManager");
             return;
-        }
+        }*/
         if (context instanceof ContextThemeWrapper || context instanceof android.view.ContextThemeWrapper) {
             mContext = context.getApplicationContext();
         } else {
@@ -416,12 +421,9 @@ public final class DLNAManager {
     public void registerListener(DLNARegistryListener listener) {
         checkConfig();
         checkPrepared();
-        Log.e("投屏initDlna",listener.toString());
         if (null == listener) {
             return;
         }
-
-        Log.e("投屏initDlna","registryListenerList不为空");
         registryListenerList.add(listener);
         listener.onDeviceChanged(mUpnpService.getRegistry().getDevices());
     }

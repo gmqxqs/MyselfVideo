@@ -78,8 +78,4 @@ public interface VideoAllCallBack {
     void onClickBlankFullscreen(String url, Object... objects);
 
 
-
-    void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object...objects);
-
-
 }

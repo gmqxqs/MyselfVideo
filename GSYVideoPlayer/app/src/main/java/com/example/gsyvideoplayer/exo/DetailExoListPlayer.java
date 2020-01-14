@@ -142,10 +142,7 @@ public class DetailExoListPlayer extends GSYBaseActivityDetail<GSYExo2PlayerView
 
 
 
-    @Override
-    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
 
-    }
 
 
     private void resolveNormalVideoUI() {

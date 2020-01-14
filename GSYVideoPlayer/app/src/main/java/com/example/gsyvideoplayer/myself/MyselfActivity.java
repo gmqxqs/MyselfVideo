@@ -74,7 +74,6 @@ public class MyselfActivity extends AppCompatActivity {
                 orientationUtils.resolveByClick();
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
                 videoPlayer.startWindowFullscreen(MyselfActivity.this, true, true);
-
             }
         });
 
@@ -83,9 +82,7 @@ public class MyselfActivity extends AppCompatActivity {
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!videoPlayer.ismError()){
-                    videoPlayer.setmError(true);
-                }
+
                 onBackPressed();
             }
         });
@@ -156,26 +153,9 @@ public class MyselfActivity extends AppCompatActivity {
                         if(minutes == 0){
                             time = 5000;
                         }
-                      /*  DanmuBean danmuBean3 = new DanmuBean(time,1,25,146114,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(time,1,25, 16737996,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean5 = new DanmuBean(time,1,25,1667233,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean6 = new DanmuBean(time,1,25,255255,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean7 = new DanmuBean(time,1,25,10458123,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean8 = new DanmuBean(time,1,25,16711680,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean9 = new DanmuBean(time,1,25,16711680,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean10 = new DanmuBean(time,1,25,16711680,"第"+minutes+"条弹幕");*/
-                     /*   DanmuBean danmuBean3 = new DanmuBean(time,1,25,146114,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(time,1,25, 16737996,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean5 = new DanmuBean(time+1000,1,25,1667233,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean6 = new DanmuBean(time+2000,1,25,255255,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean7 = new DanmuBean(time+3000,1,25,10458123,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean8 = new DanmuBean(time+4000,1,25,16711680,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean9 = new DanmuBean(time+5000,1,25,16711680,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean10 = new DanmuBean(time+6000,1,25,16711680,"第"+minutes+"条弹幕");*/
-
-                        DanmuBean danmuBean3 = new DanmuBean(time,1,25,1,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean3 = new DanmuBean(time,1,25,1,"第"+minutes+"条弹幕111111111111111111111");
                         DanmuBean danmuBean33 = new DanmuBean(time,1,25,1,"第33条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(time+1000,1,25, 2,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean4 = new DanmuBean(time,1,25, 2,"第"+minutes+"条弹幕");
                         DanmuBean danmuBean5 = new DanmuBean(time+2000,1,25,3,"第"+minutes+"条弹幕");
                         DanmuBean danmuBean6 = new DanmuBean(time+3000,1,25,4,"第"+minutes+"条弹幕");
                         DanmuBean danmuBean7 = new DanmuBean(time+4000,1,25,5,"第"+minutes+"条弹幕");
@@ -199,17 +179,8 @@ public class MyselfActivity extends AppCompatActivity {
                         danmuBeanList.add(danmuBean12);
                         danmuBeanList.add(danmuBean13);
 
-                    /*    DanmuBean danmuBean3 = new DanmuBean(5000,1,25,1,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(18000,1,25, 2,"第"+minutes+"条弹幕");
-                        danmuBeanList.add(danmuBean3);
-                        danmuBeanList.add(danmuBean4);*/
                         videoPlayer.setDanmuBeanListAll(danmuBeanList);
 
-                      /*  DanmuBean danmuBean1 = new DanmuBean(5000,1,25,16777215,"第一条弹幕");
-                        DanmuBean danmuBean2 = new DanmuBean(5000,1,25,16711935,"第二条弹幕");
-                        danmuBeanList.add(danmuBean1);
-                        danmuBeanList.add(danmuBean2);
-                        videoPlayer.setDanmuBeanListAll(danmuBeanList);*/
                     }
 
                     @Override
@@ -224,16 +195,15 @@ public class MyselfActivity extends AppCompatActivity {
                 })
                 .setTouPinCallBack(new TouPinInitCallBack(){
                     @Override
-                    public void onCastScreen(List<DeviceInfo> deviceInfos) {
-                        super.onCastScreen(deviceInfos);
+                    public void onCastScreen(DeviceInfo deviceInfo) {
+                        super.onCastScreen(deviceInfo);
+                      /*  Log.e("投屏设备infosSize",deviceInfos.size()+"");
                         for(DeviceInfo deviceInfo : deviceInfos){
                             Log.e("投屏设备",deviceInfo.toString());
                             Log.e("投屏设备",deviceInfo.getName());
-                          /*  if(deviceInfo.getName().equals("VIDAA-cc")){
-                                videoPlayer.startScreen(deviceInfo);
-                                return;
-                            }*/
-                        }
+                        }*/
+                        Log.e("投屏设备",deviceInfo.toString());
+                        Log.e("投屏设备",deviceInfo.getName());
                     }
                 })
                 .setVideoAllCallBack(new GSYSampleCallBack() {
@@ -250,6 +220,8 @@ public class MyselfActivity extends AppCompatActivity {
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
                         Log.e("点击后退","点击后退");
+                        videoPlayer.resolveDanmakuShow();
+                        videoPlayer.touPinDestroy();
                         if (orientationUtils != null) {
                             Log.e("旋转","旋转");
                             orientationUtils.setEnable(false);
@@ -257,10 +229,6 @@ public class MyselfActivity extends AppCompatActivity {
                         }
                     }
 
-                    @Override
-                    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
-                        super.onCastScreen(url, deviceInfos, objects);
-                    }
                 }).setLockClickListener(new LockClickListener() {
                     @Override
                     public void onClick(View view, boolean lock) {
@@ -276,12 +244,6 @@ public class MyselfActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        Log.e("ismError",videoPlayer.ismError()+"");
-      /*  if(!videoPlayer.ismError()){
-            return;
-        }*/
-
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }

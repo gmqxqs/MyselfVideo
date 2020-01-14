@@ -181,13 +181,4 @@ public class WebDetailActivity extends GSYBaseActivityDetail<StandardGSYVideoPla
         webPlayer.getBackButton().setVisibility(View.GONE);
     }
 
-
-
-
-
-    @Override
-    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
-
-    }
-
 }

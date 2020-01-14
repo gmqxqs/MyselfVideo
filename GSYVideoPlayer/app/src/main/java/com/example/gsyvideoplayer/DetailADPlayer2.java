@@ -134,10 +134,7 @@ public class DetailADPlayer2 extends GSYBaseADActivityDetail<NormalGSYVideoPlaye
 
 
 
-    @Override
-    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
 
-    }
 
 
     /**

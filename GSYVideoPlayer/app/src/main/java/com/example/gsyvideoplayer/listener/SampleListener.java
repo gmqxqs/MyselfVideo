@@ -148,10 +148,7 @@ public class SampleListener implements VideoAllCallBack {
 
 
 
-    @Override
-    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
 
-    }
 
 
 }

@@ -510,10 +510,6 @@ public class DetailFilterActivity extends GSYBaseActivityDetail<StandardGSYVideo
 
 
 
-    @Override
-    public void onCastScreen(String url, List<DeviceInfo> deviceInfos, Object... objects) {
-
-    }
 
 
     /**

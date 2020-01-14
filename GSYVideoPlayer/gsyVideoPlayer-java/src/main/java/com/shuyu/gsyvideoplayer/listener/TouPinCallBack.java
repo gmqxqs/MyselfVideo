@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface TouPinCallBack {
 
-    public void onCastScreen(List<DeviceInfo> deviceInfos);
+    public void onCastScreen(DeviceInfo deviceInfo);
 }
