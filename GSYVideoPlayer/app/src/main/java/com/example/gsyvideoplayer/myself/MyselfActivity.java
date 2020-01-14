@@ -81,9 +81,7 @@ public class MyselfActivity extends AppCompatActivity {
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!videoPlayer.ismError()){
-                    videoPlayer.setmError(true);
-                }
+
                 onBackPressed();
             }
         });
@@ -151,50 +149,16 @@ public class MyselfActivity extends AppCompatActivity {
                     @Override
                     public void onSetDanmu(int minutes) {
                         Log.e("初始化弹幕1",minutes+"");
-                       /* List<DanmuBean> danmuBeanList = new ArrayList<>();
-                            DanmuBean danmuBean1 = new DanmuBean(15000,1,25,16777215,"第三条弹幕");
-                            DanmuBean danmuBean2 = new DanmuBean(15000,1,25,16711935,"第四条弹幕");
-                            DanmuBean danmuBean3 = new DanmuBean(15001,1,25,16711935,"第五条弹幕");
-                            DanmuBean danmuBean4 = new DanmuBean(15002,1,25,16711935,"第六条弹幕");
-                            danmuBeanList.add(danmuBean1);
-                            danmuBeanList.add(danmuBean2);
-                            danmuBeanList.add(danmuBean3);
-                            danmuBeanList.add(danmuBean4);
-                            videoPlayer.setDanmuBeanListAll(danmuBeanList);
-                            return;
-                        }*/
-
-
-                  /*      DanmuBean danmuBean3 = new DanmuBean(65000,1,25,146114,"第三条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(65000,1,25, 16737996,"第四条弹幕");
-                        danmuBeanList.add(danmuBean3);
-                        danmuBeanList.add(danmuBean4);
-                        videoPlayer.setDanmuBeanListAll(danmuBeanList);*/
                         List<DanmuBean> danmuBeanList = new ArrayList<>();
                         long time = minutes * 60 * 1000 + 5000;
                         if(minutes == 0){
                             time = 5000;
                         }
-                      /*  DanmuBean danmuBean3 = new DanmuBean(time,1,25,146114,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(time,1,25, 16737996,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean5 = new DanmuBean(time,1,25,1667233,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean6 = new DanmuBean(time,1,25,255255,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean7 = new DanmuBean(time,1,25,10458123,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean8 = new DanmuBean(time,1,25,16711680,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean9 = new DanmuBean(time,1,25,16711680,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean10 = new DanmuBean(time,1,25,16711680,"第"+minutes+"条弹幕");*/
-                     /*   DanmuBean danmuBean3 = new DanmuBean(time,1,25,146114,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(time,1,25, 16737996,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean5 = new DanmuBean(time+1000,1,25,1667233,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean6 = new DanmuBean(time+2000,1,25,255255,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean7 = new DanmuBean(time+3000,1,25,10458123,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean8 = new DanmuBean(time+4000,1,25,16711680,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean9 = new DanmuBean(time+5000,1,25,16711680,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean10 = new DanmuBean(time+6000,1,25,16711680,"第"+minutes+"条弹幕");*/
 
-                        DanmuBean danmuBean3 = new DanmuBean(time,1,25,1,"第"+minutes+"条弹幕");
+
+                        DanmuBean danmuBean3 = new DanmuBean(time,1,25,1,"第"+minutes+"条弹幕111111111111111111111");
                         DanmuBean danmuBean33 = new DanmuBean(time,1,25,1,"第33条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(time+1000,1,25, 2,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean4 = new DanmuBean(time,1,25, 2,"第"+minutes+"条弹幕");
                         DanmuBean danmuBean5 = new DanmuBean(time+2000,1,25,3,"第"+minutes+"条弹幕");
                         DanmuBean danmuBean6 = new DanmuBean(time+3000,1,25,4,"第"+minutes+"条弹幕");
                         DanmuBean danmuBean7 = new DanmuBean(time+4000,1,25,5,"第"+minutes+"条弹幕");
@@ -218,17 +182,8 @@ public class MyselfActivity extends AppCompatActivity {
                         danmuBeanList.add(danmuBean12);
                         danmuBeanList.add(danmuBean13);
 
-                    /*    DanmuBean danmuBean3 = new DanmuBean(5000,1,25,1,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(18000,1,25, 2,"第"+minutes+"条弹幕");
-                        danmuBeanList.add(danmuBean3);
-                        danmuBeanList.add(danmuBean4);*/
                         videoPlayer.setDanmuBeanListAll(danmuBeanList);
 
-                      /*  DanmuBean danmuBean1 = new DanmuBean(5000,1,25,16777215,"第一条弹幕");
-                        DanmuBean danmuBean2 = new DanmuBean(5000,1,25,16711935,"第二条弹幕");
-                        danmuBeanList.add(danmuBean1);
-                        danmuBeanList.add(danmuBean2);
-                        videoPlayer.setDanmuBeanListAll(danmuBeanList);*/
                     }
 
                     @Override
@@ -255,6 +210,7 @@ public class MyselfActivity extends AppCompatActivity {
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
                         Log.e("点击后退","点击后退");
+                        videoPlayer.resolveDanmakuShow();
                         if (orientationUtils != null) {
                             Log.e("旋转","旋转");
                             orientationUtils.setEnable(false);
@@ -277,12 +233,6 @@ public class MyselfActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        Log.e("ismError",videoPlayer.ismError()+"");
-      /*  if(!videoPlayer.ismError()){
-            return;
-        }*/
-
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }

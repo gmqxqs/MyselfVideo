@@ -42,7 +42,7 @@ public class DanmuView extends ViewGroup {
 
     private int WIDTH, HEIGHT;
 
-    private int singltLineHeight = 83;
+    private int singltLineHeight = 100;
 
     private DanmuAdapter adapter;
 
