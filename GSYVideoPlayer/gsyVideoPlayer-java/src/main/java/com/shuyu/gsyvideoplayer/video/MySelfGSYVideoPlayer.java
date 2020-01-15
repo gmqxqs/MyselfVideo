@@ -73,11 +73,11 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         if(showDanmuIcon){
             mBarrage.setVisibility(VISIBLE);
             mDanmu.setVisibility(VISIBLE);
-            danmuSwitch.setVisibility(VISIBLE);
+          //  danmuSwitch.setVisibility(VISIBLE);
         } else{
             mBarrage.setVisibility(GONE);
             mDanmu.setVisibility(GONE);
-            danmuSwitch.setVisibility(GONE);
+          //  danmuSwitch.setVisibility(GONE);
         }
     }
 
@@ -156,7 +156,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected  ImageView newstart;
     protected  LinearLayout replay;
     protected  TextView replay_text;
-    protected ImageView danmuSwitch;
+   // protected ImageView danmuSwitch;
     protected  LinearLayout layout_bottom;
     protected  TextView batteryText;
     protected BatteryView batteryView;
@@ -262,7 +262,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
         mTotalbottom = findViewById(R.id.totalbottom);
         replay = findViewById(R.id.replay);
         replay_text = findViewById(R.id.replay_text);
-        danmuSwitch = findViewById(R.id.danmuSwitch);
+     //   danmuSwitch = findViewById(R.id.danmuSwitch);
      //   bottom_progressbar = findViewById(R.id.bottom_progressbar);
         mDanmu = findViewById(R.id.danmu);
         mDanmuImage = findViewById(R.id.danmuImage);
@@ -330,13 +330,13 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 resolveDanmakuShow();
             }
         });
-        danmuSwitch.setOnClickListener(new OnClickListener() {
+      /*  danmuSwitch.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDanmaKuShow = !mDanmaKuShow;
                 resolveDanmakuShow();
             }
-        });
+        });*/
         playstart.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -475,7 +475,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     }
 
                     mBarrage.setImageResource(R.drawable.veido_barrage_icon_hl);
-                    danmuSwitch.setImageResource(R.drawable.veido_barrage_icon_hl);
+                    //danmuSwitch.setImageResource(R.drawable.veido_barrage_icon_hl);
 
                 } else {
                     if(danmu.getVisibility() != View.INVISIBLE){
@@ -483,7 +483,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                     }
 
                     mBarrage.setImageResource(R.drawable.veido_barrage_icon_nl);
-                    danmuSwitch.setImageResource(R.drawable.veido_barrage_icon_nl);
+                 //   danmuSwitch.setImageResource(R.drawable.veido_barrage_icon_nl);
                 }
             }
         });
@@ -813,7 +813,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 if(mCurrentState == CURRENT_STATE_PAUSE){
                     playstart2.setVisibility(VISIBLE);
                 }
-                danmuSwitch.setVisibility(GONE);
+              //  danmuSwitch.setVisibility(GONE);
                 if(showDanmuIcon){
                     mBarrage.setVisibility(VISIBLE);
                     mDanmu.setVisibility(VISIBLE);
@@ -837,9 +837,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 mPan.setVisibility(GONE);
                 playstart2.setVisibility(GONE);
                 if(showDanmuIcon){
-                    danmuSwitch.setVisibility(VISIBLE);
+                    mBarrage.setVisibility(VISIBLE);
                 } else{
-                    danmuSwitch.setVisibility(GONE);
+                    mBarrage.setVisibility(GONE);
                 }
             }
 

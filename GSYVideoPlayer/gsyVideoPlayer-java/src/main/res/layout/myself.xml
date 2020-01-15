@@ -91,13 +91,13 @@
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textColor="#ffffff" />
-            <ImageView
+          <!--  <ImageView
                 android:id="@+id/danmuSwitch"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
 
                 android:scaleType="center"
-                android:src="@drawable/veido_barrage_icon_hl"/>
+                android:src="@drawable/veido_barrage_icon_hl"/>-->
             <ImageView
                 android:id="@+id/fullscreen"
                 android:layout_width="30dp"

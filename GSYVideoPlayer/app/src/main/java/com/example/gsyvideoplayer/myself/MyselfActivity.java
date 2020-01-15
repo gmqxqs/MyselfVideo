@@ -137,7 +137,7 @@ public class MyselfActivity extends AppCompatActivity {
         gsyVideoOption = new GSYVideoOptionBuilder();
         String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
         videoPlayer.setTimeCycle(60);
-        videoPlayer.setShowDanmuIcon(false);
+      //  videoPlayer.setShowDanmuIcon(false);
         gsyVideoOption.setUrl(temp)
                 .setVideoTitle("测试视频")
                 .setCacheWithPlay(false)
