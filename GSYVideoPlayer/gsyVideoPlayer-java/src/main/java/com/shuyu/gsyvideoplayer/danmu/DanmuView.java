@@ -42,7 +42,7 @@ public class DanmuView extends ViewGroup {
 
     private int WIDTH, HEIGHT;
 
-    private int singltLineHeight = 100;
+    private int singltLineHeight = 83;
 
     private DanmuAdapter adapter;
 
@@ -291,9 +291,9 @@ public class DanmuView extends ViewGroup {
                         view.offsetLeftAndRight(0 - 2);
                     }else{
                         //添加到缓存中
-                        int type = ((InnerEntity)view.getTag(R.id.tag_inner_entity)).model.getType();
+                      /*  int type = ((InnerEntity)view.getTag(R.id.tag_inner_entity)).model.getType();
 //                        adapter.addViewToCache(type,view);
-                        DanmuView.this.removeView(view);
+                        DanmuView.this.removeView(view);*/
 
                     }
                 }

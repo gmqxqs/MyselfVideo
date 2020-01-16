@@ -136,7 +136,8 @@ public class MyselfActivity extends AppCompatActivity {
 
         gsyVideoOption = new GSYVideoOptionBuilder();
         String temp = "https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
-        videoPlayer.setTimeCycle(60);
+        //String temp = "/storage/emulated/0/Android/data/com.example.gsyvideoplayer/files/d/1/62afc49f55985d7a550edc9f2864aa/d162afc49f55985d7a550edc9f2864aa/index.m3u8***https://youku.com-ok-pptv.com/20190901/6570_497d32b7/index.m3u8";
+        videoPlayer.setTimeCycle(10);
       //  videoPlayer.setShowDanmuIcon(false);
         gsyVideoOption.setUrl(temp)
                 .setVideoTitle("测试视频")
@@ -149,24 +150,20 @@ public class MyselfActivity extends AppCompatActivity {
                 .setDanmuCallBack(new DanmuInitCallBack(){
                     @Override
                     public void onSetDanmu(int minutes) {
-                        Log.e("初始化弹幕1",minutes+"");
+                        Log.e("初始化弹幕33",minutes+"");
                         List<DanmuBean> danmuBeanList = new ArrayList<>();
-                        long time = minutes * 60 * 1000 + 5000;
-                        if(minutes == 0){
-                            time = 5000;
-                        }
-
-                        DanmuBean danmuBean3 = new DanmuBean(time,1,25,1,"第"+minutes+"条弹幕111111111111111111111");
+                        long time = minutes;
+                        DanmuBean danmuBean3 = new DanmuBean(time,1,25,1,"第"+videoPlayer.getRequestDanmu()+"条弹幕111111111111111111111");
                         DanmuBean danmuBean33 = new DanmuBean(time,1,25,1,"第33条弹幕");
-                        DanmuBean danmuBean4 = new DanmuBean(time,1,25, 2,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean5 = new DanmuBean(time+2000,1,25,3,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean6 = new DanmuBean(time+3000,1,25,4,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean7 = new DanmuBean(time+4000,1,25,5,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean8 = new DanmuBean(time+5000,1,25,6,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean9 = new DanmuBean(time+6000,1,25,7,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean10 = new DanmuBean(time+7000,1,25,8,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean11 = new DanmuBean(time+8000,1,25,8,"第"+minutes+"条弹幕");
-                        DanmuBean danmuBean12 = new DanmuBean(time+9000,1,25,8,"第"+minutes+"条弹幕");
+                        DanmuBean danmuBean4 = new DanmuBean(time,1,25, 2,"第"+videoPlayer.getRequestDanmu()+"条弹幕");
+                        DanmuBean danmuBean5 = new DanmuBean(time+2000,1,25,3,"第"+videoPlayer.getRequestDanmu()+"条弹幕");
+                        DanmuBean danmuBean6 = new DanmuBean(time+3000,1,25,4,"第"+videoPlayer.getRequestDanmu()+"条弹幕");
+                        DanmuBean danmuBean7 = new DanmuBean(time+4000,1,25,5,"第"+videoPlayer.getRequestDanmu()+"条弹幕");
+                        DanmuBean danmuBean8 = new DanmuBean(time+5000,1,25,6,"第"+videoPlayer.getRequestDanmu()+"条弹幕");
+                        DanmuBean danmuBean9 = new DanmuBean(time+6000,1,25,7,"第"+videoPlayer.getRequestDanmu()+"条弹幕");
+                        DanmuBean danmuBean10 = new DanmuBean(time+7000,1,25,8,"第"+videoPlayer.getRequestDanmu()+"条弹幕");
+                        DanmuBean danmuBean11 = new DanmuBean(time+8000,1,25,8,"第"+videoPlayer.getRequestDanmu()+"条弹幕");
+                        DanmuBean danmuBean12 = new DanmuBean(time+9000,1,25,8,"第"+videoPlayer.getRequestDanmu()+"条弹幕");
                         DanmuBean danmuBean13 = new DanmuBean(30000,1,25,8,"第n条弹幕");
                         danmuBeanList.add(danmuBean3);
                         danmuBeanList.add(danmuBean33);
@@ -180,19 +177,17 @@ public class MyselfActivity extends AppCompatActivity {
                         danmuBeanList.add(danmuBean11);
                         danmuBeanList.add(danmuBean12);
                         danmuBeanList.add(danmuBean13);
-
                         videoPlayer.setDanmuBeanListAll(danmuBeanList);
-
                     }
 
                     @Override
                     public void onClickSend(DanmuBean danmuBean) {
                         super.onClickSend(danmuBean);
-                        Log.e("输入弹幕数据",danmuBean.getDanmuText());
-                        Log.e("输入弹幕数据",danmuBean.getDisplayTime()+"");
-                        Log.e("输入弹幕数据",danmuBean.getFontColor()+"");
-                        Log.e("输入弹幕数据",danmuBean.getFontSize()+"");
-                        Log.e("输入弹幕数据",danmuBean.getType()+"");
+                        Log.e("初始化弹幕发送",danmuBean.getDanmuText());
+                        Log.e("初始化弹幕发送",danmuBean.getDisplayTime()+"");
+                        Log.e("初始化弹幕发送",danmuBean.getFontColor()+"");
+                        Log.e("初始化弹幕发送",danmuBean.getFontSize()+"");
+                        Log.e("初始化弹幕发送",danmuBean.getType()+"");
                     }
                 })
                 .setVideoAllCallBack(new GSYSampleCallBack() {
@@ -261,7 +256,7 @@ public class MyselfActivity extends AppCompatActivity {
         videoPlayer.getDanmu().resume();
 
     }
-                                                
+
 
     @Override
     protected void onDestroy() {
