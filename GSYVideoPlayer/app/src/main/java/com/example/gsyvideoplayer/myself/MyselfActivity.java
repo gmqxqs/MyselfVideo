@@ -1,5 +1,4 @@
 package com.example.gsyvideoplayer.myself;
-
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,9 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
@@ -29,15 +26,11 @@ import java.util.List;
 import butterknife.BindView;
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
-
-
 public class MyselfActivity extends AppCompatActivity {
-
     //推荐使用StandardGSYVideoPlayer，功能一致
     //CustomGSYVideoPlayer部分功能处于试验阶段
     @BindView(R.id.detail_player)
     MySelfGSYVideoPlayer videoPlayer;
-
     LinearLayout danmu;
     EditText edit_danmu;
     static int count = 0;
@@ -74,9 +67,6 @@ public class MyselfActivity extends AppCompatActivity {
                videoPlayer.startWindowFullscreen(MyselfActivity.this, true, true);
             }
         });
-
-
-
         videoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,6 +143,11 @@ public class MyselfActivity extends AppCompatActivity {
                         Log.e("初始化弹幕33",minutes+"");
                         List<DanmuBean> danmuBeanList = new ArrayList<>();
                         long time = minutes;
+                        if(minutes == 0){
+                            time = 5000;
+                        } else {
+                            time = videoPlayer.getRequestDanmu() * videoPlayer.getTimeCycle() * 1000;
+                        }
                         DanmuBean danmuBean3 = new DanmuBean(time,1,25,1,"第"+videoPlayer.getRequestDanmu()+"条弹幕111111111111111111111");
                         DanmuBean danmuBean33 = new DanmuBean(time,1,25,1,"第33条弹幕");
                         DanmuBean danmuBean4 = new DanmuBean(time,1,25, 2,"第"+videoPlayer.getRequestDanmu()+"条弹幕");

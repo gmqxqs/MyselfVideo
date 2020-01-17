@@ -95,7 +95,6 @@
                 android:id="@+id/danmuSwitch"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
-
                 android:scaleType="center"
                 android:src="@drawable/veido_barrage_icon_hl"/>-->
             <ImageView

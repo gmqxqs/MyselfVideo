@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,14 +62,12 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import moe.codeest.enviews.ENPlayView;
-
 public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements SeekBar.OnSeekBarChangeListener {
     private static final int msgKey1 = 1;
     protected  int count = 0;
     private  Context contextFirst;
     private static boolean mStopTrack,mStartTrack;
     private boolean showDanmuIcon = true;
-
     public void setShowDanmuIcon(boolean showDanmuIcon) {
         this.showDanmuIcon = showDanmuIcon;
         if(showDanmuIcon){
@@ -103,10 +103,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             }
 
         }
-
-
-
-
 
     }
     static int danmuCount = 0;
@@ -156,7 +152,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     protected  ImageView newstart;
     protected  LinearLayout replay;
     protected  TextView replay_text;
-    // protected ImageView danmuSwitch;
     protected  LinearLayout layout_bottom;
     protected  TextView batteryText;
     protected BatteryView batteryView;
@@ -186,6 +181,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     private long mChooseColor = 1;
     private List<Boolean> fontColorList;
     protected int timeCycle;
+
     //弹幕回调
     protected DanmuCallBack danmuCallBack;
     private static  int requestDanmu = 0;
@@ -198,6 +194,11 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
     public void setTimeCycle(int timeCycle) {
         this.timeCycle = timeCycle;
     }
+
+    public int getTimeCycle() {
+        return timeCycle;
+    }
+
     public void setDanmuCallBack(DanmuCallBack danmuCallBack) {
         this.danmuCallBack = danmuCallBack;
     }
@@ -613,7 +614,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             if(requestDanmu >= 0){
                 danmuBeanListAll.clear();
                 danmuBeanList.clear();
-                EventBus.getDefault().post(new ProgressEvent(requestDanmu*timeCycle*1000));
+               // EventBus.getDefault().post(new ProgressEvent(requestDanmu*timeCycle*1000));
+                EventBus.getDefault().post(new ProgressEvent(time));
                 requestDanmu++;
             }
         }
@@ -652,7 +654,8 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                         danmuBeanListAll.clear();
                         danmuBeanList.clear();
                         //    EventBus.getDefault().post(new ProgressEvent(requestDanmu));
-                        EventBus.getDefault().post(new ProgressEvent(requestDanmu * timeCycle * 1000));
+                       // EventBus.getDefault().post(new ProgressEvent(requestDanmu * timeCycle * 1000));
+                        EventBus.getDefault().post(new ProgressEvent(mSeekTimePosition));
                         requestDanmu++;
                     }
                 }
@@ -1635,7 +1638,6 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
             // Log.e("初始化弹幕11requestDanmu",requestDanmu+"");
             // Log.e("初始化弹幕11currentTime",currentTime+"");
             if(currentTime > (requestDanmu * timeCycle )* 1000 - 2000){
-
                 EventBus.getDefault().post(new ProgressEvent(requestDanmu * timeCycle * 1000));
                 requestDanmu++;
                 mStopTrack = false;
@@ -1672,7 +1674,9 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                         }
                         danmu.setSpeed(2);
                         danmu.addDanmu(danmuEntity,danmuBeanList.get(danmuCount2).getFontSize(),danmuBeanList.get(danmuCount2).getFontColor());
-                        // Log.e("添加弹幕1",danmuEntity.getContent()+",time:"+danmuBeanList.get(danmuCount2).getDisplayTime()+",danmuCount:"+danmuCount2+",mStopTrack:"+mStopTrack+",mStartTrack:"+mStartTrack);
+                         //Log.e("初始化弹幕33添加弹幕",danmuEntity.getContent()+",time:"+danmuBeanList.get(danmuCount2).getDisplayTime()+",danmuCount:"+danmuCount2+",mStopTrack:"+mStopTrack+",mStartTrack:"+mStartTrack);
+                       // Log.e("初始化弹幕33添加弹幕danmuCont2",danmuCount2+"");
+                       // Log.e("初始化弹幕33添加弹幕",danmuEntity.getContent()+",time:"+danmuBeanList.get(danmuCount2).getDisplayTime()+",danmuCount:"+danmuCount2+",mStopTrack:"+mStopTrack+",mStartTrack:"+mStartTrack);
                         danmuCount2++;
                     }
                 }
@@ -1697,7 +1701,7 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                         }
                         danmu.setSpeed(2);
                         danmu.addDanmu(danmuEntity,danmuBeanList.get(danmuCount).getFontSize(),danmuBeanList.get(danmuCount).getFontColor());
-                        //     Log.e("初始化弹幕添加弹幕2",danmuEntity.getContent()+",time:"+danmuBeanList.get(danmuCount).getDisplayTime());
+                       // Log.e("初始化弹幕33添加弹幕2",danmuEntity.getContent()+",time:"+danmuBeanList.get(danmuCount).getDisplayTime());
                         danmuCount++;
 
                     }
@@ -1858,7 +1862,60 @@ public class MySelfGSYVideoPlayer extends StandardGSYVideoPlayer implements Seek
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                 -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
         mShowAction.setDuration(500);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction())) {
+                    //处理事件
+                    if (mfontSmallSize){
+                        fontSize = 18;
+                    }
+                    if(mfontBigSize){
+                        fontSize = 20;
+                    }
+                    if(editText.getText().toString().length() > 0){
+                        //addDanmaku(editText.getText().toString(),fontSize,true);
+                        DanmuBean danmuBean = new DanmuBean();
+                        danmuBean.setFontSize(fontSize);
+                        String text = editText.getText().toString();
+                    /*if(text.indexOf(",") > 0){
+                        int i = text.indexOf(",");
+                        text.re
+                    }*/
+                        text = text.replace("，","");
+                        text = text.replace(",","");
+                        text = text.replace(" ","");
+                        danmuBean.setDanmuText(text);
+                        danmuBean.setType(1);
+                        danmuBean.setFontColor(mChooseColor);
+                        danmuBean.setDisplayTime(getCurrentPositionWhenPlaying());
+                        EventBus.getDefault().post(new SendDanmuEvent(danmuBean));
+                        MyDanmuModel model = new MyDanmuModel();
+                        model.setContent(editText.getText().toString());
+                        model.setType(1);
+                  /*  model.setGoodNum(0);
+                    model.setGood(true);*/
+                        danmu.setGravity(1);
+                        danmu.setSpeed(2);
+                        //  adapter.setTextSize(20);
+                        danmu.addDanmu(model,fontSize,mChooseColor);
+                        editText.setText("");
+                    }
 
+                    if(imm != null){
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+
+                    fontDisplay.setVisibility(GONE);
+                    onVideoResume();
+                    danmu.resume();
+                }
+
+                return false;
+            }
+        });
         send.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
