@@ -41,7 +41,7 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showSupportActionBar;
  */
 
 public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
-
+    public  int danmuCount = 0;
     //保存系统状态ui
     public int mSystemUiVisibility;
 
@@ -78,6 +78,8 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     //小窗口关闭按键
     protected View mSmallClose;
 
+
+
     //旋转工具类
     public  OrientationUtils mOrientationUtils;
 
@@ -98,6 +100,10 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
 
     public GSYBaseVideoPlayer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setDanmuCount(int danmuCount) {
+        this.danmuCount = danmuCount;
     }
 
     @Override

@@ -78,7 +78,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     protected int mBackUpPlayingBufferState = -1;
 
     //从哪个开始播放
-    protected long mSeekOnStart = -1;
+    protected static long mSeekOnStart = -1;
 
     //当前的播放位置
     protected long mCurrentPosition;
